@@ -1,0 +1,51 @@
+
+
+import { Request, Response } from "express";
+// import { PAYU_MERCHANT_KEY, PAYU_SALT } from "../utils/constants";
+import {PAYU_MERCHANT_KEY ,PAYU_SALT} from  '../../domain/entities/PaymentTypes'
+import {getWorkerRepository} from '../../infrastructure/database/mongoose/MongooseWorkerRepository'
+
+import axios from "axios";
+// import PayUOrderCollection from "../models/PayUOrderCollection";
+var jsSHA = require("jssha");
+
+export const payment = (paymentData:any)=>{
+    try {
+        const { txnid, amount, productinfo, firstname, customerEmail } = paymentData;
+  
+        if (!txnid || !amount || !productinfo || !firstname || !customerEmail) {
+          // res.status(400).send();
+          const error = new Error('Mandatory fields missing');
+          (error as any).statusCode = 502;
+          throw error;
+        }
+        
+        console.log({ PAYU_MERCHANT_KEY, PAYU_SALT, txnid });
+  
+        const hashString = `${PAYU_MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${customerEmail}|||||||||||${PAYU_SALT}`;
+  
+        const sha = new jsSHA("SHA-512", "TEXT");
+        sha.update(hashString);
+        const hash = sha.getHash("HEX");
+  
+        return { hash: hash }
+      } catch (error) {
+        console.log("error payment:", error);
+        throw error
+      }
+    }
+
+    export const IsActivityUsecases = async(data:any)=>{
+        try {
+            console.log('usecases')
+            console.log(data)
+            const res = await getWorkerRepository().IsActivityQuery(data.productinfo,data.mihpayid)
+            await getWorkerRepository().paymentData(data?.productinfo,Math.floor(Number(data?.amount)),Number(data?.mihpayid))
+            console.log('after update')
+            console.log(JSON.stringify(res))
+             return
+        } catch (error) {
+            console.log("error payment:", error);
+            throw error 
+        }
+    }
