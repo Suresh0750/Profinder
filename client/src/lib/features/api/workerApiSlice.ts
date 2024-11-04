@@ -5,7 +5,7 @@ import { createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 import {FormValues} from "@/types/workerTypes"
 
 const baseQuery = fetchBaseQuery({
-    baseUrl : `http://localhost:3001`,
+    baseUrl : `http://localhost:3001/v1/api`,
     credentials: 'include',  // for include cookies
 })
 
