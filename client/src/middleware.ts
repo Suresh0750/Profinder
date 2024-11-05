@@ -79,6 +79,8 @@ async function verifyToken(
     console.log('enter function')
     console.log("workerToken")
     console.log(workerToken)
+    console.log("cookieStore")
+    console.log(cookies().get(workerToken))
     const token = req.cookies.get(workerToken);
     console.log('cookie')
     console.log(req.cookies.get(workerToken))
