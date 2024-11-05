@@ -3,7 +3,7 @@ import { addCategoryType, AdminCredentials, EditCategoryType } from '../../../ty
 
 // * baseQuery
 const baseQuery = fetchBaseQuery({
-    baseUrl: `http://localhost:3001/v1/api`,
+    baseUrl: `"${process.env.NEXT_NODE_SERVER_URL}"`,
     credentials: 'include',  
    
 });

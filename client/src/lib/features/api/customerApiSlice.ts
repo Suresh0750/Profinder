@@ -5,9 +5,9 @@
 import { createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 import {OTPData} from '../../../types/otpTypes/otpTypes'
 
-console.log('back url',process.env.NEXT_NODE_SERVER_URL)
+
 const baseQuery = fetchBaseQuery({
-    baseUrl: 'http://localhost:3001/v1/api',
+    baseUrl: `"${process.env.NEXT_NODE_SERVER_URL}"`,
     credentials: 'include',
 });
 
