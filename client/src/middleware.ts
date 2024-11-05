@@ -44,10 +44,14 @@ export async function middleware(req:NextRequest){
 
 
   const homePage = req.url
+  console.log('url',req.url)
   if(homePage==='/'){
+    console.log('redirect homepage')
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }
+  console.log('userVerifyToken')
+  console.log(userVerifyToken)
   if(pathname?.includes('/user') && !pathname?.includes('/user/UserOtp')  && !isUserProtectedRoute(pathname)&&!userVerifyToken){
     console.log('working...............')
     const loginUrl = new URL("/homePage",req.url)
@@ -85,7 +89,8 @@ async function verifyToken(
     }
   
     const secret = process.env.REFRESH_TOKEN_SECRET;
-    
+    console.log('cookie',req.cookies.get(workerToken))
+    console.log('secret',secret)
     if (!secret) {
       console.log("JWT secret not found in env");
       return false;
