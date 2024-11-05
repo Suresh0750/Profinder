@@ -5,9 +5,9 @@ import { createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
 import {editeprofile} from '@/types/userTypes'
 // * import { register } from "module"
 
-console.log('back url',process.env.NEXT_NODE_SERVER_URL)
+
 const baseQuery = fetchBaseQuery({
-    baseUrl: `"${process.env.NEXT_NODE_SERVER_URL}"`,
+    baseUrl: `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
     credentials: 'include',  // * for include cookies
 })
 

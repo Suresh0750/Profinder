@@ -3,7 +3,7 @@ import { addCategoryType, AdminCredentials, EditCategoryType } from '../../../ty
 
 // * baseQuery
 const baseQuery = fetchBaseQuery({
-    baseUrl: `"${process.env.NEXT_NODE_SERVER_URL}"`,
+    baseUrl: `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
     credentials: 'include',  
    
 });
