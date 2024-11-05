@@ -74,10 +74,4 @@
   background: transparent; /* Optional: just make scrollbar invisible */
 }
 
-@font-face {
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 100 900;
-  src: url('/fonts/inter/inter.woff2') format('woff2'), 
-       url('/fonts/inter/inter.woff') format('woff');
-}
+/* Remove the @font-face declaration for Inter */

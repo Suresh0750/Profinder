@@ -43,8 +43,8 @@ export async function middleware(req:NextRequest){
   }
 
 
-
-  if(req.url=='/'){
+  const homePage = req.url
+  if(homePage==='/'){
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }
