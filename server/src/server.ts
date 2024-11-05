@@ -47,9 +47,14 @@ app.use((req, res, next) => {
   res.set("Cache-Control", "no-store");
   next();
 });
+const allowedOrigins = [
+  "http://profinders.online",  
+  "http://localhost:3000",
+  "https://test.payu.in", 
+];
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL, 
+  origin: allowedOrigins, 
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
   credentials: true // * Allows cookies and other credentials to be shared
@@ -78,10 +83,11 @@ const httpServer = createServer(app)
 
 export const io=new serverSocket(httpServer,{
   cors :{
-    origin: process.env.FRONTEND_URL,
+    origin: allowedOrigins,
     methods:  ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD']
   }
 })
+
 socketHandler(io)
 
 connectDB().then(() => {
