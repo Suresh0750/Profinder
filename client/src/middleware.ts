@@ -77,7 +77,11 @@ async function verifyToken(
     req: NextRequest
   ){
     console.log('enter function')
+    console.log("workerToken")
+    console.log(workerToken)
     const token = req.cookies.get(workerToken);
+    console.log('cookie')
+    console.log(req.cookies.get(workerToken))
     console.log(token)
     console.log(token?.value)
     if (!token?.value) {
