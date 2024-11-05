@@ -21,12 +21,6 @@ export async function middleware(req:NextRequest){
   const workerVerifyToken = await verifyToken("workerToken",req)
   const userVerifyToken = await verifyToken("userToken",req)
 
-  // if (req.nextUrl.pathname.startsWith('/worker/professionalInfo') && (!isAuthenticated || isAuthenticated.value !== 'true')) {
-  //   return NextResponse.redirect(new URL('/worker/signup', req.url))
-  // }
-  // if (req.nextUrl.pathname.startsWith('/worker/workerOtp') && (!isAuthenticated || isAuthenticated.value !== 'true')) {
-  //   return NextResponse.redirect(new URL('/worker/signup', req.url))
-  // }
 
   // * product admin router
   if(pathname.includes('/admin')){
@@ -82,6 +76,7 @@ async function verifyToken(
     workerToken: string,
     req: NextRequest
   ){
+    console.log('enter function')
     const token = req.cookies.get(workerToken);
     console.log(token)
     console.log(token?.value)
