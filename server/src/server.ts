@@ -49,10 +49,10 @@ app.use((req, res, next) => {
 });
 
 const corsOptions = {
-  origin: 'http://localhost:3000', // Ensure this is the correct frontend URL
+  origin: process.env.FRONTEND_URL, 
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
   allowedHeaders: ['Content-Type', 'Authorization', 'Role'],
-  credentials: true // Allows cookies and other credentials to be shared
+  credentials: true // * Allows cookies and other credentials to be shared
 };
 
 app.use(cors(corsOptions)); // Ensure this is before your routes
@@ -66,7 +66,7 @@ app.use("/v1/api/user", userRouter);
 app.use('/v1/api/customer',customerRouter)
 app.use("/v1/api/admin",adminRouter)
 app.use("/v1/api/worker",workerRouter)
-// app.use("/v1/api/commonAPI",commonRouter)
+
 
 
 // * Error handle middleware
@@ -78,7 +78,7 @@ const httpServer = createServer(app)
 
 export const io=new serverSocket(httpServer,{
   cors :{
-    origin: 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL,
     methods:  ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD']
   }
 })
