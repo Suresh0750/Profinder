@@ -25,7 +25,6 @@ const customerRouter = Router()
 
 
 
-
 // * Review of worker
 customerRouter.get("/review/:id",authorizeRoles('customer'),getReviewController)
 customerRouter.post("/review",authorizeRoles('customer'),ReviewController)

@@ -27,7 +27,8 @@ export const payment = (paymentData:any)=>{
         const sha = new jsSHA("SHA-512", "TEXT");
         sha.update(hashString);
         const hash = sha.getHash("HEX");
-  
+        console.log('hash')
+        console.log(hash)
         return { hash: hash }
       } catch (error) {
         console.log("error payment:", error);
@@ -38,11 +39,11 @@ export const payment = (paymentData:any)=>{
     export const IsActivityUsecases = async(data:any)=>{
         try {
             console.log('usecases')
-            console.log(data)
+           
             const res = await getWorkerRepository().IsActivityQuery(data.productinfo,data.mihpayid)
             await getWorkerRepository().paymentData(data?.productinfo,Math.floor(Number(data?.amount)),Number(data?.mihpayid))
             console.log('after update')
-            console.log(JSON.stringify(res))
+           
              return
         } catch (error) {
             console.log("error payment:", error);

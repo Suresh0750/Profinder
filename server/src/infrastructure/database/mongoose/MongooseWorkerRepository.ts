@@ -207,11 +207,8 @@ export const getWorkerRepository = ():WorkerRepository =>({
     },
     isResendActivityQuery : async(requestId:string,payment:number,workerId:string,userId:string)=>{
         try {
-            console.log('create the recent activity')
-            console.log({requestId,payment,workerId,userId})
             await  ResentActivityModel.create({requestId,payment,workerId,userId})
         } catch (error) {
-            // console.log(`Error from infrastructure->database->mongoose->isResendActivityQuery->\n`,error)
             throw error 
         }
     },
