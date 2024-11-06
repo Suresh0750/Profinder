@@ -115,6 +115,8 @@ export const isAcceptUseCasess = async(data:any,workerId:string)=>{
         const {_id,isPayment,userId} = JSON.parse(data)
         console.log('isAcceptUsecases')
         console.log(data)
+        console.log('workerId')
+        console.log(workerId)
         await getWorkerRepository().isAcceptWorkQuery(_id,Number(isPayment))
     
        return  await getWorkerRepository().isResendActivityQuery(_id,Number(isPayment),workerId,userId)

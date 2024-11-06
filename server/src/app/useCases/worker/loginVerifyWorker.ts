@@ -5,6 +5,8 @@ export const LoginVerify = async (EmailAddress:string,Password:string)=>{
     try{       
         const {loginVerifyQuery} = getWorkerRepository()
         const actualWorker = await  loginVerifyQuery(EmailAddress)
+        console.log('worker')
+        console.log(actualWorker)
         if(!actualWorker) throw new Error("Invalid EmailAddress")
         else{
             const isCheckPass =  await checkPassword(Password,actualWorker?.Password)

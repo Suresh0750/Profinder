@@ -267,9 +267,12 @@ export const getWorkerDataController = async (req:Request,res:Response,next:Next
 export const LoginWorkerController = async (req:Request,res:Response,next:NextFunction)=>{
     try{
         const loginUsecase : WorkerInformation | boolean = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
+        console.log('worker')
         if(!loginUsecase) throw new Error('check email and password')
-        else if(loginUsecase._id && loginUsecase.isVerified){
-        const  {refreshToken,accessToken} = JwtService((loginUsecase?._id).toString(),loginUsecase.FirstName,loginUsecase.EmailAddress,(req.body.role || "worker"))  
+        else if(loginUsecase.isBlock){
+           return res.status(StatusCode.Forbidden).json({success:false,message: "This worker is blocked and cannot perform this action." }) 
+        }
+        const  {refreshToken,accessToken} = JwtService((loginUsecase?._id||'').toString(),loginUsecase.FirstName,loginUsecase.EmailAddress,(req.body.role || "worker"))  
         
         // * JWT referesh token setUp
         res.cookie(Cookie.Worker,refreshToken,{
@@ -287,8 +290,8 @@ export const LoginWorkerController = async (req:Request,res:Response,next:NextFu
             customerEmail : loginUsecase.EmailAddress,
             role : 'worker'
         }
-        res.status(StatusCode.Success).json({success:true,message:'Login successful',customerData}) 
-        }  
+        return res.status(StatusCode.Success).json({success:true,message:'Login successful',customerData}) 
+        // res.status(StatusCode.Unauthorized)
     }catch(error){
         console.log(`Error from Presntation->controllers ${error}`)
         next(error)

@@ -106,4 +106,3 @@ export type ProfessionalInfoData = {
     lon : string | number,
     lat : string | number,
 }
-
