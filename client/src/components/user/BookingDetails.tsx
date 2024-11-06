@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { format, parseISO } from "date-fns";
-import LOGO_URL from './(logo)/page'
 import jsPDF from 'jspdf'
 import {
   Calendar,
@@ -435,7 +434,7 @@ const downloadInvoice = async () => {
                   </div>
                   {(selectedWork?.isAccept=="Pending") ?
                     ""
-                   :  (!paymentId)? 
+                   :  (!paymentId && customerData && selectedWork?._id)? 
                     <>
                       <PayUComponent
                         currUserData={customerData}

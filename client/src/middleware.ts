@@ -76,27 +76,18 @@ async function verifyToken(
     workerToken: string,
     req: NextRequest
   ){
-    console.log('enter function')
-    console.log("workerToken")
-    console.log(workerToken)
-    console.log("cookieStore")
-    console.log(cookies().get(workerToken))
+    
     const token = req.cookies.get(workerToken);
-    console.log('cookie')
-    console.log(req.cookies.get(workerToken))
-    console.log(token)
-    console.log(token?.value)
+    
     if (!token?.value) {
       console.log('step 1 if')
       return false;
     }
   
     const secret = process.env.REFRESH_TOKEN_SECRET;
-    console.log('cookie',req.cookies.get(workerToken))
-    console.log('secret',secret)
+    
     if (!secret) {
-      console.log('step 2 if')
-      console.log("JWT secret not found in env");
+     
       return false;
     }
   

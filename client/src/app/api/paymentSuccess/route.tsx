@@ -19,8 +19,8 @@ export async function POST(req: any, res: NextApiResponse) {
   });
   console.log(data)
   console.log('access env')
-  console.log(process.env.NEXT_PAYMENTID_URL)
-  const PAYMENT_URL :string = process.env.NEXT_PAYMENTID_URL || ''
+  console.log(process.env.NEXT_PUBLIC_PAYMENTID_URL)
+  const PAYMENT_URL :string = process.env.NEXT_PUBLIC_PAYMENTID_URL || ''
   console.log('payment url')
 console.log(PAYMENT_URL)
   try {

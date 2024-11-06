@@ -26,10 +26,9 @@ const PayUComponent = ({ currUserData, requestId, payment }: props) => {
   const customerId = _id;
   const key = PayU.merchantKey;
   const phone = "1234567890"; // Ensure this is a string
-  const surl = process.env.NEXT_PAYMENT_SUCCESS_URL;
-  const furl = process.env.NEXT_PAYMENT_FAILURE_URL;
+  const surl = process.env.NEXT_PUBLIC_PAYMENT_SUCCESS_URL ;
+  const furl = process.env.NEXT_PUBLIC_PAYMENT_FAILURE_URL ;
   const service_provider = "payu_paisa";
-
   useEffect(() => {
     const data = { txnid, amount, productinfo, firstname, customerEmail, phone };
 
