@@ -118,7 +118,7 @@ export default function BookingPage() {
   } = useBookingQuery(customerData?._id, {
     skip: skip,
   });
-  const { data: paymentIdData } = usePaymentIdQuery(selectedWork?._id || "", {
+  const { data: paymentIdData } = usePaymentIdQuery(selectedWork?._id || '', {
     skip: skipPaymentAPI,
   });
 
@@ -149,6 +149,7 @@ export default function BookingPage() {
       setSkipPaymentAPI(false);
     }
   }, [selectedWork]);
+  
   useEffect(() => {
     if (paymentIdData?.result) {
       setPaymentId(paymentIdData?.result?.paymentId);
@@ -166,7 +167,7 @@ export default function BookingPage() {
     if (requestData?.result && requestData.result.length > 0) {
       console.log('select work')
       console.log(JSON.stringify(requestData.result))
-      setSelectedWork(requestData.result);
+      // setSelectedWork(requestData.result);
       setReviewID(requestData?.reviewDetails)
     }
   }, [requestData]);

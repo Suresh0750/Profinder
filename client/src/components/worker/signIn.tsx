@@ -69,15 +69,14 @@ export function LoginForm() {
       
         dispatch(updateCustomerLogin(true))   // * customer after login
         dispatch(updateRole('worker'))
-        // console.log("loginUsecase",res.loginUsecase) 
+ 
         localStorage.setItem("customerData",JSON.stringify(res?.customerData))  
-        // const {FirstName,LastName,PhoneNumber,EmailAddress,Password,Profile,Category,Country,State,PostalCode,City,StreetAddress,Apt,Identity} = res.loginUsecase
 
-        // dispatch(updateSignup({FirstName,LastName,PhoneNumber,EmailAddress,Password,Profile})) 
-        // dispatch(getWorkerData({FirstName,LastName,PhoneNumber,EmailAddress,Password,Profile,Category,Country,State,PostalCode,City,StreetAddress,Apt,Identity})) 
         setTimeout(() => {
           Router.push("/homePage")
         }, 3000)
+      }else if(res?.status==403){
+        toast.error(res?.data?.message)
       }
     } catch (error: any) {
       console.log(error)

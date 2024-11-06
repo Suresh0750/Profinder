@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import {WorkerDatails} from '@/types/workerTypes'
 import {  
   useGetCategoryNameQuery,
   useListWorkerDataAPIQuery,
@@ -76,7 +77,11 @@ export default function ServiceWorkerListPage() {
     setPage(1)
   }, [])
 
-  const handleRedirectWorkerPage = useCallback((_id: string) => {
+  const handleRedirectWorkerPage = useCallback((_id: string,worker:WorkerDatails) => {
+    console.log(JSON.stringify(worker))
+    if (typeof window !== "undefined" && worker){
+     localStorage.setItem("workerDetails",JSON.stringify({_id:worker?._id,Category:worker?.Category,FirstName:worker?.FirstName}))
+    }
     router.push(`/worker-details/${_id}`)
   }, [router])
 
@@ -182,7 +187,7 @@ export default function ServiceWorkerListPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredWorkers.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE).map((worker: any) => (
-              <Card key={worker._id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleRedirectWorkerPage(worker._id)}>
+              <Card key={worker._id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleRedirectWorkerPage(worker._id,worker)}>
                 <CardContent className="p-0">
                   <Image
                     src={worker.Profile || "/placeholder.svg?height=256&width=500"}

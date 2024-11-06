@@ -87,7 +87,7 @@ export const workerApi = createApi({
             })
         }),
         AcceptWorkAPI : builder.mutation({
-            query : (data:{_id:string,isPayment:number})=>({
+            query : (data:{_id:string,isPayment:number,userId:string})=>({
                 url : `/worker/isAcceptWork/${JSON.stringify(data)}`,
                 method: "PUT",
                 headers : getHeaders('worker')

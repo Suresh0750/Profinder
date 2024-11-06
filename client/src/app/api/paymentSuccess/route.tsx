@@ -18,14 +18,19 @@ export async function POST(req: any, res: NextApiResponse) {
     data[key] = value;
   });
   console.log(data)
-
+  console.log('access env')
+  console.log(process.env.NEXT_PAYMENTID_URL)
+  const PAYMENT_URL :string = process.env.NEXT_PAYMENTID_URL || ''
+  console.log('payment url')
+console.log(PAYMENT_URL)
   try {
-    const PayUOrderId = await axios.post('http://localhost:3001/customer/savePaymentId',data, { withCredentials: true })
+    if(PAYMENT_URL){
+      const PayUOrderId = await axios.post(PAYMENT_URL,data, { withCredentials: true })
+      console.log('payment id')
+      console.log(PayUOrderId)
+    }
     
-    console.log('payment id')
-    console.log(PayUOrderId)
-    // const PayUOrderId = await savePaymentId(data).unwrap()
-    // await adsService.addTransaction(PayUOrderId, data.email, "success");
+   
   } catch (error: any) {
     console.log(error.message);
   }

@@ -17,7 +17,7 @@ export default function ServiceRequestPage() {
   const router = useRouter()
 
   const [customerData, setCustomerData] = useState<any>({});
-  const { data, refetch } = useGetAllRequestDataQuery(customerData?._id)
+  const { data, refetch } = useGetAllRequestDataQuery(customerData?._id,{skip:customerData?._id ? false:true})
   const [acceptWorkAPI] = useAcceptWorkAPIMutation()
   const [rejectWorkAPI, { isLoading: preventRejectRequest }] = useRejectWorkAPIMutation()
   useEffect(() => {
@@ -56,10 +56,11 @@ export default function ServiceRequestPage() {
   const handleAccept = async (_id: string,userId:string) => {
     try {
       const payment = isPayment[_id]
+
       if (!payment || payment < 500) {
         return toast.error('Minimum payment amount is 500')
       }
-      const res = await acceptWorkAPI({ _id, isPayment: payment }).unwrap()
+      const res = await acceptWorkAPI({ _id, isPayment: payment,userId}).unwrap()
       if (res?.success) {
         toast.success(res.message)
         refetch()

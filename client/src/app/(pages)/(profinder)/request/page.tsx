@@ -68,11 +68,15 @@ export default function WorkerRequestPage() {
   useEffect(() => {
     // Only access localStorage in the browser
     if (typeof window !== "undefined") {
-      const storedData = localStorage.getItem("workerDetails");
+      alert('hellow')
+      const storedData :{_id:string,Category:string,FirstName:string} | null = JSON.parse(localStorage.getItem("workerDetails") || "{}");
       const storeCustomerData = localStorage.getItem('customerData')
       if (storedData) {
         try {
-          setWorkerDetails(JSON.parse(storedData));
+          setWorkerDetails(storedData);
+          if(storedData?._id&&storedData?.Category&&storedData?.FirstName){
+            setFormData((prev:any)=>({...prev,workerId:storedData?._id,  service: storedData?.Category,worker: storedData?.FirstName}))
+          }
         } catch (error) {
           console.error("Error parsing customerData from localStorage:", error);
           setWorkerDetails({});

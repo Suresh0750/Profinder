@@ -30,6 +30,8 @@
     WorkerImage? : string[],
     reviews ? : string[],
     isVerified : boolean,
+    latitude ? : number,
+    longitude ? : number,
     createdAt? : string,
     updatedAt ? : string,
     isBlock? :boolean,
