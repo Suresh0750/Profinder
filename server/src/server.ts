@@ -48,7 +48,8 @@ app.use((req, res, next) => {
   next();
 });
 const allowedOrigins = [
-  "http://profinders.online",  
+  "http://profinders.online", 
+  "https://profinders.online", 
   "http://localhost:3000",
   "https://test.payu.in", 
 ];
