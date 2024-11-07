@@ -60,5 +60,4 @@ export interface messageTypes{
     isRead? : boolean,
     createdAt?: Date;
     updatedAt?: Date;
- 
 }

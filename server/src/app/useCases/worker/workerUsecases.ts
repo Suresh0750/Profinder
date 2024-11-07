@@ -87,7 +87,8 @@ export const messageUsecases = async(data:messageType)=>{
 }
 export const getChatsNameUsecases = async(_id:string)=>{
     try{
-        
+        console.log('worker Id message')
+        console.log(_id)
         const result = await getWorkerRepository().getChatsNameQuery(_id)
         console.log(JSON.stringify(result))
         return result
