@@ -19,11 +19,12 @@ const [customerDetails,setCustomerDetails] = useState([])
 const [conversationID,setConversationID] = useState<string>('')
 const [stopFetch,setStopFetch] = useState(true)
 const [messages ,setMessages] = useState<any[]>([])
+const [stopFetchGetMsg,setStopFetchGetMsg] = useState<boolean>(true)
 
 // * API
 const [updateMessage] = useUpdateMessageMutation()
 const [customerData, setCustomerData] = useState<any>({});
-const {data,refetch} = useGetmessageQuery(customerData?._id)
+const {data,refetch} = useGetmessageQuery(customerData?._id,{skip:stopFetchGetMsg})
 const {data:allMessage,refetch:refetchAllMsg} =  useFetchMessageQuery(conversationID,{skip:stopFetch})
 const [socket,setSocket] = useState<Socket|null>(null)
 const [messageBox,setMessageBox] = useState<conversationData>({
@@ -49,12 +50,13 @@ interface newMessage {
 }
 
 useEffect(() => {
-  // Only access localStorage in the browser
+  
   if (typeof window !== "undefined") {
     const storedData = localStorage.getItem("customerData");
     if (storedData) {
       try {
         setCustomerData(JSON.parse(storedData));
+        setStopFetchGetMsg(false)
       } catch (error) {
         console.error("Error parsing customerData from localStorage:", error);
         setCustomerData({});
@@ -65,7 +67,7 @@ useEffect(() => {
 
  // * connect the socket
   useEffect(()=>{
-    const socketInstance = io('http://localhost:3001')
+    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URI)
 
     setSocket(socketInstance)
 
@@ -117,11 +119,9 @@ useEffect(() => {
 
   useEffect(()=>{
     setMessages(allMessage?.result)
-    // console.log(JSON.stringify(allMessage?.result))
   },[allMessage])
   
 useEffect(()=>{
-    // console.log(JSON.stringify(data?.result))
     setCustomerDetails(data?.result)
     setAllCustomer(data?.result)
 },[data])
@@ -143,7 +143,7 @@ const handleSearch = (e:React.ChangeEvent<HTMLInputElement>)=>{
 const handleShowMsg = (data: conversationData) => {
   if (!data || !data._id) { 
       console.warn("Invalid data or missing ID:", data);
-      return; // Early exit if data is invalid
+      return;
   }
 
   console.log("Showing message for conversation ID:", data._id);
@@ -155,9 +155,9 @@ const handleShowMsg = (data: conversationData) => {
       const result = prevConv?.map((conv:any) => {
           if (conv._id === data?._id) {
               // console.log("Updating unread count for:", conv);
-              return { ...conv, workerUnread: 0 }; // Update unread count
+              return { ...conv, workerUnread: 0 }; // *Update unread count
           }
-          return conv; // Return original conversation
+          return conv; 
       });
 
       return result;
@@ -200,7 +200,9 @@ const handleSendMessage = (e: React.FormEvent) => {
           {customerDetails?.length >0&& customerDetails?.map((conv:any) => (
             <div key={conv?._id} className="flex items-center p-4 hover:bg-gray-100 cursor-pointer" onClick={()=>handleShowMsg(conv)}>
               <div className="relative">
-                <Image src={conv?.userId?.profile} alt={conv?.userId?.username} className="w-10 h-10 rounded-full" />
+                <div className='w-10 h-10'>
+                  <Image src={conv?.userId?.profile} alt={conv?.userId?.username} width={250} height={250} className="w-10 h-10 rounded-full" />
+                </div>
                 {false && (
                   <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
                 )}
@@ -228,7 +230,9 @@ const handleSendMessage = (e: React.FormEvent) => {
       <div className="flex-1 m-2 flex rounded border-r flex-col">
         {/* Chat header */}
         <div className="bg-white p-4 border-b flex items-center">
-          <Image src={messageBox?.userId?.profile} alt={messageBox?.userId?.username} className="w-10 h-10 rounded-full" />
+          <div className='w-10 -10'>
+          <Image src={messageBox?.userId?.profile} alt={messageBox?.userId?.username} width={0} height={0} className="w-10 h-10 rounded-full" />
+          </div>
           <div className="ml-3">
             <h2 className="font-semibold">{messageBox?.userId?.username}</h2>
             {/* <p className="text-sm text-green-500">Active Now</p> */}

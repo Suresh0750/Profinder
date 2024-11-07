@@ -48,7 +48,7 @@ export default function Chats() {
   const { data: allMessageData } = useGetAllMessageQuery(conversationID, { skip: stopFetch })
 
   useEffect(() => {
-    const socketInstance = io('http://localhost:3001')
+    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URI)
     setSocket(socketInstance)
 
     socketInstance.on("connect", () => {
