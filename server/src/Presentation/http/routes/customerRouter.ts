@@ -44,7 +44,7 @@ customerRouter.post('/verifyOTP',CustomerOtpController)
 customerRouter.post('/resentOTP',ResentOTP)
 
 customerRouter.post('/setForgotPassword',ForgetPassWordController)
-customerRouter.post('/CustomerGoogleLogin',upload.single('identity'),authorizeRoles('customer'),GoogleLogin)
+customerRouter.post('/CustomerGoogleLogin',upload.single('Identity'),authorizeRoles('customer'),GoogleLogin)
 
 customerRouter.post("/cutomerLogout",authorizeRoles('customer'),CustomerLogoutController)
 // customerRouter.post("/customerLogIn",customerLogIn) 

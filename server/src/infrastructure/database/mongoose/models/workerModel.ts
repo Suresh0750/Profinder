@@ -24,6 +24,9 @@ const workerSchema = new Schema<WorkerInformation>({
         ProjectImage: { type: String, required: true }
       }], 
     reviews: [{ type: String }], 
+    experience : {type:String},
+    availability : {type:String},
+    rate : {type:Number},
     isVerified : {type:Boolean, default:false},
     isWorker : {type:Boolean,default:false},
     isBlock : {type:Boolean,default:false}

@@ -281,6 +281,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
     try {
      
         if(req?.body?.role == "user"){
+        
             const userData = await GoogleLoginUseCases(req.body)
             if(userData?._id){
                 const  {refreshToken,accessToken} = JwtService((userData?._id).toString(),userData.username,userData.EmailAddress,(req.body.role || "worker"))  
@@ -309,6 +310,8 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
             console.log(`Req entered worker controller`)
           
             const file: IMulterFile | any = req.file
+            console.log('file')
+            console.log(file)
             const imageUrl = await uploadImage(file)
             req.body.Identity = imageUrl
             req.body.Password = await hashPassword(req.body.Password)

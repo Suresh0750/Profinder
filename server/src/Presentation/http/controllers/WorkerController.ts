@@ -9,6 +9,7 @@ import {hashPassword} from '../../../shared/utils/encrptionUtils'
 import {JwtService} from '../../../infrastructure/service/JwtService'
 import { getUserRequestDataUsecasuse } from "../../../app/useCases/utils/customerUtils";
 import {
+    professionalUsecase,
     WorkerUsecase,
     workerExist,
     getWorkerData,
@@ -298,3 +299,16 @@ export const LoginWorkerController = async (req:Request,res:Response,next:NextFu
     }
 }
 
+
+
+export const addtionalProfessionalData = async(req:Request,res:Response,next:NextFunction)=>{
+    try{
+       console.log('addtional info') 
+       const result = await professionalUsecase(req.body)
+       console.log(req.body)
+        res.status(200).json({success:true,message:'successfully updated'})
+    }catch(error){
+        console.log(`Error from Presntation->addtionalProfessionalData ${error}`)
+        next(error) 
+    }
+}

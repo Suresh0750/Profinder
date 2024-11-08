@@ -34,7 +34,10 @@ export interface ProfessionInformation{
     WorkerImage? : any,
     reviews? : string[],
     isVerified? : Boolean,
-    isWorker ? : Boolean
+    isWorker ? : Boolean,
+    experience? : String,
+    availability ? : String,
+    rate ? :Number,
 }
 
 

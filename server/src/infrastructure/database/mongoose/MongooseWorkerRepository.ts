@@ -326,6 +326,13 @@ export const getWorkerRepository = ():WorkerRepository =>({
             // console.log(`Error from infrastructure->database->mongoose->workComplete->\n`,error)
             throw error 
         }
+    },
+    availabilityInfo : async(data:any)=>{
+        try{
+            await WorkerModel.findByIdAndUpdate({_id:new ObjectId(data?._id)},{experience:data?.experience,availability:data?.availability,rate:data?.rate})
+        }catch(error){
+            throw error
+        }
     }
 })
 

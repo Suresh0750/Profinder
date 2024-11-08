@@ -3,6 +3,7 @@ import upload from '../../../infrastructure/service/multer'
 import {authorizeRoles} from '../middlewares/authorizeRoles'
 import { customeVerify } from "../middlewares/JWTVerify/customerVerify"
 import {
+    addtionalProfessionalData,
     PersonalInformationControll,
     ProfessionalInfoControll,
     isCheckEmail,
@@ -56,7 +57,7 @@ workerRouter.post("/ProfessionalInfo",upload.single('Identity'),ProfessionalInfo
 workerRouter.post("/checkEmailForgetPass",isCheckEmail)
 workerRouter.get("/getWorkerData",authorizeRoles('worker'),getWorkerDataController)
 workerRouter.post('/loginverify',LoginWorkerController)
-
+workerRouter.put('/addtionalProfessionalDetails',authorizeRoles('worker'),addtionalProfessionalData)
 
 
 export default workerRouter

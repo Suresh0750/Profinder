@@ -251,3 +251,13 @@ export const getWorkerData = async(token:string)=>{
         throw error
     }
 }
+
+export const professionalUsecase = async(data:any)=>{
+    try {
+        console.log(data)
+        return getWorkerRepository().availabilityInfo(data)
+    } catch (error) {
+        console.log(`Error from usecases -> professionalUsecase`,error)
+        throw error
+    }
+}

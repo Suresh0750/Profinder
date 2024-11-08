@@ -41,4 +41,5 @@ export interface WorkerRepository{
     getUpcomingWorks(workerId:string):Promise<RecentActivityType[]>
     workCompleteQuery(_id:string,isCompleted:boolean,status:string):Promise<RecentActivityType | null>
     markCompleteQuery(_id:string,status:string):Promise<void>
+    availabilityInfo(data:any) : Promise<void>
 }
