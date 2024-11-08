@@ -124,11 +124,12 @@ export default function UserProfilePage() {
 
   if (isProfileLoading) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center w-[80%] h-screen">
         <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     )
   }
+
 
   return (
     <main className="flex-1 p-8 overflow-y-auto">

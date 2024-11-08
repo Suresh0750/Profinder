@@ -70,7 +70,7 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
       const file = event.target.files?.[0];
     if (file) {
       setIdentity(file);
-     
+      console.log(file)
     }else if(!file){
       setIdentity(null)
 
@@ -125,40 +125,37 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
   // Submit form data including worker data
   const onSubmit: SubmitHandler<GoogleWorkerCredentials> = async (additionalData) => {
     try {
-      if(!identity) return toast.error('identity is required')
-      
-      if (workerData) {
-        const completeWorkerData = { ...workerData, ...additionalData };
-        // completeWorkerData.identity = identity
-        completeWorkerData.role = 'worker'
-       const formData :any = new FormData()
-       for(let key in completeWorkerData){
-        formData.append(key , completeWorkerData[key])
-       }
-      if(identity){
-        formData.append('identity',identity)
+      if (!identity) {
+        return toast.error('Identity image is required');
       }
+  
+      if (workerData) {
+        const formData = new FormData();
         
-       console.log('Complete Worker Data:', completeWorkerData);
-       console.log('Complete Worker Data:', formData);
-        // alert(JSON.stringify(formData))
+        
+        Object.entries({ ...workerData, ...additionalData }).forEach(([key, value]) => {
+          formData.append(key, value as any);
+        });
+        
+
+        formData.append('Identity', identity);
+  
+       
         const result = await CustomerGoogleLogin(formData).unwrap();
-        console.log(result)
+        console.log(result);
+  
         if (result?.success) {
-
-          await localStorage.setItem("customerData",JSON.stringify(result.customerData))
+          await localStorage.setItem("customerData", JSON.stringify(result.customerData));
           toast.success(result?.message);
-
           setIsModalOpen(false);
           router.push('/homePage');
         }
       }
-
     } catch (error) {
-      console.log(`Error submit`, error);
+      console.log('Error submitting form:', error);
     }
-
   };
+  
 
   return (
     <div className="p-4">

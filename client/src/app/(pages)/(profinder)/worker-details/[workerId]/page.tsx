@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { StarIcon, MessageCircleIcon, MapPinIcon, BriefcaseIcon, CalendarIcon, DollarSignIcon } from 'lucide-react'
+import Image from 'next/image'
 
 // *types
 import {reviewData} from '@/types/utilsTypes'
@@ -200,12 +201,25 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
             <CardContent className="p-6">
               {reviewDetails.length > 0 ? (
                 reviewDetails.map((review:reviewData, index:number) => (
-                  <div key={index} className="mb-4">
-                    <Badge variant="default" className="mr-2">
-                      {review?.rating}
-                    </Badge>
-                    <p className="text-gray-700">{review?.comment}</p>
+                  <>
+                  <div key={review?._id}>
+                    <Image alt={review?.userId?.username+'Image'} src={review?.userId?.profile} width={50} height={50} className='rounded-full w-10 h-10 inline-block mr-2 text-[#0f1729] text-xl' />
+                    <span>{review?.userId?.username}</span>
                   </div>
+                  <div key={index} className="mb-4">
+                    <div className='flex'>
+                    {[...Array(5)].map((_, i) => (
+                        <StarIcon key={i} className={`w-5 h-5 ${i < Math.round(review?.rating || 0) ? 'fill-yellow-400' : 'fill-gray-300'}`} />
+                    ))}
+                    </div>
+                    <div className='flex'>
+                      <Badge variant="default" className="mr-2">
+                        {review?.rating}
+                      </Badge>
+                      <p className="text-gray-700">{review?.comment}</p>
+                    </div>
+                  </div>
+                  </>
                 ))
               ) : (
                 <p>No reviews yet.</p>

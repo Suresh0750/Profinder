@@ -46,7 +46,7 @@ export default function Header(){
                 </div>
                 <div className='flex justify-center items-center'>
                     <div>
-                        <Image src="" alt="" />
+                        {/* <Image src="" alt="" /> */}
                     </div>
                     <button className='rounded w-[156px] cursor-pointer md:w-[100px]' style={{height:'38px',backgroundColor:'#D32F2F',color:'rgb(97, 22, 22)'}} onClick={handleLogout} ><LogoutIcon/>Logout</button>
                 </div>

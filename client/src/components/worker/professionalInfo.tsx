@@ -1,185 +1,434 @@
 'use client'
 
-import React, { useState } from 'react';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm, Controller } from "react-hook-form"
+import { z } from "zod"
+import { useRouter } from 'next/navigation'
+import { Toaster, toast } from 'sonner'
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { PulseLoader } from 'react-spinners'
+import { useSelector } from 'react-redux'
+import { useEffect, useState, useMemo } from 'react'
+import { useProfessionalInfoMutation } from '@/lib/features/api/workerApiSlice'
+import { useGetCategoryNameQuery } from '@/lib/features/api/customerApiSlice'
+import Select, { SingleValue } from 'react-select'
+import countryList from 'react-select-country-list'
+import { City, State, Country } from 'country-state-city'
+import GoogleMapComponent from './GoogleMapComponent'
 
-const ProfessionalInfoForm: React.FC = () => {
-  // State to hold the form data
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    profession: '',
-    experience: '',
-    skills: '',
-    services: '',
-    image: null as File | null, // Store the uploaded file
-  });
+// import { professionalInfoFormSchema } from '@/lib/formSchema'
 
-  // State to handle form submission status
-  const [formSubmitted, setFormSubmitted] = useState(false);
+const professionalInfoFormSchema = z.object({
+  Category: z.string().min(1, { message: "Category is required." }),
+  Country: z.object({
+    value: z.string(),
+    label: z.string()
+  }).nullable(),
+  StreetAddress: z.string().min(1, { message: "Street address is required." }),
+  City: z.object({
+    value: z.string(),
+    label: z.string()
+  }).nullable(),
+  Identity: z
+    .any()
+    .refine((file) => file instanceof File, {
+      message: "Identity document is required and must be a valid file.",
+    }),
+  Apt: z.string().max(10, { message: "Apt/Suite should be less than 10 characters." }).optional(),
+  State: z.object({
+    value: z.string(),
+    label: z.string()
+  }).nullable(),
+  PostalCode: z.string().min(1, { message: "Postal code is required." }),
+})
+type SelectOption = {
+  value: string
+  label: string
+}
 
-  // Handle input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+type FormValues = z.infer<typeof professionalInfoFormSchema>
 
-  // Handle file upload
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
-    setFormData({
-      ...formData,
-      image: file,
-    });
-  };
+export default function ProfessionalInfoForm() {
+  const [workerSignupDetails, setWorkerSignupDetails] = useState<Record<string, any>>({})
+  const [categoryOptions, setCategoryOptions] = useState<SelectOption[]>([])
+  const [countryOptions, setCountryOptions] = useState<SelectOption[]>([])
+  const [stateOptions, setStateOptions] = useState<SelectOption[]>([])
+  const [cityOptions, setCityOptions] = useState<SelectOption[]>([])
+  const [address, setAddress] = useState('')
+  const [coords, setCoords] = useState({ latitude: 0, longitude: 0 })
+  const [getCoords, setGetCoords] = useState({ lat: 0, lon: 0 })
+  const [getAddress, setGetAddress] = useState({})
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
-  // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const workersignupData = useSelector((state: any) => state.WorkerSignupData)
+  const [ProfessionalInfo, { isLoading }] = useProfessionalInfoMutation()
+  const { data: categoryData } = useGetCategoryNameQuery('')
 
-    // You can handle the form submission logic here (e.g., API call)
-    console.log('Form Data:', formData);
+  const router = useRouter()
 
-    // Reset form after submission
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      profession: '',
-      experience: '',
-      skills: '',
-      services: '',
-      image: null,
-    });
+  const countries = useMemo(() => countryList().getData(), [])
+
+  useEffect(() => {
+    const userLocation = async () => {
+      try {
+        const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject)
+        })
+        const { latitude, longitude } = position.coords
+        setCoords({ latitude, longitude })
+      } catch (error) {
+        console.error('Error getting user location:', error)
+        setCoords({ latitude: 0, longitude: 0 })
+      }
+    }
+    userLocation()
+  }, [])
+
+  useEffect(() => {
+    setCountryOptions(countries)
+    setWorkerSignupDetails(workersignupData)
+  }, [countries, workersignupData])
+
+  useEffect(() => {
+    if (categoryData) {
+      setCategoryOptions(categoryData?.result?.map((category: string) => ({ value: category, label: category })))
+    }
+  }, [categoryData])
+
+  const form = useForm<FormValues>({
+    resolver: zodResolver(professionalInfoFormSchema),
+    defaultValues: {
+      Category: "",
+      Country: null,
+      StreetAddress: "",
+      City: null,
+      Identity: undefined,
+      Apt: "",
+      State: null,
+      PostalCode: "",
+    },
+  })
+  type SelectOption = {
+    value: string
+    label: string
+  }
+  
+  type FormValues = z.infer<typeof professionalInfoFormSchema>
+
+  const onCategoryChange = (selectedOption: SingleValue<SelectOption>) => {
+    if (selectedOption) {
+      form.setValue('Category', selectedOption.value)
+    } else {
+      form.setValue('Category', "")
+    }
+  }
+
+
+  const onCountryChange = (selectedOption: SingleValue<SelectOption>) => {
+    form.setValue('Country', selectedOption)
+    form.setValue('State', null)
+    form.setValue('City', null)
+    form.setValue('StreetAddress', '')
+    form.setValue('PostalCode', '')
     
-    // Indicate that the form has been submitted
-    setFormSubmitted(true);
-  };
+    if (selectedOption) {
+      const states = State.getStatesOfCountry(selectedOption.value)
+      setStateOptions(states.map(state => ({ value: state.isoCode, label: state.name })))
+    } else {
+      setStateOptions([])
+    }
+    setCityOptions([])
+    updateAddress()
+  }
+
+  const onStateChange = (selectedOption: SingleValue<SelectOption>) => {
+    form.setValue('State', selectedOption)
+    form.setValue('City', null)
+    form.setValue('StreetAddress', '')
+    form.setValue('PostalCode', '')
+    
+    const countryValue = form.getValues('Country')?.value
+    if (countryValue && selectedOption) {
+      const cities = City.getCitiesOfState(countryValue, selectedOption.value)
+      setCityOptions(cities.map(city => ({ value: city.name, label: city.name })))
+    } else {
+      setCityOptions([])
+    }
+    updateAddress()
+  }
+
+  const onCityChange = (selectedOption: SingleValue<SelectOption>) => {
+    form.setValue('City', selectedOption)
+    updateAddress()
+  }
+
+  const updateAddress = () => {
+    const country = form.getValues('Country')?.label || ''
+    const state = form.getValues('State')?.label || ''
+    const city = form.getValues('City')?.label || ''
+    const street = form.getValues('StreetAddress') || ''
+    const postalCode = form.getValues('PostalCode') || ''
+
+    setAddress(`${street}, ${city}, ${state}, ${country}, ${postalCode}`)
+  }
+
+  useEffect(() => {
+    updateAddress()
+  }, [form.watch(['Country', 'State', 'City', 'StreetAddress', 'PostalCode'])])
+
+  
+  const onSubmit = async (values: FormValues) => {
+    try {
+      if (Object.values(getAddress).length <= 0) return toast.error('Please set your location')
+
+      const formData = new FormData()
+
+      if (values.Identity instanceof File) {
+        formData.append('Identity', values.Identity)
+      }
+      formData.append('lat', getCoords?.lat.toString());
+      formData.append('lon', getCoords?.lon.toString());      
+      formData.append('mapAddress', JSON.stringify(getAddress))
+      
+      for (const [key, value] of Object.entries(values)) {
+        if (key !== "Identity") {
+          if (value && typeof value === 'object' && 'value' in value) {
+            formData.append(key, value.value)
+          } else if (value) {
+            formData.append(key, value.toString())
+          }
+        }
+      }
+
+      const signupData: Record<string, any> = workerSignupDetails.signUpData || {}
+
+      for (const [key, value] of Object.entries(signupData)) {
+        formData.append(key, value)
+      }
+
+      const res = await ProfessionalInfo(formData).unwrap()
+      
+      if (res.success) {
+        toast.success(res.message)
+        setTimeout(() => {
+          router.push(`/worker/workerOtp/${res.worker}`)
+        }, 4000)
+      }
+    } catch (err) {
+      toast.error('Error: Registration failed. Please check your input and try again.')
+      console.error(err)
+    }
+  }
 
   return (
-    <div className="max-w-md mx-auto p-4 border border-gray-300 rounded-lg shadow-md">
-      <h2 className="text-xl font-bold mb-4">Professional Information Form</h2>
-      
-      {formSubmitted && (
-        <div className="bg-green-100 text-green-700 p-2 mb-4 rounded">
-          Your information has been submitted successfully!
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
-            id="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className="border border-gray-300 rounded p-2 w-full"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="email">Email</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            className="border border-gray-300 rounded p-2 w-full"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="phone">Phone</label>
-          <input
-            type="tel"
-            name="phone"
-            id="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            className="border border-gray-300 rounded p-2 w-full"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="profession">Profession</label>
-          <input
-            type="text"
-            name="profession"
-            id="profession"
-            value={formData.profession}
-            onChange={handleChange}
-            required
-            className="border border-gray-300 rounded p-2 w-full"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="experience">Experience (in years)</label>
-          <input
-            type="number"
-            name="experience"
-            id="experience"
-            value={formData.experience}
-            onChange={handleChange}
-            required
-            className="border border-gray-300 rounded p-2 w-full"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="skills">Skills</label>
-          <textarea
-            name="skills"
-            id="skills"
-            value={formData.skills}
-            onChange={handleChange}
-            required
-            className="border border-gray-300 rounded p-2 w-full"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="services">Services Offered</label>
-          <textarea
-            name="services"
-            id="services"
-            value={formData.services}
-            onChange={handleChange}
-            required
-            className="border border-gray-300 rounded p-2 w-full"
-          />
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" htmlFor="image">Upload Profile Image</label>
-          <input
-            type="file"
-            name="image"
-            id="image"
-            onChange={handleFileChange}
-            accept="image/*"
-            className="border border-gray-300 rounded p-2 w-full"
-          />
-        </div>
-
-        <button
-          type="submit"
-          className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
-        >
-          Submit
-        </button>
-      </form>
+    <div className="max-w-[71rem] mx-auto bg-white shadow-lg rounded-lg p-6 mb-8 mt-[8em]">
+      <h2 className="text-2xl font-bold text-center mb-6">Professional Information</h2>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col gap-6 max-w-[100%]">
+          <div className='flex gap-4'>
+            <div className='w-[50%]'>
+              <FormField
+                control={form.control}
+                name="Category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Select category</FormLabel>
+                    <Select<SelectOption>
+                      options={categoryOptions}
+                      className="basic-single"
+                      classNamePrefix="select"
+                      placeholder="Select category"
+                      isClearable
+                      onChange={onCategoryChange}
+                      value={categoryOptions.find(option => option.value === field.value) || null}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <Controller
+                name="Country"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Select country</FormLabel>
+                    <Select<SelectOption>
+                      options={countryOptions}
+                      className="basic-single"
+                      classNamePrefix="select"
+                      placeholder="Select country"
+                      onChange={onCountryChange}
+                      value={field.value}
+                      isClearable
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <Controller
+                name="State"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>State / Province</FormLabel>
+                    <Select<SelectOption>
+                      options={stateOptions}
+                      className="basic-single"
+                      classNamePrefix="select"
+                      placeholder="Select state"
+                      onChange={onStateChange}
+                      value={field.value}
+                      isClearable
+                      isDisabled={!form.getValues('Country')}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <Controller
+                name="City"
+                control={form.control}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>City</FormLabel>
+                    <Select<SelectOption>
+                      options={cityOptions}
+                      className="basic-single"
+                      classNamePrefix="select"
+                      placeholder="Select city"
+                      onChange={onCityChange}
+                      value={field.value}
+                      isClearable
+                      isDisabled={!form.getValues('State')}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className='w-[50%]'>
+              <FormField
+                control={form.control}
+                name="StreetAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Street address</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your street address"
+                        {...field}
+                        className="p-2 rounded w-full border border-gray-300"
+                        onChange={(e) => {
+                          field.onChange(e)
+                          updateAddress()
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="Apt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Apt / Suite</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Enter your Apt / Suite"
+                        {...field}
+                        className="p-2 rounded w-full border border-gray-300"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="PostalCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Postal Code</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Postal Code"
+                        {...field}
+                        className="p-2 rounded w-full border border-gray-300"
+                        onChange={(e) => {
+                          field.onChange(e)
+                          updateAddress()
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="Identity"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-lg">Identity</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const file = e.target.files?.[0]
+                          if (file) {
+                            field.onChange(file)
+                          }
+                        }}
+                        className="w-full mt-2 p-2 border border-gray-300 rounded"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </div>
+          <div className="w-full">
+            <Button onClick={(e) => {
+              e.preventDefault();
+              setIsOpen(true);
+            }}>
+              Set Location
+            </Button>
+            {isOpen && ( 
+              <GoogleMapComponent 
+                apiKey={process.env.NEXT_PUBLIC_GOOGLE_API || ''} 
+                onLocationConfirm={() => {}}
+                handleCoords={coords}
+                addressHandle={setGetAddress} 
+                Handlecoords={setGetCoords} 
+                closeModal={() => setIsOpen(false)}
+              />
+            )}
+          </div>
+          <Button type="submit" className="w-full mt-4 cursor-pointer">
+            {isLoading ? <PulseLoader size={6} color="#ffffff" /> : "Submit"}
+          </Button>
+        </form>
+        <Toaster richColors position="top-center" />
+      </Form>
+     
     </div>
-  );
-};
+  )
+}
 
-export default ProfessionalInfoForm;
+

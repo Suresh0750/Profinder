@@ -68,7 +68,6 @@ export default function WorkerRequestPage() {
   useEffect(() => {
     // Only access localStorage in the browser
     if (typeof window !== "undefined") {
-      alert('hellow')
       const storedData :{_id:string,Category:string,FirstName:string} | null = JSON.parse(localStorage.getItem("workerDetails") || "{}");
       const storeCustomerData = localStorage.getItem('customerData')
       if (storedData) {

@@ -142,12 +142,21 @@ export const workerApi = createApi({
                 method : 'PUT',
                 headers : getHeaders('worker')
             })
+        }),
+        addtionalProffessionalInfo : builder.mutation({
+            query : (data:{_id:string,experience:string,rate:number,availability:string})=>({
+                url : `/worker/addtionalProfessionalDetails`,
+                method:'PUT',
+                body : data,
+                headers : getHeaders('worker')
+            })
         })
     })
 })
 
 
 export const {
+    useAddtionalProffessionalInfoMutation,
     useWorkerSignUpMutation,
     useProfessionalInfoMutation,
     useCheckWorkerEmailForgetPassMutation,

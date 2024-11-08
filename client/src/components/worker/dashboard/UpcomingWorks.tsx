@@ -71,8 +71,6 @@ export default function UpcomingWorksPage() {
 
     if(isLoadingUpdate) return // * handle multiple click
     
-    // alert(JSON.stringify(newStatus))
-    // if(!(selectedWork?.paymentId) && newStatus=="Completed") return toast.warning(`Payment isn't complete`)
     
     if((selectedWork?.paymentId) && newStatus=="Cancelled") return toast.warning(`Payment has been completed`)
 
@@ -87,7 +85,7 @@ export default function UpcomingWorksPage() {
       confirmButtonText: `Yes, ${newStatus} it!`,
     }).then(async (res:any) => {     
       // alert(JSON.stringify(res))
-      const result:any = updateWorkStatus({status:newStatus,_id}).unwrap()
+      const result:any = await updateWorkStatus({status:newStatus,_id}).unwrap()
       console.log(result)
       if(result?.success){
         MySwal.fire(
