@@ -120,14 +120,17 @@ export const userSignupController = async (req:Request,res:Response,next:NextFun
 
 export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
     try{
-        const loginUsecase = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
+        const loginUsecase :any = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
 
         console.log(loginUsecase)        
         if(!loginUsecase){
             res.status(StatusCode.Unauthorized)
             throw new Error('check email and password')
-        } 
-        else if(loginUsecase && loginUsecase?._id){
+        }else if(loginUsecase && loginUsecase?.isBlock){
+            console.log('user is block')
+            res.status(StatusCode.Unauthorized)
+            throw new Error('User is blocked')
+        }else if(loginUsecase && loginUsecase?._id){
     
             const  {refreshToken,accessToken} = JwtService((loginUsecase._id).toString(),loginUsecase.username,loginUsecase.EmailAddress,(req.body.role || "user"))   // * mongose Id converted as a string
         

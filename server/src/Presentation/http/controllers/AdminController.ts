@@ -181,7 +181,7 @@ export const isWorkerApproval = async (req:Request,res:Response,next:NextFunctio
 export const getALLWorkerListController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const result = await getALLWorkerUseCases()
-        console.log(JSON.stringify(result))
+        // console.log(JSON.stringify(result))
         return res.status(StatusCode.Success).json({success:true,message:"successfully fetched the worker list",result})
     } catch (error) {
         console.log(`Error from getALLWorkerListController\n${error}`)  

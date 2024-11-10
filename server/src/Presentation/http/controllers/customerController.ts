@@ -282,8 +282,13 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
      
         if(req?.body?.role == "user"){
         
-            const userData = await GoogleLoginUseCases(req.body)
+            const userData :any = await GoogleLoginUseCases(req.body)
+
             if(userData?._id){
+                if(userData?.isBlock){
+                    res.status(StatusCode.Unauthorized)
+                    throw new Error('User is blocked')
+                }
                 const  {refreshToken,accessToken} = JwtService((userData?._id).toString(),userData.username,userData.EmailAddress,(req.body.role || "worker"))  
                 // * JWT referesh token setUp
                 res.cookie(Cookie.User,refreshToken,{
@@ -302,8 +307,6 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                     customerEmail : userData.EmailAddress,
                     role : 'user'
                 }
-
-                console.log("Google login controller",userData)
             return res.status(StatusCode.Success).json({success:true,message:"successfully login",customerData})
             }
         }else if(req.body.role ='worker'){

@@ -55,7 +55,7 @@ export const AdminMongoose = () : IAdminRepository =>({
     },
     deleteProductQuery : async(_id:string)=>{
         try{
-            await CategoryModel.findByIdAndDelete({_id})
+            await CategoryModel.findByIdAndDelete({_id:new ObjectId(_id)})
         }catch(error){
             // console.log(`Error from infrastructure->database->mongoose->deleteProductQuery->\n`,error)
             throw error
