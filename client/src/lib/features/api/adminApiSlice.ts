@@ -24,7 +24,9 @@ export const adminApi = createApi({
                 url: `/admin/addCategory`,
                 method: "POST",
                 body: data,
-                headers: getHeaders('admin'), 
+                headers: {
+                    Role : 'admin',
+                }, 
             }),
         }),
         AdminVeriyAPI: builder.mutation({
@@ -62,7 +64,6 @@ export const adminApi = createApi({
             query: (data: string) => ({
                 url: `/admin/deleteProduct/${data}`,
                 method: 'DELETE',
-                body: data,
                 headers: getHeaders('admin'), 
             }),
         }),

@@ -139,7 +139,7 @@ const AddCategoryForm = () => {
               </FormItem>
             )}
           />
-          <Toaster richColors position="top-right" />
+          {/* <Toaster richColors position="top-right" /> */}
           <Button
             type="submit"
             variant="contained"

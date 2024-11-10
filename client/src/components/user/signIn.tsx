@@ -58,12 +58,9 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      console.log(values)
       const res = await Login(values).unwrap()
       if (res.success) {
-        // console.log(res)
-        // dispatch(updateCustomerLogin(true))   // * customer after login
-        // dispatch(updateRole('user'))   
+     
         localStorage.setItem("customerData",JSON.stringify(res.customerData))
 
         toast.success(res.message)

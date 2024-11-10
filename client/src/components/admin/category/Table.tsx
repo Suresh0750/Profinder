@@ -295,7 +295,7 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
         </DialogContent>
       </Dialog>
 
-      <Toaster />
+      {/* <Toaster />x */}
     </div>
   )
 }
