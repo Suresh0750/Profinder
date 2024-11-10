@@ -46,13 +46,15 @@ const UserTable = () => {
   const [allWorkerList, setAllWorkerList] = useState<any[]>([]);
   const [workerList, setWorkerList] = useState<WorkerDatails[]>([]);
 
-  const { data, refetch } = useGetAllUnApprovalWorkerlistQuery("");
+
+  const { data, refetch } = useGetAllUnApprovalWorkerlistQuery({});
+
  
   const Router = useRouter();
 
   
   const searchHandle = (value:string)=>{
-    console.log(value)
+  
     if(value){
 
       let filterData =allWorkerList
@@ -115,7 +117,7 @@ const UserTable = () => {
         )
       );
     }
-  }, [data]);
+  });
 
   return (
     <>
@@ -147,7 +149,7 @@ const UserTable = () => {
           <TableBody>
             {showWorkerList.length > 0 &&
               showWorkerList
-                .slice((page - 1) * 5, page * 5) // Corrected slicing logic
+                .slice((page - 1) * 5, page * 5) 
                 .map((worker: any, index: number) => (
                   <TableRow key={index}>
                     <TableCell component="th" scope="row">
@@ -182,21 +184,14 @@ const UserTable = () => {
       </TableContainer>
       <div className="flex justify-center mt-4">
         <Pagination
-          count={Math.ceil(showWorkerList.length / 5)} // Total number of pages
-          page={page} // Current page number
-          onChange={handleChangePage} // Handle page change
+          count={Math.ceil(showWorkerList.length / 5)}
+          page={page}
+          onChange={handleChangePage}
           variant="outlined"
           color="primary"
         />
       </div>
       <Toaster richColors position="top-center" />
-      {/* <IdentityModal
-        isOpen={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        image={imageUrl}
-        workerId={workerId}
-        refetch={refetch}
-      /> */}
     </>
   );
 };

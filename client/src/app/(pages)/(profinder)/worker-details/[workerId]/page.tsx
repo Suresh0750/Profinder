@@ -158,29 +158,46 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <CalendarIcon className="w-5 h-5 text-primary" />
-                    <div>
-                      <p className="font-semibold">Experience:</p>
-                      <p>5 years</p>
-                    </div>
+                    {
+                      workerDetails?.experience && (
+                        <>
+                        <CalendarIcon className="w-5 h-5 text-primary" />
+                          <div> 
+                            <p className="font-semibold">Experience:</p>
+                            <p>{workerDetails.experience} years</p>
+                          </div>
+                        </>
+                      )
+                    }
+                    
                   </div>
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
-                    <DollarSignIcon className="w-5 h-5 text-primary" />
-                    <div>
-                      <p className="font-semibold">Rate:</p>
-                      <p>${data?.requestData?.payment || 'N/A'} per hour</p>
-                    </div>
+                    {
+                      workerDetails?.rate && (
+                        <>
+                        <DollarSignIcon className="w-5 h-5 text-primary" />
+                        <div>
+                          <p className="font-semibold">Rate:</p>
+                          <p>${workerDetails?.rate || 'N/A'} per day</p>
+                        </div>
+                        </>
+                      )
+                    }
                   </div>
                   <div className="flex items-center gap-2">
-                    <CalendarIcon className="w-5 h-5 text-primary" />
-                    <div>
-                      <p className="font-semibold">Availability:</p>
-                      <p>Monday - Friday: 9 AM - 5 PM</p>
-                      <p>Saturday: 10 AM - 2 PM</p>
-                      <p>Sunday: Closed</p>
-                    </div>
+                    {
+                      workerDetails?.availability && (
+                        <>
+                          <CalendarIcon className="w-5 h-5 text-primary" />
+                          <div>
+                            <p className="font-semibold">Availability:</p>
+                            <p>{ workerDetails?.availability}</p>
+                          </div>
+                        </>
+                      )
+                    }
                   </div>
                 </div>
               </div>

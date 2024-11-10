@@ -2,6 +2,7 @@
 
 import { useState ,useEffect} from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import { getWorkerData } from '@/lib/features/slices/workerSlice'
 import { useForm, Controller } from 'react-hook-form';
 import { Modal, Box, Button, Typography, TextField, MenuItem } from '@mui/material';
 import Image from "next/image";
@@ -114,9 +115,11 @@ const DashboardProfessionalInfo = () => {
                if(res.success){
                    alert(res.message)
                    toast.success(res.message)
-                   setTimeout(()=>{
-                    router.push('/worker/dashboard/workerdashboard')
-                   },500)
+                   dispatch(getWorkerData({...workerData,experience:data?.experience,availability:data?.availability,rate : Number(data?.rate)}))
+                //    setTimeout(()=>{
+                //     router.push('/worker/dashboard/workerdashboard')
+                //    },500)
+
                }
            }catch(error : any){
                 error?.data?.errorMessage ? toast.warning(error?.data?.errorMessage) : toast.warning('somthing wrong try again')

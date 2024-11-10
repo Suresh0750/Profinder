@@ -17,7 +17,7 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [customerData, setCustomerData] = useState<any>({});
-  const [CustomerLogout] = useCustomerLogoutMutation()
+  const [CustomerLogout,{isLoading}] = useCustomerLogoutMutation()
 
   const router = useRouter()
 
@@ -44,6 +44,8 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     try {
+
+      if(isLoading) return // * handle multiple click
       const result = await CustomerLogout({}).unwrap()
       console.log(result)
       if (result?.success) {
