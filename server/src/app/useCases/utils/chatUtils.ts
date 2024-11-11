@@ -7,7 +7,7 @@ import {messageType} from '../../../domain/entities/commonTypes'
 export const sendMessage =async (message:messageType)=>{
     try {
 
-        console.log('call socket')
+        // console.log('call socket')
         // console.log(message)
         // console.log(JSON.stringify(message))
 

@@ -16,15 +16,14 @@ export const verify = (req:Request,res:Response,next:NextFunction)=>{
 
         const adminAccessToken = req.cookies.accessToken
         // const adminAccessToken = null // * checking purpose
-        console.log(`Request reached middleware`,adminAccessToken)
-        
+ 
         if(!adminAccessToken){
            if(renewToken(req,res,next)){
             next()
            }
         }else{
            const AdminData =  jwt.verify(adminAccessToken,String(process.env.ACCESS_TOKEN_SECRET))
-           console.log(AdminData)
+        
            if(AdminData){
             req.session.AdminData = AdminData as AdminDetails
             next()
@@ -43,7 +42,7 @@ export const verify = (req:Request,res:Response,next:NextFunction)=>{
 
 export const renewToken = (req:Request,res:Response,next:NextFunction)=>{
     try{
-        console.log(`req Enter renewtoken`)
+        // console.log(`req Enter renewtoken`)
         const refreshToken = req.cookies.adminToken
         // const refreshToken = null // * checking purpose
         let exist = false

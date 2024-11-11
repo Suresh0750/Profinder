@@ -4,6 +4,7 @@ import {verify} from '../middlewares/JWTVerify/adminVerify'
 import {authorizeRoles} from '../middlewares/authorizeRoles'
 import upload from '../../../infrastructure/service/multer'
 import {
+    isBlock, // * worker block admin side
     workerDetails,
     downloadSales,
     salesReport,
@@ -57,6 +58,7 @@ adminRoutes.get('/worker-details/:workerId',verify,authorizeRoles('admin'),worke
 
 // * admin/ worker side
 adminRoutes.get("/getWorkerList",verify,authorizeRoles('admin'),getALLWorkerListController)
+adminRoutes.patch("/worker/isBlock/:id",verify,authorizeRoles('admin'),isBlock)
 
 
 // * admin catagory router

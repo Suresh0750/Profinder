@@ -15,20 +15,18 @@ declare module 'express-session' {
 //*  Token renewal function
 export const renewToken = async (req: Request, res: Response): Promise<boolean> => {
     try {
-        
-      
-            console.log(req?.cookies?.userToken)
+
             const refreshToken = req.cookies.userToken;
             
             if (!refreshToken) {
-                console.log(`step invalid`)
+                // console.log(`step invalid`)
                 return false; // No refresh token present
             }
     
             let userRefreshTokenData;
             
             try {
-                console.log('step6')
+                // console.log('step6')
                 userRefreshTokenData = jwt.verify(refreshToken, String(process.env.REFRESH_TOKEN_SECRET));
             } catch (error) {
                 console.error('Invalid refresh token:', error);
@@ -36,7 +34,7 @@ export const renewToken = async (req: Request, res: Response): Promise<boolean> 
             }
     
             const { customerId, customerName, customerEmail, role } = userRefreshTokenData as customerDetails;
-            console.log('step7')
+            // console.log('step7')
             // Generate new access token
             const accessToken = jwt.sign(
                 { customerId, customerName, customerEmail, role },

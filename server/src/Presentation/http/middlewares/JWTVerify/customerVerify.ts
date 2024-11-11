@@ -16,18 +16,16 @@ declare module 'express-session' {
 export const customeVerify = (req: Request, res: Response, next: NextFunction) => {
     try {
         const verifyRole = req.headers['role'];
-        console.log(`verifyRole`,verifyRole)
+        // console.log(`verifyRole`,verifyRole)
         if (verifyRole == 'user') {
            return  UserJWT(req, res, next);
         } else if (verifyRole === 'worker') {
-            console.log(verifyRole)
+            // console.log(verifyRole)
           return  WorkerJWT(req, res, next);
         } else {
             return res.status(StatusCode.Unauthorized).json({ message: 'In JWT Invalid role specified' });
         }
-        console.log(`step 8`)
-        return next()
-        console.log(`step 9`)
+    
     } catch (err) {
         console.error(err);
         next(err);
@@ -37,25 +35,25 @@ export const customeVerify = (req: Request, res: Response, next: NextFunction) =
 //* User token verification
 export const UserJWT = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log('step1')
+        // console.log('step1')
         const userAccessToken = req.cookies.accessToken;
         
         if (!userAccessToken) {
-            console.log('step2')
+            // console.log('step2')
             // * Attempt to renew token if access token is not present
             if (await renewToken(req, res)) {
-                console.log('verified')
+                // console.log('verified')
                 return next();
-                 console.log('v 1')
+                //  console.log('v 1')
             }else{
                 return res.status(StatusCode.Unauthorized).json({ message: 'Access token is missing and renewal failed' });
             }
         }
 
         const UserData = jwt.verify(userAccessToken, String(process.env.ACCESS_TOKEN_SECRET)) as customerDetails;
-        console.log(UserData)
+        // console.log(UserData)
         req.session.UserData = UserData;
-        console.log('v 8')
+        // console.log('v 8')
         return next();
         
     } catch (error) {
@@ -68,7 +66,7 @@ export const UserJWT = async (req: Request, res: Response, next: NextFunction) =
 export const WorkerJWT = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const workerAccessToken = req.cookies.accessToken;
-        console.log(`accesstoker\n ${workerAccessToken}`)
+        // console.log(`accesstoker\n ${workerAccessToken}`)
         if (!workerAccessToken) {
             // * Attempt to renew token if access token is not present
             if (await renewToken(req, res)) {
@@ -93,32 +91,28 @@ export const WorkerJWT = async (req: Request, res: Response, next: NextFunction)
 //*  Token renewal function
 export const renewToken = async (req: Request, res: Response): Promise<boolean> => {
     try {
-        console.log('step3')
-        console.log(`Request entered renewToken`);
-
+    
         if(req.headers['role']=='user'){
-            console.log('step5')
-            console.log(`refreshToken`)
-            console.log(req?.cookies?.userToken)
+        
             const refreshToken = req.cookies.userToken;
             
             if (!refreshToken) {
-                console.log(`step invalid`)
+                // console.log(`step invalid`)
                 return false; // No refresh token present
             }
     
             let userRefreshTokenData;
             
             try {
-                console.log('step6')
+                // console.log('step6')
                 userRefreshTokenData = jwt.verify(refreshToken, String(process.env.REFRESH_TOKEN_SECRET));
             } catch (error) {
-                console.error('Invalid refresh token:', error);
+                // console.error('Invalid refresh token:', error);
                 return false; // Invalid refresh token
             }
     
             const { customerId, customerName, customerEmail, role } = userRefreshTokenData as customerDetails;
-            console.log('step7')
+            // console.log('step7')
             // Generate new access token
             const accessToken = jwt.sign(
                 { customerId, customerName, customerEmail, role },

@@ -4,7 +4,7 @@ export async function getWorkerData(getComplete: any[], getTopWorker: any[]) {
     getTopWorker?.forEach((val) => {
         getComplete?.forEach((completed) => {
             if (String(val?._id) == String(completed?._id)) {
-                console.log(val)
+                // console.log(val)
                 mergeData.push({ ...val, ...completed });
             }
         });

@@ -4,7 +4,7 @@ import {AdminVerifyUseCases} from '../../../app/useCases/admin/AdminVerify'
 import Jwt from 'jsonwebtoken'
 // * useCases
 import {uploadImage} from '../../../app/useCases/utils/uploadImage'
-import {getALLWorkerUseCases,getDetails}  from '../../../app/useCases/admin/AdminwokerSide'
+import {getALLWorkerUseCases,getDetails, isBlockUsecases}  from '../../../app/useCases/admin/AdminwokerSide'
 import {getAllUserUseCase,isBlockUserUseCases} from '../../../app/useCases/admin/AdminUserSide'
 import {AdminWorkerApprovalUseCases,isWorkerApprovalUseCases} from "../../../app/useCases/admin/AdminWorkerApprovalSide"
 import {
@@ -46,10 +46,9 @@ export const downloadSales = async(req:Request,res:Response,next:NextFunction)=>
 
 export const salesReport = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(req.query)
+      
         const result = await salesUsecases(req.query)
-        console.log('sales report')
-        console.log(JSON.stringify(result))
+   
         return await res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
     } catch (error) {
         console.log(`Error from salesReport\n${error}`)  
@@ -106,7 +105,7 @@ export const dashboardOverview = async(req:Request,res:Response,next:NextFunctio
 }
 export const dashboard = async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        console.log('req entered dashboard')
+
         const result = await dashboardUsecases()
         return res.status(StatusCode.Success).json({success:true,message:'data has been fetched successfully',result})
     }catch(error){
@@ -119,9 +118,7 @@ export const dashboard = async(req:Request,res:Response,next:NextFunction)=>{
 // * admin User side
 export const isBlockUserController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`Request reached`)
-        console.log(req.body)
-       
+
         await isBlockUserUseCases(req.body._id,req.body.isBlock)
         return res.status(StatusCode.Success).json({success:true,message:"Data has been update"})
     } catch (error) {
@@ -144,7 +141,7 @@ export const getAllUserList = async(req:Request,res:Response,next:NextFunction)=
 
 export const getAllUnApprovalWorkerlist = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`request reached getAllUnApprovalWorkerlist`)
+
         const result = await AdminWorkerApprovalUseCases()
         return res.status(StatusCode.Success).json({success:true,message:'Data successfully fetched',result})
     } catch (error) {
@@ -165,8 +162,7 @@ export const workerDetails = async (req:Request,res:Response,next:NextFunction)=
 
 export const isWorkerApproval = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`Request reaced isWorkerApproval`)
-        console.log(req.params?.id)
+        
         const result = await isWorkerApprovalUseCases(req.params?.id)
         
         return res.status(StatusCode.Success).json({success:true,message:'worker successfully verified'})
@@ -181,10 +177,19 @@ export const isWorkerApproval = async (req:Request,res:Response,next:NextFunctio
 export const getALLWorkerListController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const result = await getALLWorkerUseCases()
-        // console.log(JSON.stringify(result))
         return res.status(StatusCode.Success).json({success:true,message:"successfully fetched the worker list",result})
     } catch (error) {
         console.log(`Error from getALLWorkerListController\n${error}`)  
+        next(error)
+    }
+}
+
+export const isBlock = async(req:Request,res:Response,next:NextFunction)=>{
+    try {
+        const result = await isBlockUsecases(req.params.id)
+        return res.status(StatusCode.Success).json({success:true,message:'successfully updated'})
+    } catch (error) {
+        console.log(`Error from Admin->worker->isBlock\n${error}`)  
         next(error)
     }
 }
@@ -197,7 +202,6 @@ export const addCategoryController = async(req:Request,res:Response,next:NextFun
 
         const ExistCategory = await CheckExistCategory(req?.body?.CategoryName)
 
-        console.log(ExistCategory)
         if(ExistCategory){ return res.status(StatusCode.Conflict).json({success:false,message:'Producet already exist'})}
 
         const file: IMulterFile |any = req.file
@@ -228,7 +232,6 @@ export const editCategory = async (req:Request,res:Response,next:NextFunction)=>
         if(req.body.newImage){
             const file: IMulterFile |any = req.file
             const imageUrl = await uploadImage(file)  
-            console.log(imageUrl)
             req.body.categoryImage = imageUrl
         }
     
@@ -254,8 +257,7 @@ export const verifyListController = async(req:Request,res:Response,next:NextFunc
 
 export const deleteProductController = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`Req reached deleteProductController`)
-       
+
         await deleteProductUsecases(req?.params?.id)
         return res.status(StatusCode.Success).json({success:true,message:'Product has been deleted'})
     } catch (error) {
@@ -269,8 +271,7 @@ export const deleteProductController = async (req:Request,res:Response,next:Next
 
 export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
     try{
-        console.log('req entered AdminVerify controller')
-        console.log(AdminVerifyUseCases(req.body))
+       
         if(AdminVerifyUseCases(req.body)){
             const refreshToken =  Jwt.sign({adminEmail: req.body.adminEmail},String(process.env.REFRESH_TOKEN_SECRET),{expiresIn:'7d'})
             const accessToken = Jwt.sign({adminEmail:req.body.adminEmail},String(process.env.ACCESS_TOKEN_SECRET), { expiresIn:'15m' }); 
@@ -285,7 +286,7 @@ export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
             })    
             res.status(StatusCode.Success).json({success:true,message:'login verify successful'})
         }    
-        console.log('admin verify')
+      
         res.status(StatusCode.Unauthorized).json({success:false,message:'Invalid credentials'})
 
     }catch(error){
@@ -296,8 +297,7 @@ export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
 
 export const adminLogoutController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`req reached adminLogout`)
-        console.log(req.cookies)
+     
         res.clearCookie('accessToken'); // * Clear the accessToken
          
         res.clearCookie('adminToken', {  // * Clear the refresh token cookie

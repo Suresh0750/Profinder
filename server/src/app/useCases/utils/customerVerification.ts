@@ -64,7 +64,7 @@ export const workerVerification = (wokerId:string)=>{
 
 export const customerResentOTP = async(customerData:ResendOTP)=>{
     try {
-        console.log(`Req reached usCases utils cutomerResentOTP`)
+        // console.log(`Req reached usCases utils cutomerResentOTP`)
 
         const {getUserDataResendOTP,getWorkerDataResendOTP} = OTPRepository()
         if(customerData.role=='user'){
@@ -118,7 +118,7 @@ export const ForgetPassWordUseCase = async (forgetPasswordData:forgetPasswordDat
 export const GoogleLoginWorkerRegister = async(customerData:WorkerInformation)=>{
     try {
         
-        console.log(`Req reached GoogleLoginWorker`)
+        // console.log(`Req reached GoogleLoginWorker`)
        
         delete customerData.role
      
@@ -135,7 +135,7 @@ export const GoogleLoginUseCases = async (customerData:GoogleLogintypes )=>{
         
         if(customerData.role=='user'){
             const {UserGoogleLogin} = CustomerQueryRepository()     // * user
-            console.log(customerData)
+            // console.log(customerData)
             const UserData : User = {
                 username : customerData.username,
                 PhoneNumber : 0,

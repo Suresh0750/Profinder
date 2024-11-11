@@ -20,15 +20,15 @@ export const payment = (paymentData:any)=>{
           throw error;
         }
         
-        console.log({ PAYU_MERCHANT_KEY, PAYU_SALT, txnid });
+        // console.log({ PAYU_MERCHANT_KEY, PAYU_SALT, txnid });
   
         const hashString = `${PAYU_MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${customerEmail}|||||||||||${PAYU_SALT}`;
   
         const sha = new jsSHA("SHA-512", "TEXT");
         sha.update(hashString);
         const hash = sha.getHash("HEX");
-        console.log('hash')
-        console.log(hash)
+        // console.log('hash')
+        // console.log(hash)
         return { hash: hash }
       } catch (error) {
         console.log("error payment:", error);
@@ -38,11 +38,11 @@ export const payment = (paymentData:any)=>{
 
     export const IsActivityUsecases = async(data:any)=>{
         try {
-            console.log('usecases')
+            // console.log('usecases')
            
             const res = await getWorkerRepository().IsActivityQuery(data.productinfo,data.mihpayid)
             await getWorkerRepository().paymentData(data?.productinfo,Math.floor(Number(data?.amount)),Number(data?.mihpayid))
-            console.log('after update')
+            // console.log('after update')
            
              return
         } catch (error) {

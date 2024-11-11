@@ -6,7 +6,7 @@ function generateOtp() {
 
 export const OtpService = async (customerId: any, EmailAddress: string) => {
   try {
-    console.log(`Otp service`);
+    // console.log(`Otp service`);
     const customerOTP = generateOtp(); // * call to generate the OTP
     await sendEmail(EmailAddress, customerOTP); // * call nodemailer for sent otp to user
     return { customerOTP, customerId };

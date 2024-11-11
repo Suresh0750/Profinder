@@ -16,6 +16,16 @@ export const getDetails = async(workerId:string)=>{
     try{
         return await AdminMongoose().getWorkerDetails(workerId)
     }catch(error){
-        
+        console.log(`Error from useCases->admin->getDetails\n`,error)
+        throw error
+    }
+}
+// * worker Block
+export const isBlockUsecases = async(workerId:string)=>{
+    try {
+        return await AdminMongoose().isBlockWorker(workerId)
+    } catch (error) {
+        console.log(`Error from useCases->admin->isBlockUsecases\n`,error)
+        throw error
     }
 }

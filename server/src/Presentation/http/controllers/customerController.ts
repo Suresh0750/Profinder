@@ -42,10 +42,8 @@ export const ReviewController = async (req:Request,res:Response,next:NextFunctio
 export const paymetnAPIController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
 
-        console.log(`Request reached paymetnAPIController`)
-        console.log(req.body)
         const {hash}  = await payment(req.body)
-        console.log(hash)
+    
         return res.status(StatusCode.Success).json({success:true,hash})
 
     } catch (error) {
@@ -56,8 +54,7 @@ export const paymetnAPIController = async(req:Request,res:Response,next:NextFunc
 
 export const paymentIdController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`request reached paymentIdcontroller`)
-        console.log(req.body)
+     
         const result = await IsActivityUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true})
     } catch (error) {
@@ -81,8 +78,7 @@ export const paymentDetails = async(req:Request,res:Response,next:NextFunction)=
 
 export const userRequestWorkerController = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`Request reached useRequestWorkerController`)
-        console.log(req.body)
+       
         const result = await userRequestUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true,message:'Request has been sent'})
         
@@ -96,7 +92,7 @@ export const userRequestWorkerController = async (req:Request,res:Response,next:
 
 export const getNearByWorkerDetailsController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(req.params.categoryName)
+       
         const result = await getNearByWorkerListUtils(req.params.categoryName)
         // console.log(JSON.stringify(result))
      
@@ -112,9 +108,7 @@ export const getNearByWorkerDetailsController = async(req:Request,res:Response,n
 
 export const getVerifiedWorkerController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`req reached getVerifiedworkerController`)
-        console.log(req.params.lat)
-        console.log(req.params.lon)
+  
          const result = await getVerifiedWorkerUtils(req.params.lat,req.params.lon)
          if(result) return res.status(StatusCode.Success).json({success:true,message:'Verified worker has been fetched',result})
         
@@ -130,7 +124,7 @@ export const getVerifiedWorkerController = async(req:Request,res:Response,next:N
 
 export const getCategoryName = async(req:Request,res:Response,next:Function)=>{
     try {
-        console.log('req reached getCategoryName')
+
         const result = await getCategoryNameUtils()
         return res.status(StatusCode.Success).json({success:true,message:`Fetch category's name has been success`,result})
     } catch (error) {
@@ -143,7 +137,6 @@ export const getCategoryName = async(req:Request,res:Response,next:Function)=>{
 // * customer comman authendication Part
 export const CustomerOtpController = async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        console.log(`req reach customerotp controller`)
 
         const {otpValue,userId}:getVerifyOTP = req.body
         const isVerifyOTP = await OtpVerifyUseCases(otpValue,userId)
@@ -228,7 +221,6 @@ export const ResentOTP = async(req:Request,res:Response,next:NextFunction)=>{
 
 export const ForgetPassWordController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`Req reached ForgetPassWordController`)
        const setNewPass =  await ForgetPassWordUseCase(req.body)
 
        if(setNewPass){
@@ -245,13 +237,13 @@ export const ForgetPassWordController = async(req:Request,res:Response,next:Next
 
 export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log('Request reached WorkerGoogleLoginWithRegistrastion')
-        console.log(req.params)
-        console.log(req.body)
+
         const result :(WorkerInformation | null | undefined)= await workerGoogleVerification(req.body.email)
-        console.log("result",result)
+      
         if(!result) return res.status(StatusCode.NotFound).json({success:false,message:`Worker has't register`,modal:true})
-        else{
+        else if(result?.isBlock){
+        return res.status(StatusCode.Forbidden).json({success:false,errorMessage: "This worker is blocked and cannot perform this action." }) 
+        }else{
         const  {refreshToken,accessToken} = JwtService(((result._id)?.toString() || ''),result.FirstName,result.EmailAddress,'worker')
         // * JWT referesh token setUp
         res.cookie(Cookie.Worker,refreshToken,{
@@ -310,11 +302,9 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
             return res.status(StatusCode.Success).json({success:true,message:"successfully login",customerData})
             }
         }else if(req.body.role ='worker'){
-            console.log(`Req entered worker controller`)
-          
+  
             const file: IMulterFile | any = req.file
-            console.log('file')
-            console.log(file)
+          
             const imageUrl = await uploadImage(file)
             req.body.Identity = imageUrl
             req.body.Password = await hashPassword(req.body.Password)
@@ -356,8 +346,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
 
 export const CustomerLogoutController =async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`Req reached CustomerLogoutController`)
-       
+
         res.clearCookie(Cookie.Worker, {
             httpOnly: true,
             secure: true,

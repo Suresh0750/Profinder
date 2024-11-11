@@ -5,7 +5,7 @@ import { OTPRepository } from "../../../infrastructure/database/mongoose/Mongoos
 
 export const ResendOTPStore = async (customerId: string, OtpPIN: number) => {
   try {
-    console.log("req entered OtpStoreData controler");
+    // console.log("req entered OtpStoreData controler");
     const expirationTime = new Date(Date.now() + 60 * 60 * 1000);
     const OtpRepo: OtpRepository = OTPRepository();
     await OtpRepo.deleteOTP(customerId)   // * for deleting the old OTP data
@@ -19,7 +19,7 @@ export const ResendOTPStore = async (customerId: string, OtpPIN: number) => {
 
 export const OtpStoreData = async (customerId: string, OtpPIN: number) => {
   try {
-    console.log("req entered OtpStoreData controler");
+    // console.log("req entered OtpStoreData controler");
     const expirationTime = new Date(Date.now() + 60 * 60 * 1000);
     const OtpRepo: OtpRepository = OTPRepository();
     await OtpRepo.createOTP(customerId, OtpPIN, expirationTime);
@@ -34,7 +34,7 @@ export const OtpStoreData = async (customerId: string, OtpPIN: number) => {
 export const OtpVerifyUseCases = async (Otp:number,customerId:string)=>{
   try {
     
-    console.log(Otp,customerId)
+    // console.log(Otp,customerId)
     const {CustomerVerifyOTP} = OTPRepository(); // * Here we called the method for calling the mogoose query
     return await CustomerVerifyOTP(Otp,customerId)
   } catch (error) {

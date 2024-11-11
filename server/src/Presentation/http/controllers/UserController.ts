@@ -22,7 +22,7 @@ import {
 
 export const paymentId = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(req.params.requestId)
+
         const result = await paymentIdUsecases(req.params.requestId)
         return res.status(StatusCode.Success).json({sucess:true,message:'successfully fetched data',result})
     } catch (error) {
@@ -34,8 +34,7 @@ export const paymentId = async(req:Request,res:Response,next:NextFunction)=>{
 
 export const getBooking = async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        console.log('get booking')
-        console.log(req.params.id)
+      
         const {bookingDetails,reviewDetails}  = await getBookingUsecases(req.params.id)
         console.log(JSON.stringify(bookingDetails))
         return res.status(StatusCode.Success).json({success:true,message:'data has been fetched',result:bookingDetails,reviewDetails})
@@ -67,7 +66,7 @@ export const getConversation = async (req:Request,res:Response,next:NextFunction
 }
 export const conversation = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(req.body)
+     
         const result = await conversationUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true,message:'successfully updated'})
     } catch (error) {
@@ -81,9 +80,7 @@ export const conversation = async(req:Request,res:Response,next:NextFunction)=>{
 // * profile
 export const editprofile = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log('editprofile')
-        console.log(req.body)
-        console.log(req.file)
+        
         const file: IMulterFile |any  = req.file
         if(JSON.parse(req.body.isImage)){
             const image = await uploadImage(file)
@@ -121,13 +118,12 @@ export const userSignupController = async (req:Request,res:Response,next:NextFun
 export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
     try{
         const loginUsecase :any = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
-
-        console.log(loginUsecase)        
+      
         if(!loginUsecase){
             res.status(StatusCode.Unauthorized)
             throw new Error('check email and password')
         }else if(loginUsecase && loginUsecase?.isBlock){
-            console.log('user is block')
+           
             res.status(StatusCode.Unauthorized)
             throw new Error('User is blocked')
         }else if(loginUsecase && loginUsecase?._id){
@@ -135,8 +131,7 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
             const  {refreshToken,accessToken} = JwtService((loginUsecase._id).toString(),loginUsecase.username,loginUsecase.EmailAddress,(req.body.role || "user"))   // * mongose Id converted as a string
         
             // * JWT referesh token setUp
-            console.log('user login')
-            console.log(refreshToken,accessToken)
+            
             res.cookie('userToken',refreshToken,{
                 httpOnly:true,
                 secure :true,
@@ -165,10 +160,9 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
 
 export const isCheckEmail = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        
-        console.log(req.body)
+     
         const userEmailValidation = await isCheckUserEmail(req.body.email)
-        console.log("isCheckEmail",JSON.stringify(userEmailValidation.toString()))
+        
         if(userEmailValidation){
             res.status(200).json({success:true,message:'verified success',userEmailValidation})
         }else {

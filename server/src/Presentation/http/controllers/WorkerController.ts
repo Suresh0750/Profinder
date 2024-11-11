@@ -89,7 +89,6 @@ export const fetchMessage = async(req:Request,res:Response,next:NextFunction)=>{
 
 export const messageController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`Request reached messageController`)
         const result = await messageUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true,message:'successfully sent message to user'})
     } catch (error) {
@@ -134,8 +133,6 @@ export const getAllRequestController = async (req: Request, res: Response, next:
 export const isAcceptWorkController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const {customerId} = req.session
-        console.log('isAcceptWorkerController')
-        console.log(customerId)
         const result = await isAcceptUseCasess(req.params.update,(customerId|| ''))
         return res.status(StatusCode.Success).json({success:true,message:'successfully updated'})
     } catch (error) {
@@ -221,8 +218,7 @@ export const PersonalInformationControll = async (req:Request,res:Response, next
 
 export const ProfessionalInfoControll = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log('ProfessionalInfo')
-        console.log(req.body)
+     
         const file: IMulterFile |any = req.file
         const imageUrl = await uploadImage(file)    // * call uploadImage usecases
         req.body.Identity = imageUrl
@@ -268,10 +264,10 @@ export const getWorkerDataController = async (req:Request,res:Response,next:Next
 export const LoginWorkerController = async (req:Request,res:Response,next:NextFunction)=>{
     try{
         const loginUsecase : WorkerInformation | boolean = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
-        console.log('worker')
+       
         if(!loginUsecase) throw new Error('check email and password')
         else if(loginUsecase.isBlock){
-           return res.status(StatusCode.Forbidden).json({success:false,message: "This worker is blocked and cannot perform this action." }) 
+           return res.status(StatusCode.Forbidden).json({success:false,errorMessage: "This worker is blocked and cannot perform this action." }) 
         }
         const  {refreshToken,accessToken} = JwtService((loginUsecase?._id||'').toString(),loginUsecase.FirstName,loginUsecase.EmailAddress,(req.body.role || "worker"))  
         
@@ -303,9 +299,9 @@ export const LoginWorkerController = async (req:Request,res:Response,next:NextFu
 
 export const addtionalProfessionalData = async(req:Request,res:Response,next:NextFunction)=>{
     try{
-       console.log('addtional info') 
+    
        const result = await professionalUsecase(req.body)
-       console.log(req.body)
+     
         res.status(200).json({success:true,message:'successfully updated'})
     }catch(error){
         console.log(`Error from Presntation->addtionalProfessionalData ${error}`)

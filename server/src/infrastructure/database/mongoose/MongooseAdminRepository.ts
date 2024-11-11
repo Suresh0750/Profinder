@@ -295,6 +295,16 @@ export const AdminMongoose = () : IAdminRepository =>({
             // console.log(`Error from infrastructure->database->mongoose->getRecentReview->\n`,error)
             throw error
         }
+    },
+    isBlockWorker : async(workerId:string)=>{
+        try {
+            await WorkerModel.updateOne(
+                { _id: new ObjectId(workerId) },
+                [{ $set: { isBlock: { $not: "$isBlock" } } }]
+              );            
+        } catch (error) {
+            throw error
+        }
     }
-    
+
 })

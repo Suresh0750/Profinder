@@ -15,9 +15,6 @@ export const {ObjectId} = Types
 // * worker dashboard
 export const markasCompleteUsecases = async(_id:string,status:string)=>{
     try {
-        console.log('worker usecause')
-        console.log(_id)
-        console.log(status)
        
             const res = await getWorkerRepository().workCompleteQuery(_id,status=="Completed",status)
             return await getWorkerRepository().markCompleteQuery(String(res?.requestId),status)
@@ -49,8 +46,7 @@ export const dashboardUsescases = async(workerId:string)=>{
         const resentActivity :any = await getWorkerRepository().countResentWorkQuery(workerId)
         const getRecentActivity = await getWorkerRepository().getRecentActivity(workerId)
         const totalOffer = await getWorkerRepository().totalOffer(workerId)
-        console.log('dashboard')
-        console.log(resentActivity)
+ 
         return {resentActivity,getRecentActivity,totalOffer}
     } catch (error) {
         console.log(`Error from useCases->worker->dashboardUsescases\n`,error)
@@ -87,8 +83,7 @@ export const messageUsecases = async(data:messageType)=>{
 }
 export const getChatsNameUsecases = async(_id:string)=>{
     try{
-        console.log('worker Id message')
-        console.log(_id)
+       
         const result = await getWorkerRepository().getChatsNameQuery(_id)
         console.log(JSON.stringify(result))
         return result
@@ -114,10 +109,7 @@ export const getRequestUsecases = async (workerId:string)=>{
 export const isAcceptUseCasess = async(data:any,workerId:string)=>{
     try {
         const {_id,isPayment,userId} = JSON.parse(data)
-        console.log('isAcceptUsecases')
-        console.log(data)
-        console.log('workerId')
-        console.log(workerId)
+    
         await getWorkerRepository().isAcceptWorkQuery(_id,Number(isPayment))
     
        return  await getWorkerRepository().isResendActivityQuery(_id,Number(isPayment),workerId,userId)
@@ -182,7 +174,7 @@ export const getWorkerProjectData = async(_id:string)=>{
 
 export const workerExist = async (workerData:PersonalInformation) =>{
     try {
-        console.log(workerData,"workerData")
+      
         const {findWorker} = getWorkerRepository()
         return await findWorker(workerData.EmailAddress) // * check the worker already exite or not  
 
@@ -194,11 +186,10 @@ export const workerExist = async (workerData:PersonalInformation) =>{
 
 export const WorkerUsecase= async(workerData:ProfessionalInfoData)=>{
     try {
-        console.log(`Request reached WorkrUsecase`)
+        
         let {FirstName,LastName,PhoneNumber,EmailAddress,PostalCode,Password,lat,lon,Profile,Identity,Category,Country,State,City,StreetAddress,Apt,coord,mapAddress} = workerData
 
-        console.log(lat)
-        console.log(lon)
+   
     
         let data = {
             FirstName,
@@ -220,7 +211,7 @@ export const WorkerUsecase= async(workerData:ProfessionalInfoData)=>{
         }
 
         mapAddress = JSON.parse(mapAddress)
-        console.log(mapAddress)
+        
         if(mapAddress?.Country) data.Country = mapAddress?.Country
         if(mapAddress?.postcode) data.PostalCode = mapAddress?.postcode
         if(mapAddress?.state) data.State = mapAddress?.state
@@ -240,7 +231,6 @@ export const WorkerUsecase= async(workerData:ProfessionalInfoData)=>{
 
 export const getWorkerData = async(token:string)=>{
     try {
-        console.log(`req reached WorkrUsecase getWorkerData`)
    
         const customer :any = verifyRefreshToken(token) 
         const {getWorkerData} = getWorkerRepository()
@@ -254,7 +244,7 @@ export const getWorkerData = async(token:string)=>{
 
 export const professionalUsecase = async(data:any)=>{
     try {
-        console.log(data)
+       
         return getWorkerRepository().availabilityInfo(data)
     } catch (error) {
         console.log(`Error from usecases -> professionalUsecase`,error)

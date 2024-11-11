@@ -32,4 +32,5 @@ export interface IAdminRepository{
     getAllCategory() : Promise<string[]>
     downloadSalesData(query:any) : Promise<any[]>
     getWorkerDetails(workerId:string) : Promise<any>
+    isBlockWorker(workerId:string) : Promise<void>
 }
