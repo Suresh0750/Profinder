@@ -26,7 +26,6 @@ export default function WorkerDashboardLayout({ children }: { children: React.Re
 
   useEffect(() => {
     if (data) {
-      console.log(data)
       setCustomerData(data?.workerData || {})
       dispatch(getWorkerData(data?.workerData))
     }

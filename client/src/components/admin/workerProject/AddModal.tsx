@@ -82,7 +82,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose,refetch }) =>
       if (response?.success) {
         toast.success(response.message);
         refetch();  // Refetch the updated projects after upload
-        console.log("Refetch called");
+        // console.log("Refetch called");
         onClose(); // Close modal on successful submission
       }
     } catch (error: any) {

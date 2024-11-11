@@ -59,7 +59,6 @@ const UserTable = () => {
 
       let filterData =allWorkerList
       filterData = filterData?.filter((prev:any)=>((prev?.FirstName).toLowerCase())?.includes((value)?.toLowerCase()))
-      console.log(filterData)
       setShowWorkerList(
         filterData?.map((worker: any, i: number) =>
           createData(

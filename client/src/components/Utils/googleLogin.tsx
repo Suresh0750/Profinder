@@ -22,10 +22,10 @@ const GoogleSignIn = ({ role }: { role: string }) => {
       EmailAddress: email,
       role
     };
-    console.log(email, given_name);
+  
     try{
       const result = await CustomerGoogleLogin(data).unwrap()
-      console.log(result);
+
       if (result?.success) {
         toast.success(result?.message);
         localStorage.setItem('customerData', JSON.stringify(result?.customerData));
@@ -34,7 +34,7 @@ const GoogleSignIn = ({ role }: { role: string }) => {
         }, 2000);
       }else{
         toast.warning(result?.data?.errorMessage)
-        console.log(result?.data?.errorMessage)
+        // console.log(result?.data?.errorMessage)
       }
       
     }catch(error:any){
@@ -54,7 +54,7 @@ const GoogleSignIn = ({ role }: { role: string }) => {
       <GoogleLogin
         onSuccess={(credentialResponse:any) => {
           const credentialResponseDecoded = jwtDecode(credentialResponse?.credential);
-          console.log(credentialResponseDecoded);
+          
           handleLoginSuccess(credentialResponseDecoded);
         }}
         onError={() => {

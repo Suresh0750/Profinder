@@ -14,8 +14,7 @@ export default function Intro({ coords, workerData }: { coords: CoordsTypes, wor
     // * Find nearby workers and update state
     useEffect(() => {
         const workersNearby = FindNearByWorkers(coords, workerData);
-        console.log('worker google page')
-        console.log(JSON.stringify(workersNearby))
+
         setNearbyWorkers(workersNearby);
     }, [coords, workerData]);
 

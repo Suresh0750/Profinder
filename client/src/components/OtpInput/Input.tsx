@@ -28,7 +28,7 @@ export default function InputOtp({ userId }: { userId: string }) {
     if (value.length === 1 && index < inputRefs.current.length - 1) {
       inputRefs.current[index + 1]?.focus();
     }
-    console.log(value, "inputRefs");
+
   };
 
 

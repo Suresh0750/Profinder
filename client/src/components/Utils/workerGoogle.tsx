@@ -70,7 +70,7 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
       const file = event.target.files?.[0];
     if (file) {
       setIdentity(file);
-      console.log(file)
+      // console.log(file)
     }else if(!file){
       setIdentity(null)
 
@@ -84,7 +84,7 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
   // * Handle Google login success
   const handleLoginSuccess = async (credentialResponse: any) => {
     try {
-      console.log('Login Success:', credentialResponse);
+     
       const { email, given_name, picture, family_name } = credentialResponse
 
       setWorkerData({
@@ -95,10 +95,6 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
       });
       // alert(email)
       const result  = await customerGoogleVerification({email:email}).unwrap();
-
-      console.log(result);
-      console.log(result.success);
-
       if (result?.success) {
         toast.success(result?.message);
 
@@ -110,6 +106,9 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
       }
 
     } catch (error: any) {
+      if(error?.status == 403){
+        toast.error('worker has been blocked')
+      }
       console.log(error);
       if (error?.data?.modal) {
         setIsModalOpen(true);
@@ -142,7 +141,7 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
   
        
         const result = await CustomerGoogleLogin(formData).unwrap();
-        console.log(result);
+      
   
         if (result?.success) {
           await localStorage.setItem("customerData", JSON.stringify(result.customerData));
@@ -162,7 +161,7 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
       <GoogleLogin
         onSuccess={(credentialResponse:any) => {
           const credentialResponseDecoded = jwtDecode(credentialResponse.credential);
-          console.log(credentialResponseDecoded);
+         
           handleLoginSuccess(credentialResponseDecoded);
         }}
         onError={() => {

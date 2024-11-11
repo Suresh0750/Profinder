@@ -55,7 +55,6 @@ const Dashboard = () => {
   useEffect(() => {
     setDashboardDetails(data?.result)
     setRating(data?.result?.rating)
-    console.log(JSON.stringify(data?.result)) 
     const getGraphData = async function(activityData:any) {
       await setGraphDetails(graphData(activityData))
     }

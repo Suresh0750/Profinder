@@ -47,7 +47,6 @@ export default function Navbar() {
 
       if(isLoading) return // * handle multiple click
       const result = await CustomerLogout({}).unwrap()
-      console.log(result)
       if (result?.success) {
         toast.success(result?.message)
         localStorage.setItem("customerData", '')

@@ -55,7 +55,6 @@ export default function ServiceWorkerListPage() {
   useEffect(() => {
     getCurrentLocation().then(
       (coords) => {
-        console.log('Current location:', coords)
         setLocation({latitude: coords.latitude, longitude: coords.longitude})
         setMarkerPosition({lat: coords.latitude, lng: coords.longitude})
         setSkip(false)
@@ -78,7 +77,6 @@ export default function ServiceWorkerListPage() {
   }, [])
 
   const handleRedirectWorkerPage = useCallback((_id: string,worker:WorkerDatails) => {
-    console.log(JSON.stringify(worker))
     if (typeof window !== "undefined" && worker){
      localStorage.setItem("workerDetails",JSON.stringify({_id:worker?._id,Category:worker?.Category,FirstName:worker?.FirstName}))
     }
@@ -106,7 +104,7 @@ export default function ServiceWorkerListPage() {
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace()
-      console.log('Selected place:', place)
+      // console.log('Selected place:', place)
       setLocationSearchTerm(place.formatted_address || "")
       if (place.geometry && place.geometry.location) {
         const lat = place.geometry.location.lat()
@@ -114,7 +112,7 @@ export default function ServiceWorkerListPage() {
         setSelectedPlace({ lat, lng })
         setMarkerPosition({ lat, lng })
         setLocation({ latitude: lat, longitude: lng })
-        console.log('Selected coordinates:', { lat, lng })
+  
         setSkip(false)
       }
     }

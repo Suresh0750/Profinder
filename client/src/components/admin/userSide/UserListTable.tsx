@@ -43,12 +43,11 @@ const UserTable = () => {
   };
 
   const searchHandle = (value:string)=>{
-    console.log(value)
+
     if(value){
 
       let filterData =allUserList
       filterData = filterData?.filter((prev:any)=>((prev?.username).toLowerCase())?.includes((value)?.toLowerCase()))
-      console.log(filterData)
       setShowUserList(
         filterData?.map((user: any, i: number) =>
           createData(

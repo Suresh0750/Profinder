@@ -54,7 +54,7 @@ export default function UpcomingWorksPage() {
   }, []);
 
   const handleWorkSelect = (work: upcomingWorkerData) => {
-    console.log(JSON.stringify(work))
+    
     setSelectedWork(work)
   }
 
@@ -74,7 +74,6 @@ export default function UpcomingWorksPage() {
     
     if((selectedWork?.paymentId) && newStatus=="Cancelled") return toast.warning(`Payment has been completed`)
 
-    console.log(`Updating work ${_id} status to ${newStatus}`)
     MySwal.fire({
       title: `Have you want ${newStatus} "${selectedWork?.userId?.username} of work"?`,
       text: "You won't be able to revert this!",
@@ -86,7 +85,7 @@ export default function UpcomingWorksPage() {
     }).then(async (res:any) => {     
       // alert(JSON.stringify(res))
       const result:any = await updateWorkStatus({status:newStatus,_id}).unwrap()
-      console.log(result)
+    
       if(result?.success){
         MySwal.fire(
           `Mark as ${newStatus}!`,

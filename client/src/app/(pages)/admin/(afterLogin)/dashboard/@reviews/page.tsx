@@ -23,8 +23,8 @@ export default function ReviewsPage() {
 
   useEffect(()=>{
     if(data?.result){
-      console.log('review page')
-      console.log(JSON.stringify(data?.result))
+      // console.log('review page')
+      // console.log(JSON.stringify(data?.result))
       setRecentReviews(data?.result)
     }
   },[data])

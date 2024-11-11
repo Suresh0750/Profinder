@@ -4,9 +4,7 @@ import UserForgetPassword from '@/components/user/ForgetPasswordEmail';
 import {ForgetPasswordPage} from '@/types/utilsTypes'
 
 const ForgetPassword = ({params}:{params:ForgetPasswordPage}) => {
-    
-    console.log(params.getCustomer)
-      
+
     return (
         <div className="relative w-full h-[93.7vh]">
             <Image 

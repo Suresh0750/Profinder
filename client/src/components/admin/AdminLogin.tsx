@@ -26,9 +26,9 @@ const AdminLogin = () => {
   const onSubmit: SubmitHandler<AdminCredentials> = async (data) => {
     try{
       if(isLoading) return 
-      console.log("Form Data: ", data);
+
       const result = await AdminVeriyAPI(data).unwrap()
-      console.log(result)
+
       if(result?.success){
         toast.success(result.message)
         setTimeout(()=>{

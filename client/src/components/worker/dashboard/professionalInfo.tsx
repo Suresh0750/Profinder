@@ -83,10 +83,7 @@ const DashboardProfessionalInfo = () => {
         }
     });
 
-    useEffect(()=>{
-        console.log('experience')
-        console.log(workerData?.experience)
-    },[workerData])
+   
 
     const router = useRouter()
 

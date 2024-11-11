@@ -108,7 +108,7 @@ export default function BookingPage() {
   }
 
   const router = useRouter()
-  console.log('selectedWork',selectedWork)
+
   const {
     data: requestData,
     isLoading,
@@ -164,8 +164,7 @@ export default function BookingPage() {
 
   useEffect(() => {
     if (requestData?.result && requestData.result.length > 0) {
-      console.log('select work')
-      console.log(JSON.stringify(requestData.result))
+      
       // setSelectedWork(requestData.result);
       setReviewID(requestData?.reviewDetails)
     }

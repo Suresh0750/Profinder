@@ -70,9 +70,7 @@ export default function Chats() {
   useEffect(() => {
     if (socket) {
       const handleNewMessage = (newMessage: newMessage) => {
-        console.log("newMessage")
-        console.log(newMessage.conversationId)
-        console.log(newMessage)
+        
         const roomId = JSON.parse(localStorage.getItem('conversationId')||'')
         if(newMessage?.conversationId == roomId){
           setMessages((prevMessages:any) => [...prevMessages, newMessage])
@@ -104,7 +102,7 @@ export default function Chats() {
 
   useEffect(() => {
     if (allMessageData?.result) {
-      console.log(JSON.stringify(allMessageData?.result[0]))
+      
       setMessages(allMessageData.result)
     }
   }, [allMessageData])

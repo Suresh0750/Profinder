@@ -167,12 +167,20 @@ export const adminApi = createApi({
                 method: 'GET',
                 headers: getHeaders('admin') 
             })
+        }),
+        isWorkerBlock : builder.mutation({
+            query : (data:string)=>({
+                url : `/admin/worker/isBlock/${data}`,
+                method: 'PATCH',
+                headers : getHeaders('admin')
+            })
         })
     })
 });
 
 // * Export hooks for usage in functional components
 export const {
+    useIsWorkerBlockMutation,
     useGetWorkerDataQuery,
     useDownloadSalesQuery,
     useAddCategoryFormMutation,

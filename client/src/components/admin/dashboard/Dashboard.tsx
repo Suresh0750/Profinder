@@ -34,8 +34,7 @@ const Dashboard = () => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('main dashboard');
-    console.log(JSON.stringify(data?.result));
+    
     if(data?.result){
       setDashboard(data?.result)
     }

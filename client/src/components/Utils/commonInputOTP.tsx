@@ -95,7 +95,7 @@ export default function SetNewPass({role}:{role:string}) {
  
       event.preventDefault();
       const checkError =  HandlError(formData, error);  
-      console.log(checkError,isLoading)
+     
       if(!checkError || isLoading) return  // * prevent multiple request and validate the input field
       
       const result = await ForgetPassword({formData,role,customerId}).unwrap()

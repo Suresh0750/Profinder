@@ -5,7 +5,6 @@ import adminbackground from '../../../../public/images/Admin/background.jpg'
 
 
 
-console.log('AdminLayout')
 
 function AdminLayout({children}:{children:React.ReactNode}){
     return(

@@ -48,7 +48,7 @@ const UserForgetPassword = ({role}:{role:string}) => {
       }
       if (result.success) {
         toast.success(result.message);
-        console.log(result)
+
         dispatch(updateWorkerId(result?.userEmailValidation))
         setTimeout(() => {
           Router.push(`/customer/setforget_password/${role}`);
@@ -57,7 +57,7 @@ const UserForgetPassword = ({role}:{role:string}) => {
      
     } catch (err: any) {
       // console.log(`Error in validateEmail function: ${err.message}`);
-      console.log(JSON.stringify(err));
+     
       err.data?.message
         ? toast.error(err.data?.message)
         : toast.error("Error in submitting email.");

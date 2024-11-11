@@ -20,7 +20,6 @@ export default function Header(){
             if(isLoading) return
             const result = await AdminLogoutAPI('').unwrap()
 
-            console.log(result)
             if(result.success){
                 toast.success(result.message)
                 setTimeout(()=>{

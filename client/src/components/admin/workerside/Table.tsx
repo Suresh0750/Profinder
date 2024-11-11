@@ -12,7 +12,10 @@ import Paper from '@mui/material/Paper';
 import SearchBar from '@/components/admin/SearchBar';
 import { Pagination } from "@mui/material";
 import Image from "next/image"
+import {toast,Toaster} from 'sonner'
 
+// * API call
+import {useIsWorkerBlockMutation} from '@/lib/features/api/adminApiSlice'
 
 function createData(
   No: number,
@@ -30,7 +33,9 @@ const WorkerTableBody = () => {
   const [page,setPage] = useState(1)
   const [showWorkerList, setShowWorkerList] = useState<any[]>([]);
   const [allWorkerList, setAllWorkerList] = useState<any[]>([]);
-  const { data } = useGetWorkerListQuery("");
+  const { data,refetch } = useGetWorkerListQuery("");
+
+  const [isWorkerBlock,{isLoading}] = useIsWorkerBlockMutation()
 
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
@@ -47,12 +52,13 @@ const WorkerTableBody = () => {
       setShowWorkerList(
         filterData?.map((worker: any, i: number) =>
          createData(
-              i + 1,
-              worker.Profile, // Assuming this is a URL for the image
+              worker?._id,
+              worker.Profile, 
               worker.FirstName,
               worker.PhoneNumber,
               worker.Category,
-              "Action"
+              worker?.isBlock,
+              
             )
         ))
     }else{
@@ -60,17 +66,17 @@ const WorkerTableBody = () => {
       setShowWorkerList(
         allWorkerList?.map((worker: any, i: number) =>
           createData(
-              i + 1,
-              worker.Profile, // Assuming this is a URL for the image
+              worker?._id,
+              worker.Profile, 
               worker.FirstName,
               worker.PhoneNumber,
               worker.Category,
-              "Action"
+              worker?.isBlock,
+              
             )
         ))
     }
   }
-
   useEffect(() => {
     if (data) {
       setAllWorkerList(data?.result);
@@ -78,18 +84,32 @@ const WorkerTableBody = () => {
         (data?.result).map((worker: any, i: number) =>
             
           createData(
-            i + 1,
-            worker.Profile, // Assuming this is a URL for the image
+            worker?._id,
+            worker.Profile, 
             worker.FirstName,
             worker.PhoneNumber,
             worker.Category,
-            "Action"
+            worker?.isBlock
           )
           
         )
       );
     }
   }, [data]);
+
+  const handleIsBlock = async(id:string)=>{
+    try{
+      if(isLoading) return 
+
+      const res =  await isWorkerBlock(id).unwrap()
+      if(res.success){
+        toast.success(res.message)
+        refetch()
+      }
+    }catch(error){
+      console.log(error)
+    }
+  }
 
   return (
 
@@ -131,9 +151,13 @@ const WorkerTableBody = () => {
             <TableCell align="right">{worker.Phone}</TableCell>
             <TableCell align="right">{worker.categories}</TableCell>
             <TableCell align="right">
-                <button className="p-2 bg-green-600 rounded">Action</button>
+                <button onClick={()=>handleIsBlock(worker?.No)} className={`p-2 rounded cursor-pointer ${worker?.Actions ? 'bg-green-600':'bg-red-600'}`}>
+                    {
+                        worker?.Actions ? 'unblock' : 'block'
+                    }
+                </button>
             </TableCell>
-            </TableRow>
+            </TableRow> 
         ))}
     </TableBody>
         </Table>

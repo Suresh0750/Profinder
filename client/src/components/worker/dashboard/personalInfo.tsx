@@ -5,7 +5,7 @@ const DashboardProfessionalInfo = ()=>{
 
     
   const workerData = useSelector((state:any)=>state?.WorkerSignupData?.getWorkerData)
-  console.log(workerData)
+
 
 
     return(

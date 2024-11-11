@@ -17,8 +17,7 @@ import{workerDetailsTypes} from '@/types/adminTypes'
 
 
 export default function WorkerDetails({ workerId }: { workerId: string }) {
-  console.log('workerId')
-  console.log(workerId)
+
   const [isEditing, setIsEditing] = useState(false)
   const [editeWorker, setEditedWorker] = useState({})
   const [workerData,setWorkerData] = useState<workerDetailsTypes>()
@@ -39,9 +38,7 @@ export default function WorkerDetails({ workerId }: { workerId: string }) {
 
   useEffect(()=>{
     if(data?.result){
-      console.log('worker data')
-
-      console.log(JSON.stringify(data?.result))
+      
       setWorkerData(data?.result)
     }
   },[data])

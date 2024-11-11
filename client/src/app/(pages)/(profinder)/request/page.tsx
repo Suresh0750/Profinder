@@ -182,7 +182,7 @@ export default function WorkerRequestPage() {
         router.push(`/worker-details/${workerDetails?._id}`)
       }
     } catch (err: any) {
-      console.error(err)
+
       toast.error(err?.data?.errorMessage || 'An error occurred while submitting the request.')
     }
   }

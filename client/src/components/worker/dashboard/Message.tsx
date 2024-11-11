@@ -128,7 +128,7 @@ useEffect(()=>{
 
 
 const handleSearch = (e:React.ChangeEvent<HTMLInputElement>)=>{
-  console.log(e.target.value)
+
   let searchInput = (e.target.value).toLowerCase()
   if((e.target.value)?.length>1){
     const filter = allCustomer?.filter((prevCustomer:any)=>{
@@ -146,7 +146,6 @@ const handleShowMsg = (data: conversationData) => {
       return;
   }
 
-  console.log("Showing message for conversation ID:", data._id);
 
   setConversationID(data?._id);
   setMessageBox(data);

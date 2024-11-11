@@ -54,8 +54,7 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
 
   useEffect(() => {
     if (reviewData?.result) {
-      console.log('review details')
-      console.log(JSON.stringify(reviewData?.result))
+ 
       setReviewDetails(reviewData.result)
     }
   }, [reviewData])
