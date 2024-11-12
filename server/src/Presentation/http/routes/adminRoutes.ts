@@ -50,7 +50,7 @@ adminRoutes.post('/isBlockUser',verify,authorizeRoles('admin'),isBlockUserContro
 
 // * admin / Worker Approval side
 adminRoutes.get('/getAllUnApprovalWorkerlist',verify,authorizeRoles('admin'),getAllUnApprovalWorkerlist)
-adminRoutes.put('/isWorkerApproval:id',verify,authorizeRoles('admin'),isWorkerApproval)
+adminRoutes.put('/isWorkerApproval/:id',verify,authorizeRoles('admin'),isWorkerApproval)
 
 // admin / worker details
 adminRoutes.get('/worker-details/:workerId',verify,authorizeRoles('admin'),workerDetails)

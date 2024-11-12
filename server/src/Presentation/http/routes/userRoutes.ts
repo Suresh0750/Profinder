@@ -32,7 +32,7 @@ userRouter.post('/checkEmailForgetPass',isEmailValidate,isCheckEmail)   // * che
 
 
 // * user dashboard
-userRouter.get('/profile:id',customeVerify,profile)
+userRouter.get('/profile/:id',customeVerify,profile)
 userRouter.put('/updateprofile',upload.single('newImageData'),customeVerify,editprofile)
 userRouter.get('/booking/:id',customeVerify,authorizeRoles('user'),getBooking)
 userRouter.get('/paymentId/:requestId',paymentId)
@@ -41,7 +41,7 @@ userRouter.get('/paymentId/:requestId',paymentId)
 // * chats
 userRouter.post('/conversation',customeVerify,authorizeRoles('user'),conversation)
 userRouter.get('/conversation/:id',customeVerify,authorizeRoles('user'),getConversation)
-userRouter.get('/message:id',customeVerify,authorizeRoles('user'),getMessage)
+userRouter.get('/message/:id',customeVerify,authorizeRoles('user'),getMessage)
 
 
 

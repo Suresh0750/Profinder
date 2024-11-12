@@ -55,6 +55,6 @@ customerRouter.post("/customerGoogleVerification",WorkerGoogleLoginWithRegistras
 customerRouter.get('/getALLVerifiedWorker/:lat/:lon',authorizeRoles('customer'),getVerifiedWorkerController)
 
 customerRouter.get('/getCategoryName',authorizeRoles('customer'),getCategoryName)
-customerRouter.post('/getNearByWorkerDetails:categoryName',authorizeRoles('customer'),getNearByWorkerDetailsController)
+customerRouter.post('/getNearByWorkerDetails/:categoryName',authorizeRoles('customer'),getNearByWorkerDetailsController)
 
 export default customerRouter   

@@ -28,7 +28,7 @@ const workerRouter = Router()
 
 // * worker dashboard
 workerRouter.get('/dashboard/:Id',customeVerify,authorizeRoles('worker'),dashboard)
-workerRouter.get('/upcoming-workers:id',customeVerify,authorizeRoles('worker'),upcomingWorkers)
+workerRouter.get('/upcoming-workers/:id',customeVerify,authorizeRoles('worker'),upcomingWorkers)
 workerRouter.put('/markStatus/:status/:id',customeVerify,authorizeRoles('worker'),workComplete)
 
 
@@ -36,12 +36,12 @@ workerRouter.put('/markStatus/:status/:id',customeVerify,authorizeRoles('worker'
 
 workerRouter.get('/message/:Id',authorizeRoles('worker'),getChatsName)
 workerRouter.post('/message',authorizeRoles('worker'),messageController)
-workerRouter.get('/fetchmessage:Id',authorizeRoles('worker'),fetchMessage)
+workerRouter.get('/fetchmessage/:Id',authorizeRoles('worker'),fetchMessage)
 
 
 // * request details or woker
 
-workerRouter.get("/getRequestData:workerId",authorizeRoles('worker'),getAllRequestController)
+workerRouter.get("/getRequestData/:workerId",authorizeRoles('worker'),getAllRequestController)
 workerRouter.put("/isAcceptWork/:update",customeVerify,authorizeRoles('worker'),isAcceptWorkController)
 workerRouter.put("/rejectWork/:id",authorizeRoles('worker'),isRejectWorkController)
 
@@ -50,7 +50,7 @@ workerRouter.get('/singleWorkerDetails/:workerid/:userId',getSingleWorkerDetails
 
 // * Worker in worker Project upload 
 workerRouter.post("/uploadWorkerProject",upload.single('image'),AddProjectDetails)
-workerRouter.get('/getWorkerProject:id',authorizeRoles('worker'),getProjectDetails)
+workerRouter.get('/getWorkerProject/:id',authorizeRoles('worker'),getProjectDetails)
 
 workerRouter.post("/personalinfo",upload.single('profileImage'),PersonalInformationControll)
 workerRouter.post("/ProfessionalInfo",upload.single('Identity'),ProfessionalInfoControll)
