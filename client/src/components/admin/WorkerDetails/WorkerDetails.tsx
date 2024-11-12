@@ -1,11 +1,10 @@
 
 "use client"
 import React, { useState,useEffect } from 'react'
-import { User, Phone, Mail, Key, MapPin, Briefcase, Flag, Home, Building, Hash, CreditCard, Edit, Save, X ,CircleCheckBig} from 'lucide-react'
+import { Phone, Mail} from 'lucide-react'
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "@/components/ui/card"
+import { Card, CardContent,CardHeader, CardTitle} from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {useGetWorkerDataQuery} from '@/lib/features/api/adminApiSlice'
@@ -18,8 +17,6 @@ import{workerDetailsTypes} from '@/types/adminTypes'
 
 export default function WorkerDetails({ workerId }: { workerId: string }) {
 
-  const [isEditing, setIsEditing] = useState(false)
-  const [editeWorker, setEditedWorker] = useState({})
   const [workerData,setWorkerData] = useState<workerDetailsTypes>()
 
   const {data,isLoading} = useGetWorkerDataQuery(workerId)
@@ -64,9 +61,7 @@ export default function WorkerDetails({ workerId }: { workerId: string }) {
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-2xl font-bold">Worker Details</CardTitle>
           <div className="space-x-2">
-            
           
-  
           </div>
         </CardHeader>
         <CardContent>
@@ -195,7 +190,7 @@ export default function WorkerDetails({ workerId }: { workerId: string }) {
     onClose={() => setModalOpen(false)}
     image={imageUrl}
     workerId={workerId}
-    // refetch={refetch}
+    
   />
     </>
   )

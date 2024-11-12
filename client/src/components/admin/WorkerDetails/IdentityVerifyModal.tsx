@@ -24,7 +24,7 @@ const IdentityModal = ({ isOpen, onClose, image, workerId}: { isOpen: boolean, o
                 toast.success(result.message)
                 onClose() 
                 setTimeout(()=>{
-                    Router.push(`/admin/workerApproval`)
+                    Router.push(`/admin/dashboard`)
                 })
                 // refetch()
             }

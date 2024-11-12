@@ -93,7 +93,7 @@ export const customerApi  = createApi({
         }),
         getNearByworkerList : builder.mutation({
             query : (data)=> ({
-                url : `/customer/getNearByWorkerDetails${data}`,
+                url : `/customer/getNearByWorkerDetails/${data}`,
                 method : "POST",
                 headers : getHeaders('customer')
             })

@@ -68,7 +68,7 @@ export const workerApi = createApi({
         }),
         getWorkerProject : builder.query({
                query :(data)=>({
-                url:`/worker/getWorkerProject${data}`,
+                url:`/worker/getWorkerProject/${data}`,
                 method:"GET",
                 headers : getHeaders('worker')
                })
@@ -81,7 +81,7 @@ export const workerApi = createApi({
         }),
         getAllRequestData : builder.query({
             query : (data:string)=>({
-                url : `/worker/getRequestData${data}`,
+                url : `/worker/getRequestData/${data}`,
                 method : "GET",
                 headers : getHeaders('worker')
             })
@@ -117,7 +117,7 @@ export const workerApi = createApi({
         }),
         fetchMessage : builder.query({
             query : (data:string)=>({
-                url:`/worker/fetchmessage${data}`,
+                url:`/worker/fetchmessage/${data}`,
                 method:"GET",
                 headers:getHeaders("worker")
             })
@@ -131,7 +131,7 @@ export const workerApi = createApi({
         }),
         getUpcomingWorks: builder.query({
             query : (data)=>({
-                url : `/worker/upcoming-workers${data}`,
+                url : `/worker/upcoming-workers/${data}`,
                 method : 'GET',
                 headers : getHeaders('worker')
             })

@@ -45,7 +45,7 @@ export const userApi = createApi({
         }),
         Profile : builder.query({
             query :(data)=>({
-                url : `/user/profile${data}`,
+                url : `/user/profile/${data}`,
                 method: "GET",
                 headers : getHeaders("user")
             })
@@ -78,7 +78,7 @@ export const userApi = createApi({
         }),
         getAllMessage:builder.query({
             query:(conversationId:string)=>({
-                url:`/user/message${conversationId}`,
+                url:`/user/message/${conversationId}`,
                 method:'GET',
                 headers:getHeaders('user')
             })

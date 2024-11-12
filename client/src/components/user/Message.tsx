@@ -45,7 +45,7 @@ export default function Chats() {
  
 
   const { data: conversationsQueryData } = useGetAllconversationQuery(customerData?._id)
-  const { data: allMessageData } = useGetAllMessageQuery(conversationID, { skip: stopFetch })
+  const { data: allMessageData } = useGetAllMessageQuery(conversationID, { skip: stopFetch, refetchOnMountOrArgChange: true})
 
   useEffect(() => {
     const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URI)
@@ -73,6 +73,7 @@ export default function Chats() {
         
         const roomId = JSON.parse(localStorage.getItem('conversationId')||'')
         if(newMessage?.conversationId == roomId){
+         
           setMessages((prevMessages:any) => [...prevMessages, newMessage])
         }
        
@@ -97,16 +98,18 @@ export default function Chats() {
   }, [socket])
 
   useEffect(() => {
-    setStopFetch(false)
+    if(conversationID){
+      setStopFetch(false)
+    }
   }, [conversationID])
 
   useEffect(() => {
     if (allMessageData?.result) {
-      
       setMessages(allMessageData.result)
+      setStopFetch(true)
     }
   }, [allMessageData])
-  
+
   useEffect(() => {
     if (conversationsQueryData?.result) {
       setConversations(conversationsQueryData.result)
@@ -114,6 +117,9 @@ export default function Chats() {
   }, [conversationsQueryData])
 
   const handleShowMsg = useCallback((data: conversationData) => {
+    console.log('data')
+
+    console.log(JSON.stringify(data))
     if (!data || !data._id) {
       console.warn("Invalid data or missing ID:", data)
       return

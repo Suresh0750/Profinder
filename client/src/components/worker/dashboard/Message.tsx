@@ -25,7 +25,7 @@ const [stopFetchGetMsg,setStopFetchGetMsg] = useState<boolean>(true)
 const [updateMessage] = useUpdateMessageMutation()
 const [customerData, setCustomerData] = useState<any>({});
 const {data,refetch} = useGetmessageQuery(customerData?._id,{skip:stopFetchGetMsg})
-const {data:allMessage,refetch:refetchAllMsg} =  useFetchMessageQuery(conversationID,{skip:stopFetch})
+const {data:allMessage,refetch:refetchAllMsg} =  useFetchMessageQuery(conversationID,{skip:stopFetch,refetchOnMountOrArgChange: true})
 const [socket,setSocket] = useState<Socket|null>(null)
 const [messageBox,setMessageBox] = useState<conversationData>({
         _id : '',
@@ -89,6 +89,7 @@ useEffect(() => {
   useEffect(()=>{
     if (socket) {
       socket.on("message", (newMessage: newMessage) => {
+      
         if(newMessage?.conversationId == JSON.parse(localStorage.getItem('conversationId')||'')){
           setMessages((prevMessage:any)=>[...prevMessage,newMessage])
         }
@@ -105,6 +106,7 @@ useEffect(() => {
         })
       });
 
+
       return () => {
         socket.off("message");
       };
@@ -114,7 +116,9 @@ useEffect(() => {
   
 // * enable get method RTK query API tool
   useEffect(()=>{
-    setStopFetch(false)
+    if(conversationID){
+      setStopFetch(false)
+    }
   },[conversationID])
 
   useEffect(()=>{
@@ -153,7 +157,6 @@ const handleShowMsg = (data: conversationData) => {
   setCustomerDetails((prevConv:any) => {
       const result = prevConv?.map((conv:any) => {
           if (conv._id === data?._id) {
-              // console.log("Updating unread count for:", conv);
               return { ...conv, workerUnread: 0 }; // *Update unread count
           }
           return conv; 

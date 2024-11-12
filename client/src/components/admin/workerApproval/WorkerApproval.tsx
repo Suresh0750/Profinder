@@ -50,7 +50,9 @@ const UserTable = () => {
   const { data, refetch } = useGetAllUnApprovalWorkerlistQuery({});
 
  
-  const Router = useRouter();
+  const router = useRouter();
+
+
 
   
   const searchHandle = (value:string)=>{
@@ -116,7 +118,7 @@ const UserTable = () => {
         )
       );
     }
-  });
+  },[data]);
 
   return (
     <>
@@ -168,16 +170,16 @@ const UserTable = () => {
                     <TableCell align="right">{worker.EmailId}</TableCell>
                     <TableCell align="right">
                       <Link href={`/admin/worker-details/${worker?._id}`}>
-                        <button
+                        <span
                           
                           className="p-2 bg-yellow-300 rounded cursor-pointer"
                         >
                           View Details
-                        </button>
+                        </span>
                       </Link>
                     </TableCell>
                   </TableRow>
-                ))}
+                ))} 
           </TableBody>
         </Table>
       </TableContainer>

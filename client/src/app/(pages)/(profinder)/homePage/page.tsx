@@ -1,4 +1,5 @@
 "use client"
+import {useState,useEffect} from 'react'
 import Image from 'next/image';
 import Link from 'next/link'
 import Navbar from '@/components/Navbar/page'
@@ -11,11 +12,25 @@ import IndustrySociety from '../../../../../public/images/IndustrySociety.jpg'
 import AboutIndustry from '../../../../../public/images/aboutIndustry.jpg'
 import IndustryValue from '../../../../../public/images/IndustryValue.jpg'
 import Head from 'next/head'
+import {  
+  useListWorkerDataAPIQuery,
+} from "@/lib/features/api/customerApiSlice"
 
+
+
+
+const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => resolve(position.coords),
+      (error) => reject(error)
+    )
+  })
+}
 
 const Home = () => {
   // 
- 
+  const [location, setLocation] = useState<{latitude: number, longitude: number}>({latitude: 0, longitude: 0})
   const expertise = [
     {
       title: "Innovation of Metallurgy",
@@ -34,7 +49,24 @@ const Home = () => {
     },
   ];
 
+  const [worker,setWorker] = useState<any>([])
+  const [mechanic,setMechannic] = useState<any>([])
+  const {data} = useListWorkerDataAPIQuery(location)
+  useEffect(()=>{
+    getCurrentLocation().then(
+      (coords) => {
+        setLocation({latitude: coords.latitude, longitude: coords.longitude})
+      },
+      (error) => console.error('Error getting location:', error)
+    )
+  },[])
 
+  useEffect(()=>{
+    console.log(data)
+    const mechanic = (data?.result)?.filter((data:any)=>data?.Category=="mechanical")
+    console.log(mechanic)
+    setMechannic(mechanic)
+  },[data])
   
   return (
     <>
@@ -42,15 +74,43 @@ const Home = () => {
       {/* Slider Section */}
      <SliderSection />
       {/* Services Section */}
-      <section className="py-12 bg-gray-100">
+      {/* <section className="py-12 bg-gray-100">
         <div className="container mx-auto">
           <h2 className="text-center text-3xl font-bold mb-6">Modern Elegant Design Services</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">       
             <div className="bg-white p-6 rounded shadow">
               <Image src={ContractImage} alt="Service 1" width={400} height={300} />
               <h3 className="text-xl font-bold mt-4">Implement General Contract</h3>
               <p className="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
             </div>
+            <div className="bg-white p-6 rounded shadow">
+              <Image src={Renovation} alt="Service 2" width={400} height={300} />
+              <h3 className="text-xl font-bold mt-4">Building Renovation</h3>
+              <p className="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            </div>
+            <div className="bg-white p-6 rounded shadow">
+              <Image src={BuildingConstruction} alt="Service 3" width={400} height={300} />
+              <h3 className="text-xl font-bold mt-4">Building Construction</h3>
+              <p className="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            </div>
+          </div>
+        </div>
+      </section> */}
+      {/* Services Section */}
+      <section className="py-12 bg-gray-100">
+        <div className="container mx-auto">
+          <h2 className="text-center text-3xl font-bold mb-6">Modern Elegant Design Services</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {
+            mechanic?.length>0 && (
+            <div className="bg-white p-6 rounded shadow">
+              <Image src={mechanic?.[0]?.Profile} alt="Service 1" width={400} height={300} />
+              <h3 className="text-xl font-bold mt-4">Implement General Contract</h3>
+              <p className="mt-2">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            </div>
+            )
+          }
+            
             <div className="bg-white p-6 rounded shadow">
               <Image src={Renovation} alt="Service 2" width={400} height={300} />
               <h3 className="text-xl font-bold mt-4">Building Renovation</h3>

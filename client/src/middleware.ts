@@ -10,7 +10,8 @@ export async function middleware(req:NextRequest){
   // console.log('isAuthenticated',isAuthenticated)
     const cookieStore = cookies();
     const pathname = req.nextUrl.pathname;
-    // console.log(pathname)
+    console.log('path name')
+    console.log(pathname)
   // Improved matcher for static assets
   if (pathname.startsWith("/_next/") || pathname.startsWith("/favicon.ico")) {
     return NextResponse.next();
@@ -32,31 +33,29 @@ export async function middleware(req:NextRequest){
       const loginUrl = new URL("/admin/dashboard",req.url)
       return NextResponse.redirect(loginUrl)
     }
-   
     return NextResponse.next()
   }
 
 
   const homePage = req.url
-  console.log('url',req.url)
+  
   if(homePage==='/'){
-    console.log('redirect homepage')
+    
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }
-  console.log('userVerifyToken')
-  console.log(userVerifyToken)
+  
   if(pathname?.includes('/user') && !pathname?.includes('/user/UserOtp')  && !isUserProtectedRoute(pathname)&&!userVerifyToken){
-    console.log('working...............')
+    
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }
   if((workerVerifyToken && isUserProtectedRoute(pathname)) || (userVerifyToken && isUserProtectedRoute(pathname)) ){
-    console.log('req redirect')
+   
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }else if((!workerVerifyToken && !isUserProtectedRoute(pathname) && req.url == '/homePage')||(!workerVerifyToken&& (req.url).includes("/worker/dashboard"))){
-    console.log('req redirect')
+
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }
@@ -80,7 +79,7 @@ async function verifyToken(
     const token = req.cookies.get(workerToken);
     
     if (!token?.value) {
-      console.log('step 1 if')
+      // console.log('step 1 if')
       return false;
     }
   
@@ -113,7 +112,7 @@ async function AdminVerifyToken(AdminToken:string,req:NextRequest){
     }
   
     const secret = process.env.REFRESH_TOKEN_SECRET;
-    console.log("secret",secret)
+    
     
     if (!secret) {
       console.log("JWT secret not found in env");
