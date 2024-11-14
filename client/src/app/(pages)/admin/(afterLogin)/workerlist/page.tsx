@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import WorkerListTable from '@/components/Admin/WS(workerside)/Table';
+import WorkerListTable from '@/components/Admin/WorkerSide/Table';
 
 
 export default function BasicTable() {

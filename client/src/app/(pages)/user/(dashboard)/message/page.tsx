@@ -1,6 +1,6 @@
 
-import ProfileHeader from '@/components/U(user)/ProfileHeader'
-import Chats from '@/components/U(user)/Message'
+import ProfileHeader from '@/components/User/ProfileHeader'
+import Chats from '@/components/User/Message'
 
 const Message = ()=>{
     return(

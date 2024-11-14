@@ -1,6 +1,6 @@
 // components/UserOtp.tsx
 
-import OtpImage from "@/components/Op(otpPageImage)/otpsidePage";
+import OtpImage from "@/components/OtpPageImage/otpsidePage";
 import { useParams } from "next/navigation";
 import InputOtp from '../../../../../components/OtpInput/Input'
 

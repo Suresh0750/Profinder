@@ -1,6 +1,6 @@
 
 
-import ShowCategoryDetails from '../../../../../components/Admin/C/category'
+import ShowCategoryDetails from '../../../../../components/Admin/Category/category'
 
 export default function Category() {
 

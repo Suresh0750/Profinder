@@ -1,6 +1,6 @@
 import Image from "next/image";
 import bgImage from '../../../../../../public/images/User/forgetPassword_bgImage.jpeg';
-import UserForgetPassword from '@/components/U(user)/ForgetPasswordEmail';
+import UserForgetPassword from '@/components/User/ForgetPasswordEmail';
 import {ForgetPasswordPage} from '@/types/utilsTypes'
 
 const ForgetPassword = ({params}:{params:ForgetPasswordPage}) => {

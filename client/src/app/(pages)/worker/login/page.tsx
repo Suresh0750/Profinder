@@ -1,5 +1,5 @@
 
-import {LoginForm} from '@/components/W(worker)/signIn'
+import {LoginForm} from '@/components/Worker/signIn'
 
 export default function Login(){
 

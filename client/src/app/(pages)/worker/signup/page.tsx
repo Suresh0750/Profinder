@@ -1,4 +1,4 @@
-import WorkerSignUp from "@/components/W(worker)/signup"
+import WorkerSignUp from "@/components/Worker/signup"
 
 
 const SignUp = ()=>{
