@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {useGetWorkerDataQuery} from '@/lib/features/api/adminApiSlice'
 import {Triangle} from 'react-loader-spinner'
-import IdentityModal from "./I(IdentityVerifyModal)";
+import IdentityModal from "./IdentityVerifyModal";
 
 import{workerDetailsTypes} from '@/types/adminTypes'
 

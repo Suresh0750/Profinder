@@ -2,7 +2,7 @@
 import { useGetCategoryNameQuery, useGetNearByworkerListMutation } from '@/lib/features/api/customerApiSlice';
 import { workerDetailsWithlatlon } from '@/types/utilsTypes';
 import React, { useState, useEffect } from 'react';
-import GoogleMaps from './G(googleMap)/GM(googleMaps)';
+import GoogleMaps from './GoogleMap/GoogleMaps';
 
 interface ModalProps {
   isOpen: boolean;

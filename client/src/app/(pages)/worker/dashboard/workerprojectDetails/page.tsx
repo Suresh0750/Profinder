@@ -3,7 +3,7 @@ import Images from '../../../../../../public/images/worker/mechanic/Akill_Mech.w
 
 import React from 'react'
 import Image from 'next/image'
-import ShowImage from '@/components/Admin/WorkerProject/WPI(workerProjectImage)'
+import ShowImage from '@/components/Admin/WorkerProject/WorkerProjectImage'
 
 
 
