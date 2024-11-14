@@ -1,5 +1,5 @@
 
-export interface OtpRepository {
+export interface IOTPRepository {
     createOTP(customerId: string, OtpPIN: number, otpExpiration: Date): Promise<void>;
     CustomerVerifyOTP(otpValue: number, userId: string): Promise<boolean | undefined>;
     verifyUser(userId:string) : Promise<void>;

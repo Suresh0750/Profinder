@@ -1,10 +1,10 @@
-import { OtpRepository } from "../../../domain/repositories/OtpRepository";
+import { IOTPRepository } from "../../../domain/repositories/OtpRepository";
 import { CustomerOTP } from "../../../domain/entities/CustomerOTP";
 import { customerOTPModel } from "./models/OTPModel";
 import {UserModel} from './models/UserModel'
 import {WorkerModel} from "./models/workerModel"
 
-export const OTPRepository = (): OtpRepository => ({
+export const OTPRepository = (): IOTPRepository => ({
   createOTP: async (
     customerId: string,
     OtpPIN: number,

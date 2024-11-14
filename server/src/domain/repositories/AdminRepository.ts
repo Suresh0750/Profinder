@@ -4,7 +4,7 @@ import {User} from "../entities/User"
 
 
 
-export interface IAdminRepository{
+export interface IAdminMongoose{
     CheckExistCategory(categoryName:string) : Promise<AddCategory | null>  // * Admin in category side
     AddCategoryQuery(categoryDetails:AddCategory) :Promise<AddCategory> ;
     getAllCategoryQuery() : Promise<AddCategory[]>

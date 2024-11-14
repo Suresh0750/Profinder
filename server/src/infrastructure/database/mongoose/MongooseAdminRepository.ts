@@ -4,7 +4,7 @@ const {ObjectId} = Types
 import { AddCategory,addCategoryData,filterSales } from "../../../domain/entities/Admin"
 
 // * Repository types
-import {IAdminRepository} from "../../../domain/repositories/AdminRepository"
+import {IAdminMongoose} from "../../../domain/repositories/AdminRepository"
 
 // * Model
 import {CategoryModel} from "./models/AdminModel"
@@ -16,7 +16,7 @@ import { PaymentModel } from "./models/paymentModel"
 import { RequestModel } from "./models/RequestModel"
 
 
-export const AdminMongoose = () : IAdminRepository =>({
+export const AdminMongoose = () : IAdminMongoose =>({
     // * Admin in category side query's
     CheckExistCategory : async(categoryName:string)=>{
         try{

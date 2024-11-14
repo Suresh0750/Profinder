@@ -4,7 +4,7 @@ import {messageType,RequestType} from "../entities/commonTypes";
 
 
 // * Repositories types
-export interface IUserRepository{
+export interface IgetUserRepository{
     createUser(user:User):Promise<User>;
     findUserByEmail(email:string): Promise<User |null>;   
     insertUserDetails(user:User):Promise<void>;

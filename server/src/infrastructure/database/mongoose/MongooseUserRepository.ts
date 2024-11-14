@@ -2,7 +2,7 @@ import {Types} from 'mongoose'
 const { ObjectId } = Types; 
 
 import { User,loginDetails,editprofileTypes,conversationTypes,messageTypes } from "../../../domain/entities/User";
-import { IUserRepository } from "../../../domain/repositories/IUserRepository";
+import { IgetUserRepository } from "../../../domain/repositories/IUserRepository";
 
 // * Model
 import {UserModel} from './models/UserModel'
@@ -13,7 +13,7 @@ import { ResentActivityModel } from './models/RecentActivityModel';
 import { ReviewModel } from './models/ReviewModel';
 
 
-export const getUserRepository = () : IUserRepository =>({
+export const getUserRepository = () : IgetUserRepository =>({
     createUser : async (user:User) =>{
         try {
             const userDoc  = new UserModel(user);

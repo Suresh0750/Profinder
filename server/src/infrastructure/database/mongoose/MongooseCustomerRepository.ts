@@ -3,7 +3,7 @@ import { RequestData } from "../../../domain/entities/customerTypes";
 import { ReviewTypes } from "../../../domain/entities/commonTypes";  
 import { User,loginDetails } from "../../../domain/entities/User";
 import { WorkerInformation } from "../../../domain/entities/Worker";
-import { CustomerRepository } from "../../../domain/repositories/CustomerRepository";
+import { ICustomerQueryRepository } from "../../../domain/repositories/CustomerRepository";
 
 // * database model
 import { CategoryModel } from "./models/AdminModel";
@@ -18,7 +18,7 @@ import { ResentActivityModel } from "./models/RecentActivityModel";
 import { request } from "@esri/arcgis-rest-request";
 const {ObjectId} = Types
 
-export const CustomerQueryRepository = ():CustomerRepository=>({
+export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
     UserGoogleLogin : async (user:User) =>{
         try {
             const userDoc  = await UserModel.updateOne({EmailAddress:user.EmailAddress},{$set:{user}},{upsert:true});

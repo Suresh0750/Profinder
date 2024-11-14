@@ -10,7 +10,7 @@ import {
 import {conversationTypes,messageType,RecentActivityType} from '../entities/commonTypes'
 import {Types} from 'mongoose'
 
-export interface WorkerRepository{
+export interface IgetWorkerRepository{
     createWorker (workerData:PersonalInformation) : Promise<PersonalInformation | null>
     findWorker(workerEmail:string) : Promise<PersonalInformation | null>
     ischeckEmail(userEmail:string): Promise<string | undefined>

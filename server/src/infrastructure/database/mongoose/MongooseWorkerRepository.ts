@@ -1,5 +1,5 @@
 import {Types} from 'mongoose'
-import {WorkerRepository} from '../../../domain/repositories/WorkerRepository'
+import {IgetWorkerRepository} from '../../../domain/repositories/WorkerRepository'
 import {PersonalInformation, WorkerInformation,ProjectDetails,messageTypes} from '../../../domain/entities/Worker'
 
 // * model
@@ -12,7 +12,7 @@ import {ReviewModel} from './models/ReviewModel'
 import {PaymentModel} from './models/paymentModel'
 
 const {ObjectId} = Types
-export const getWorkerRepository = ():WorkerRepository =>({
+export const getWorkerRepository = ():IgetWorkerRepository =>({
     createWorker: async(workerData:PersonalInformation)=>{
         try {
             const workerDetails = new WorkerModel(workerData); 

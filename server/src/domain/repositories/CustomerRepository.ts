@@ -7,7 +7,7 @@ import { getCategoryName,ReviewTypes } from "../entities/commonTypes";
 import { RequestData,getReviewTypes } from "../entities/customerTypes";
 
 
-export interface CustomerRepository {
+export interface ICustomerQueryRepository {
     UserGoogleLogin(user:User): Promise<any>;
     UserWorkerLogin(workerData:WorkerInformation): Promise<any>;
     WorkerGoogleLoginVerification(EmailAddress:string) : Promise<WorkerInformation | undefined | null>
