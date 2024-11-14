@@ -1,4 +1,4 @@
-import Message from '@/components/worker/dashboard/Message'
+import Message from '@/components/W(worker)/dashboard/Message'
 export default function Component() {
  
   return (

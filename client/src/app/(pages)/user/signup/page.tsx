@@ -1,6 +1,6 @@
 
 
-import {SignupForm} from '@/components/user/signupForm'
+import {SignupForm} from '@/components/U(user)/signupForm'
 
 
 

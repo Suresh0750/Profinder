@@ -1,6 +1,6 @@
 
 
-import BookingDetails from '@/components/user/BookingDetails'
+import BookingDetails from '@/components/U(user)/BookingDetails'
 
 
 

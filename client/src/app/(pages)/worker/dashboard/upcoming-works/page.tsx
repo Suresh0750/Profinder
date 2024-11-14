@@ -1,6 +1,6 @@
 
 
-import UpcomingWorks from '@/components/worker/dashboard/UpcomingWorks'
+import UpcomingWorks from '@/components/W(worker)/dashboard/UpcomingWorks'
 
 
 

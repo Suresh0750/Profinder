@@ -1,4 +1,4 @@
-import ProfessionalInfoForm from '@/components/worker/professionalInfo'
+import ProfessionalInfoForm from '@/components/W(worker)/professionalInfo'
 import { useParams } from 'next/navigation'
 import {FormValues} from '@/types/workerTypes'
 

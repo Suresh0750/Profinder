@@ -1,5 +1,5 @@
 
-import Profile from "@/components/user/Profile"
+import Profile from "@/components/U(user)/Profile"
 
 
 const UserProfile  = ()=>{
