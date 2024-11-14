@@ -5,8 +5,8 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import SearchBar from '../../admin/SearchBar';
-import Table from '../../admin/category/Table'
+import SearchBar from '../SearchBar';
+import Table from './Table'
 import * as React from 'react';
 import AddCategoryForm from './AddCategoryForm';
 import {useState} from 'react'

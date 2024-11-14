@@ -1,5 +1,5 @@
 
-import WorkerApprovalData from '@/components/admin/workerApproval/WorkerApproval'
+import WorkerApprovalData from '@/components/m/workerApproval/WorkerApproval'
 
 
 const WorkerApproval = ()=>{

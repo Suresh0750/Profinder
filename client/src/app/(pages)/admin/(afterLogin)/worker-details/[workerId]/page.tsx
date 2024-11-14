@@ -1,5 +1,5 @@
 
-import WorkerDetails from '@/components/admin/WorkerDetails/WorkerDetails'
+import WorkerDetails from '@/components/m/WorkerDetails/WorkerDetails'
 
 
 export default function WorkerDetailsAdmin({ params }: { params: {workerId:string} }) {

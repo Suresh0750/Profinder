@@ -1,5 +1,5 @@
 
-import SalesReport from '@/components/admin/SalesReport/SalesReport'
+import SalesReport from '@/components/m/SalesReport/SalesReport'
 
 export default function EnhancedAdminSalesReport() {
 

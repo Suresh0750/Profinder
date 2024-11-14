@@ -3,7 +3,7 @@
 
 // * Admin Login page
 
-import AdminLoginForm from "@/components/admin/AdminLogin";
+import AdminLoginForm from "@/components/m/AdminLogin";
 const AdminLogin = () => {
 
   return (

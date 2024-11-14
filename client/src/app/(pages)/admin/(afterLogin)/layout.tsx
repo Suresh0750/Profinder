@@ -1,8 +1,8 @@
 
 
 
-import Header from "@/components/admin/Header"
-import Aside from "@/components/admin/Aside"
+import Header from "@/components/m/Header"
+import Aside from "@/components/m/Aside"
 
 
 export default function InAdminloyout({children}:{children:React.ReactNode}){

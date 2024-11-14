@@ -9,7 +9,7 @@ import TableRow from "@mui/material/TableRow";
 import TableHead from "@mui/material/TableHead";
 import TableContainer from '@mui/material/TableContainer';
 import Paper from '@mui/material/Paper';
-import SearchBar from '@/components/admin/SearchBar';
+import SearchBar from '@/components/m/SearchBar';
 import { Pagination } from "@mui/material";
 import Image from "next/image"
 import {toast,Toaster} from 'sonner'
