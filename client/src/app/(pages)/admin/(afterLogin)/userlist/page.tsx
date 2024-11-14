@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import UserListTable from '@/components/m/userSide/UserListTable';
+import UserListTable from '@/components/Admin/userSide/UserListTable';
 
 
 export default function BasicTable() {
