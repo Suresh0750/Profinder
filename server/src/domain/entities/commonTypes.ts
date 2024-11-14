@@ -1,7 +1,7 @@
 
 // * server status code
 
-import { conversation } from "../../p(Presentation)/http/controllers/u(UserController)";
+import { conversation } from "../../presentation/http/controllers/user";
 import {Types} from 'mongoose'
 
 

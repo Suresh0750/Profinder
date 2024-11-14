@@ -1,7 +1,7 @@
 import {Schema,model,Document} from 'mongoose'
 
 // * types
-import { AddCategory } from '../../../../domain/entities/a(Admin)';
+import { AddCategory } from '../../../../domain/entities/admin';
 
 
 

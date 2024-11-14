@@ -1,7 +1,7 @@
 
 
 import axios from 'axios'
-import {WorkerInformation} from '../../domain/entities/w(Worker)'
+import {WorkerInformation} from '../../domain/entities/worker'
 
 export const GeoCoding = async (workerData:any)=>{
   // console.log(`Request reached Geocoding`)

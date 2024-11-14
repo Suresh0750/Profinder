@@ -13,11 +13,11 @@ import { Server as serverSocket } from "socket.io"
 import { connectDB } from "./infrastructure/config/database.config";
 
 // * routers
-import userRouter from "./p(Presentation)/http/routes/userRoutes";
-import adminRouter from "./p(Presentation)/http/routes/adminRoutes"
-import customerRouter from './p(Presentation)/http/routes/customerRouter'
-import { errorHandles } from "./p(Presentation)/http/middlewares/errorHandler";
-import workerRouter from './p(Presentation)/http/routes/workerRouter'
+import userRouter from "./presentation/http/routes/userRoutes";
+import adminRouter from "./presentation/http/routes/adminRoutes"
+import customerRouter from './presentation/http/routes/customerRouter'
+import { errorHandles } from "./presentation/http/middlewares/errorHandler";
+import workerRouter from './presentation/http/routes/workerRouter'
 
 
 // * socket

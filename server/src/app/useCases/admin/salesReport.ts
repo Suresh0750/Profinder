@@ -1,6 +1,6 @@
 
 // usernameFilter=null&workerNameFilter=null&categoryFilter=null&dateFilter=null
-import {AdminMongoose} from '../../../infrastructure/database/mongoose/ma(MongooseAdminRepository)'
+import {AdminMongoose} from '../../../infrastructure/database/mongoose/admin'
 
 // * ADMIN SALES REPORT * //
 

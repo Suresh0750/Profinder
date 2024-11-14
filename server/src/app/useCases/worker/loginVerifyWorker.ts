@@ -1,4 +1,4 @@
-import {getWorkerRepository} from "../../../infrastructure/database/mongoose/mw(MongooseWorkerRepository)"
+import {getWorkerRepository} from "../../../infrastructure/database/mongoose/worker"
 import {checkPassword} from  "../../../infrastructure/service/bcrypt"
 
 export const LoginVerify = async (EmailAddress:string,Password:string)=>{

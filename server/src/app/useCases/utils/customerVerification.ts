@@ -3,19 +3,19 @@
 
 // * Customer authendication 
 
-import {OTPRepository} from '../../../infrastructure/database/mongoose/mor(MongooseOtpRepository)'
-import {getUserRepository} from '../../../infrastructure/database/mongoose/mur(MongooseUserRepository)'
-import {getWorkerRepository} from '../../../infrastructure/database/mongoose/mw(MongooseWorkerRepository)'
-import {CustomerQueryRepository} from '../../../infrastructure/database/mongoose/mc(MongooseCustomerRepository)'
-import {ResendOTP,GoogleLogintypes} from '../../../domain/entities/c(CustomerOTP)'  // * resend otp data types
-import {User} from '../../../domain/entities/u(User)'  // * resend otp data types
-import {OtpService} from "../../services/o(OtpService)"
-import {ResendOTPStore,OtpVerifyUseCases} from './o(OtpStoreData)'   // * store otp data in database and verif OTP
+import {OTPRepository} from '../../../infrastructure/database/mongoose/otp'
+import {getUserRepository} from '../../../infrastructure/database/mongoose/user'
+import {getWorkerRepository} from '../../../infrastructure/database/mongoose/worker'
+import {CustomerQueryRepository} from '../../../infrastructure/database/mongoose/customer'
+import {ResendOTP,GoogleLogintypes} from '../../../domain/entities/customerOTP'  // * resend otp data types
+import {User} from '../../../domain/entities/user'  // * resend otp data types
+import {OtpService} from "../../services/otpService"
+import {ResendOTPStore,OtpVerifyUseCases} from './otpStoreData'   // * store otp data in database and verif OTP
 import { hashPassword } from '../../../shared/utils/encrptionUtils'
 
 // * types
-import {forgetPasswordDataType} from '../../../domain/entities/c(CustomerOTP)'
-import { WorkerInformation } from '../../../domain/entities/w(Worker)'
+import {forgetPasswordDataType} from '../../../domain/entities/customerOTP'
+import { WorkerInformation } from '../../../domain/entities/worker'
 
 
 

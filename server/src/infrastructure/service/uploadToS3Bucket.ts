@@ -1,5 +1,5 @@
 import { S3Client, PutObjectCommand,ObjectCannedACL } from "@aws-sdk/client-s3";
-import { IMulterFile,paramsImage } from "../../domain/entities/a(Admin)"; // Adjust the path as necessary
+import { IMulterFile,paramsImage } from "../../domain/entities/admin"; // Adjust the path as necessary
 
 
 export const uploadToS3Bucket = async (file: IMulterFile) => {

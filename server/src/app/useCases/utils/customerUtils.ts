@@ -1,5 +1,5 @@
 
-import {CustomerQueryRepository} from '../../../infrastructure/database/mongoose/mc(MongooseCustomerRepository)'
+import {CustomerQueryRepository} from '../../../infrastructure/database/mongoose/customer'
 
 
 // * types 

@@ -1,7 +1,7 @@
 
 
 import {uploadToS3Bucket} from '../../../infrastructure/service/uploadToS3Bucket'
-import {IMulterFile} from"../../../domain/entities/a(Admin)"
+import {IMulterFile} from"../../../domain/entities/admin"
 
 export const uploadImage = async (file:IMulterFile)=>{
     try {

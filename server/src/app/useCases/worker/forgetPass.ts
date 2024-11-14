@@ -1,7 +1,7 @@
 
-import {getWorkerRepository} from '../../../infrastructure/database/mongoose/mw(MongooseWorkerRepository)'
-import {OtpService} from '../../services/o(OtpService)'
-import {OtpStoreData} from '../utils/o(OtpStoreData)'
+import {getWorkerRepository} from '../../../infrastructure/database/mongoose/worker'
+import {OtpService} from '../../services/otpService'
+import {OtpStoreData} from '../utils/otpStoreData'
 
 
 export const isCheckWorkerEmail = async (email:string)=>{
