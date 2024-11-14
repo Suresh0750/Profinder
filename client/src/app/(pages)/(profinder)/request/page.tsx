@@ -140,7 +140,7 @@ export default function WorkerRequestPage() {
     if (!formData.servicelocation) {
       errors.servicelocation = "Service location is required."
     }
-    if (!formData.additionalNotes) {
+    if (!(formData.additionalNotes).trim()) {
       errors.additionalNotes = "Additional notes are required."
     }
 
@@ -155,7 +155,7 @@ export default function WorkerRequestPage() {
       toast.warning(`Please login`)
       setTimeout(() => {
         router.push('/user/login')
-      }, 500)
+      }, 600)
       return
     } else if (customerData?.role !== "user") {
       return toast.warning(`Workers can't book. Please log in as a user.`)
@@ -179,7 +179,10 @@ export default function WorkerRequestPage() {
 
       if (result?.success) {
         toast.success(result?.message)
-        router.push(`/worker-details/${workerDetails?._id}`)
+        setTimeout(() => {
+          router.push(`/user/booking`)
+        }, 600)
+       
       }
     } catch (err: any) {
 
@@ -329,7 +332,7 @@ export default function WorkerRequestPage() {
           </GoogleMap>
         </CardFooter>
       </Card>
-      <Toaster />
+      {/* <Toaster /> */}
     </div>
   )
 }

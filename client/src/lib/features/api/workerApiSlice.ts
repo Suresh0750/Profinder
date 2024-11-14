@@ -59,11 +59,13 @@ export const workerApi = createApi({
             })
         }),
         workerUploadProject : builder.mutation({
-            query : (data)=>({
+            query : (data:any)=>({
                 url:`/worker/uploadWorkerProject`,
                 method:"POST",
                 body : data,
-                headers : getHeaders('worker')
+                headers : {
+                    'Role': 'worker', 
+                }
             })
         }),
         getWorkerProject : builder.query({

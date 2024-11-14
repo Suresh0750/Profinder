@@ -19,8 +19,9 @@ const ImageGrid = () => {
   const workerData = useSelector((state: any) => state?.WorkerSignupData?.getWorkerData);
   const [showImage, setShowImage] = useState<any[]>([]);
   const [customerData, setCustomerData] = useState<any>({});
+  const [stop,setStop] = useState<boolean>(true)
 
-  
+  const { data, refetch, isLoading, error } = useGetWorkerProjectQuery(customerData?._id,{skip:stop,refetchOnMountOrArgChange: true});
   useEffect(() => {
     // Only access localStorage in the browser
     if (typeof window !== "undefined") {
@@ -28,6 +29,7 @@ const ImageGrid = () => {
       if (storedData) {
         try {
           setCustomerData(JSON.parse(storedData));
+          setStop(false)
         } catch (error) {
           console.error("Error parsing customerData from localStorage:", error);
           setCustomerData({});
@@ -36,8 +38,7 @@ const ImageGrid = () => {
     }
   }, []);
   // Fetching worker projects data
-  const { data, refetch, isLoading, error } = useGetWorkerProjectQuery(customerData?._id);
-
+  
   useEffect(() => {
     if (data && data.length > 0) {
       setShowImage(data?.result); // Using data fetched from the API

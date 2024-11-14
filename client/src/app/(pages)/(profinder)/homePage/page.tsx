@@ -145,8 +145,8 @@ const Home = () => {
             <h2 className="text-3xl font-bold">Explore Our Expertise</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-8 mx-6">
             {expertise.map((item, index) => (
-                <Link href={`/service-workerlist`}>
-                  <div key={index} className="bg-white shadow-lg rounded-lg">
+                <Link href={`/service-workerlist`} key={index} >
+                  <div className="bg-white shadow-lg rounded-lg">
                   <Image src={item.imageSrc} alt={item.title} width={400} height={300} className="rounded-t-lg object-cover w-full" />
                   <div className="p-6">
                       <h3 className="text-xl font-bold mb-4">{item.title}</h3>
