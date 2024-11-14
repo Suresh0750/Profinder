@@ -6,7 +6,7 @@ import {PAYU_MERCHANT_KEY ,PAYU_SALT} from  '../../domain/entities/PaymentTypes'
 import {getWorkerRepository} from '../../infrastructure/database/mongoose/MongooseWorkerRepository'
 
 import axios from "axios";
-// import PayUOrderCollection from "../models/PayUOrderCollection";
+
 var jsSHA = require("jssha");
 
 export const payment = (paymentData:any)=>{
@@ -20,7 +20,6 @@ export const payment = (paymentData:any)=>{
           throw error;
         }
         
-        // console.log({ PAYU_MERCHANT_KEY, PAYU_SALT, txnid });
   
         const hashString = `${PAYU_MERCHANT_KEY}|${txnid}|${amount}|${productinfo}|${firstname}|${customerEmail}|||||||||||${PAYU_SALT}`;
   
@@ -38,7 +37,7 @@ export const payment = (paymentData:any)=>{
 
     export const IsActivityUsecases = async(data:any)=>{
         try {
-            // console.log('usecases')
+           
            
             const res = await getWorkerRepository().IsActivityQuery(data.productinfo,data.mihpayid)
             await getWorkerRepository().paymentData(data?.productinfo,Math.floor(Number(data?.amount)),Number(data?.mihpayid))

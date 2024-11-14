@@ -25,31 +25,44 @@ export enum StatusCode {
 
 // * cookie
 
- export enum Cookie {
+ export enum CookieTypes {
     Admin = "adminToken",
     Worker = "workerToken",
     User = "userToken",
+    AccessToken = 'accessToken'
+ }
+
+ export enum Role{
+  Admin ="admin",
+  Wokrer="worker",
+  User = "user",
+  Customer = "customer"
  }
 
 
+
+
+ export type RoleType = 'user' | 'admin' | 'worker' | "customer";
  // * JWT 
 
  export interface AdminDetails {
    adminEmail : string,
-   iat : number,
-   exp : number
+   iat? : number,
+   exp? : number
  }
 
  // * user JWT
 
- export interface customerDetails{
+ export interface CustomerDetails{
    customerId : string,
    customerName :string,
    customerEmail : string,
-   role : string,
+   role: 'user' | 'worker' | 'admin',
    iat ? : number,
    exp ?: number
  }
+
+
 
 
 // * category name type

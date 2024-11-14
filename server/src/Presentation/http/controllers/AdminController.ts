@@ -29,7 +29,9 @@ import {
 
 // * types
 import {IMulterFile} from '../../../domain/entities/Admin'
-import { StatusCode } from "../../../domain/entities/commonTypes"
+import { Role, StatusCode } from "../../../domain/entities/commonTypes"
+import {CookieTypes} from '../../../domain/entities/commonTypes'
+import { JwtService } from "../../../infrastructure/service/JwtService"
 
 
 
@@ -273,15 +275,17 @@ export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
     try{
        
         if(AdminVerifyUseCases(req.body)){
-            const refreshToken =  Jwt.sign({adminEmail: req.body.adminEmail},String(process.env.REFRESH_TOKEN_SECRET),{expiresIn:'7d'})
-            const accessToken = Jwt.sign({adminEmail:req.body.adminEmail},String(process.env.ACCESS_TOKEN_SECRET), { expiresIn:'15m' }); 
-            res.cookie('adminToken',refreshToken,{
+            let email = req.body.adminEmail
+          
+            const { refreshToken, accessToken } = JwtService(email,email,email,Role.Admin)  // * here create Jwt token
+ 
+            res.cookie(CookieTypes.Admin,refreshToken,{
                 httpOnly:true,
                 secure :true,
                 sameSite:'strict',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })    
-            res.cookie('accessToken',accessToken,{
+            res.cookie(CookieTypes.AccessToken,accessToken,{
                 maxAge: 2 * 60 * 1000
             })    
             res.status(StatusCode.Success).json({success:true,message:'login verify successful'})
@@ -298,9 +302,9 @@ export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
 export const adminLogoutController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
      
-        res.clearCookie('accessToken'); // * Clear the accessToken
+        res.clearCookie(CookieTypes.AccessToken); // * Clear the accessToken
          
-        res.clearCookie('adminToken', {  // * Clear the refresh token cookie
+        res.clearCookie(CookieTypes.Admin, {  // * Clear the refresh token cookie
             httpOnly: true,
             secure: true, 
             sameSite: 'strict'

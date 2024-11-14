@@ -163,6 +163,7 @@ export const workerProjectUsecases = async (workerProjectDetails:ProjectDetails)
 }
 export const getWorkerProjectData = async(_id:string)=>{
     try {
+        console.log(_id)
         return await getWorkerRepository().getProjectDetailsQuery(_id)
     } catch (error) {
         console.log(`Error from useCases->worker->getWorkerProjectData\n`,error)

@@ -2,10 +2,10 @@ import { Request,Response,NextFunction, json } from "express";
 import {JwtService} from '../../../infrastructure/service/JwtService'
 import {LoginVerify} from "../../../app/useCases/user/loginVerifyUser"
 import {isCheckUserEmail} from '../../../app/useCases/user/forgetPass'
-import { StatusCode } from "../../../domain/entities/commonTypes";
+import { Role, StatusCode } from "../../../domain/entities/commonTypes";
 import { IMulterFile } from "../../../domain/entities/Admin";
 import { uploadImage } from "../../../app/useCases/utils/uploadImage";
-
+import {CookieTypes} from '../../../domain/entities/commonTypes'
 import {
     createUser,
     ProfileUsecases,
@@ -128,17 +128,17 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
             throw new Error('User is blocked')
         }else if(loginUsecase && loginUsecase?._id){
     
-            const  {refreshToken,accessToken} = JwtService((loginUsecase._id).toString(),loginUsecase.username,loginUsecase.EmailAddress,(req.body.role || "user"))   // * mongose Id converted as a string
+            const  {refreshToken,accessToken} = JwtService((loginUsecase._id).toString(),loginUsecase.username,loginUsecase.EmailAddress,(req.body.role || Role.User))   // * mongose Id converted as a string
         
             // * JWT referesh token setUp
             
-            res.cookie('userToken',refreshToken,{
+            res.cookie(CookieTypes.User,refreshToken,{
                 httpOnly:true,
                 secure :true,
                 sameSite:'none',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
-            res.cookie('accessToken',accessToken,{
+            res.cookie(CookieTypes.AccessToken,accessToken,{
                 maxAge: 2 * 60 * 1000
             })
             const customerData = {

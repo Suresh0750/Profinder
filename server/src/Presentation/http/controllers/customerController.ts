@@ -4,7 +4,7 @@ import { Request,Response,NextFunction } from "express"
 import {OtpVerifyUseCases} from "../../../app/useCases/utils/OtpStoreData"
 import {getVerifyOTP} from '../../../domain/entities/CustomerOTP'
 import {JwtService} from '../../../infrastructure/service/JwtService'
-import {Cookie,StatusCode} from '../../../domain/entities/commonTypes'
+import {CookieTypes,StatusCode} from '../../../domain/entities/commonTypes'
 import {WorkerInformation} from '../../../domain/entities/Worker'
 import {userVerification,workerVerification,ForgetPassWordUseCase,customerResentOTP,GoogleLoginUseCases, workerGoogleVerification, GoogleLoginWorkerRegister} from '../../../app/useCases/utils/customerVerification'
 import { uploadImage } from "../../../app/useCases/utils/uploadImage"
@@ -148,14 +148,14 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
 
                 const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(userData?.username || ''),(userData?.EmailAddress || ''),(req.body.role || "user"))   // * mongose Id converted as a string
                 // * JWT referesh token setUp
-                res.cookie(Cookie.User,refreshToken,{
+                res.cookie(CookieTypes.User,refreshToken,{
                     httpOnly:true,
                     secure :true,
                     sameSite:'strict',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 })
 
-                res.cookie('accessToken',accessToken,{
+                res.cookie(CookieTypes.AccessToken,accessToken,{
                     maxAge: 15 * 60 * 1000
                 })   
                 const customerData = {
@@ -174,13 +174,13 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
                 const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(workerData?.FirstName || ''),(workerData?.EmailAddress || ''),(req.body.role || "worker"))   // * mongose Id converted as a string
                 // * JWT referesh token setUp
         
-                res.cookie(Cookie.Worker,refreshToken,{
+                res.cookie(CookieTypes.Worker,refreshToken,{
                     httpOnly:true,
                     secure :true,
                     sameSite:'strict',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 })
-                res.cookie('accessToken',accessToken,{
+                res.cookie(CookieTypes.AccessToken,accessToken,{
                     maxAge: 15 * 60 * 1000
                 })
 
@@ -246,13 +246,13 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
         }else{
         const  {refreshToken,accessToken} = JwtService(((result._id)?.toString() || ''),result.FirstName,result.EmailAddress,'worker')
         // * JWT referesh token setUp
-        res.cookie(Cookie.Worker,refreshToken,{
+        res.cookie(CookieTypes.Worker,refreshToken,{
             httpOnly:true,
             secure :true,
             sameSite:'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-        res.cookie('accessToken',accessToken,{
+        res.cookie(CookieTypes.AccessToken,accessToken,{
             maxAge: 15 * 60 * 1000
         })
     }
@@ -283,13 +283,13 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                 }
                 const  {refreshToken,accessToken} = JwtService((userData?._id).toString(),userData.username,userData.EmailAddress,(req.body.role || "worker"))  
                 // * JWT referesh token setUp
-                res.cookie(Cookie.User,refreshToken,{
+                res.cookie(CookieTypes.User,refreshToken,{
                     httpOnly:true,
                     secure :true,
                     sameSite:'strict',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 })
-                res.cookie('accessToken',accessToken,{
+                res.cookie(CookieTypes.AccessToken,accessToken,{
                     // maxAge: 15 * 60 * 1000
                     maxAge: 2 * 60 * 1000
                 })
@@ -315,13 +315,13 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
             if(customerDetails?._id){
                 const  {refreshToken,accessToken} = JwtService((customerDetails?._id).toString(),customerDetails.FirstName,customerDetails.EmailAddress, "worker")  
                 // * JWT referesh token setUp
-                res.cookie(Cookie.Worker,refreshToken,{
+                res.cookie(CookieTypes.Worker,refreshToken,{
                     httpOnly:true,
                     secure :true,
                     sameSite:'strict',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 })
-                res.cookie('accessToken',accessToken,{
+                res.cookie(CookieTypes.AccessToken,accessToken,{
                     // maxAge: 15 * 60 * 1000
                     maxAge: 2 * 60 * 1000
                 })
@@ -347,13 +347,13 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
 export const CustomerLogoutController =async (req:Request,res:Response,next:NextFunction)=>{
     try {
 
-        res.clearCookie(Cookie.Worker, {
+        res.clearCookie(CookieTypes.Worker, {
             httpOnly: true,
             secure: true,
             sameSite: 'strict',
             path : '/'
         });
-        res.clearCookie(Cookie.User, {
+        res.clearCookie(CookieTypes.User, {
             httpOnly: true,
             secure: true,
             sameSite: 'strict',

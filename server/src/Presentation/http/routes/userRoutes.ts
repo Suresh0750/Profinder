@@ -17,8 +17,8 @@ import {
 
 
 // * authendication middleware 
-import {customeVerify} from '../middlewares/JWTVerify/customerVerify'
-import {authorizeRoles} from '../middlewares/authorizeRoles'
+
+import {verifyTokenAndRole} from '../middlewares/verifyTokenAndRole'
 
 const userRouter = Router()
 
@@ -32,16 +32,16 @@ userRouter.post('/checkEmailForgetPass',isEmailValidate,isCheckEmail)   // * che
 
 
 // * user dashboard
-userRouter.get('/profile/:id',customeVerify,profile)
-userRouter.put('/updateprofile',upload.single('newImageData'),customeVerify,editprofile)
-userRouter.get('/booking/:id',customeVerify,authorizeRoles('user'),getBooking)
+userRouter.get('/profile/:id',verifyTokenAndRole('user'),profile)
+userRouter.put('/updateprofile',upload.single('newImageData'),editprofile)
+userRouter.get('/booking/:id',verifyTokenAndRole('user'),getBooking)
 userRouter.get('/paymentId/:requestId',paymentId)
 
 
 // * chats
-userRouter.post('/conversation',customeVerify,authorizeRoles('user'),conversation)
-userRouter.get('/conversation/:id',customeVerify,authorizeRoles('user'),getConversation)
-userRouter.get('/message/:id',customeVerify,authorizeRoles('user'),getMessage)
+userRouter.post('/conversation',verifyTokenAndRole('user'),conversation)
+userRouter.get('/conversation/:id',verifyTokenAndRole('user'),getConversation)
+userRouter.get('/message/:id',verifyTokenAndRole('user'),getMessage)
 
 
 

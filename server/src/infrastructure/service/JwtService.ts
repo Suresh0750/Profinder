@@ -4,31 +4,24 @@
 import Jwt,{JwtPayload} from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config()
+import {RoleType} from '../../domain/entities/commonTypes'
 
-export function JwtService(customer:string,customerName:string,customerEmail:string,role:string){
-    try{
-       
-        let refreshToken,accessToken ;
-        if(role=='user'){
 
-            refreshToken = Jwt.sign({customerId:customer,customerName,customerEmail,role},String(process.env.REFRESH_TOKEN_SECRET),{expiresIn:'7d'})
-            // * Access token
-            accessToken = Jwt.sign({customerId:customer,customerName,customerEmail,role},String(process.env.ACCESS_TOKEN_SECRET), { expiresIn:'15m' }); 
-            //  console.log(refreshToken,accessToken)
-        }else{
+export function JwtService(customerId: string, customerName: string, customerEmail: string, role: RoleType) {
+    try {
+        const payload = { customerId, customerName, customerEmail, role };
 
-            refreshToken = Jwt.sign({customerId:customer,customerName,customerEmail,role},String(process.env.REFRESH_TOKEN_SECRET),{expiresIn:'7d'})
-            // * Access token
-            accessToken = Jwt.sign({customerId:customer,customerName,customerEmail,role},String(process.env.ACCESS_TOKEN_SECRET), { expiresIn:'15m' }); 
-            //  console.log(refreshToken,accessToken)
-        }
-         return {refreshToken,accessToken}
+        const refreshToken = Jwt.sign(payload, String(process.env.REFRESH_TOKEN_SECRET), { expiresIn: '7d' });
+        const accessToken = Jwt.sign(payload, String(process.env.ACCESS_TOKEN_SECRET), { expiresIn: '15m' });
 
-    }catch(err){
-        // console.log(`Error from JWTService token generate \n${err}`)
-        throw err
+        return { refreshToken, accessToken };
+
+    } catch (err) {
+        console.error(`Error generating JWT tokens: ${err}`);
+        throw err;
     }
 }
+
 
 export function verifyRefreshToken (token:string){
     try {
@@ -39,3 +32,4 @@ export function verifyRefreshToken (token:string){
         throw error
     }
 }
+

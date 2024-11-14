@@ -1,13 +1,13 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { StatusCode, customerDetails } from '../../../../domain/entities/commonTypes';
+import { StatusCode, CustomerDetails } from '../../../../domain/entities/commonTypes';
 
 
 // * Extend Express session to include user data
 declare module 'express-session' {
     interface SessionData {
-        UserData: customerDetails;
-        WorkerData: customerDetails;
+        UserData: CustomerDetails;
+        WorkerData: CustomerDetails;
         customerId: string;
     }
 }
@@ -33,7 +33,7 @@ export const renewToken = async (req: Request, res: Response): Promise<boolean> 
                 return false; // Invalid refresh token
             }
     
-            const { customerId, customerName, customerEmail, role } = userRefreshTokenData as customerDetails;
+            const { customerId, customerName, customerEmail, role } = userRefreshTokenData as CustomerDetails;
             // console.log('step7')
             // Generate new access token
             const accessToken = jwt.sign(

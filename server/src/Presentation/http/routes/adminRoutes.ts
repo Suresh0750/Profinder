@@ -1,7 +1,6 @@
 
 import {Request,Response,Router} from 'express'
-import {verify} from '../middlewares/JWTVerify/adminVerify'
-import {authorizeRoles} from '../middlewares/authorizeRoles'
+import {verifyTokenAndRole} from '../middlewares/verifyTokenAndRole'
 import upload from '../../../infrastructure/service/multer'
 import {
     isBlock, // * worker block admin side
@@ -32,45 +31,45 @@ const adminRoutes = Router()
 
 
 // * ADMIN SALES - REPORT 
-adminRoutes.get('/sales-report',verify,authorizeRoles('admin'),salesReport)
-adminRoutes.get('/categoryList',verify,authorizeRoles('admin'),categoryList)
-adminRoutes.get('/download-sales',verify,authorizeRoles('admin'),downloadSales)
+adminRoutes.get('/sales-report',verifyTokenAndRole('admin'),salesReport)
+adminRoutes.get('/categoryList',verifyTokenAndRole('admin'),categoryList)
+adminRoutes.get('/download-sales',verifyTokenAndRole('admin'),downloadSales)
 
 
 // * Admin / dashboard side
-adminRoutes.get('/dashboardOverview',verify,authorizeRoles('admin'),dashboardOverview)
-adminRoutes.get('/dashboard',verify,authorizeRoles('admin'),dashboard)
-adminRoutes.get('/dashboardWorker',verify,authorizeRoles('admin'),workerDashboard)
-adminRoutes.get('/dashboard-review',verify,authorizeRoles('admin'),reviewDashboard)
+adminRoutes.get('/dashboardOverview',verifyTokenAndRole('admin'),dashboardOverview)
+adminRoutes.get('/dashboard',verifyTokenAndRole('admin'),dashboard)
+adminRoutes.get('/dashboardWorker',verifyTokenAndRole('admin'),workerDashboard)
+adminRoutes.get('/dashboard-review',verifyTokenAndRole('admin'),reviewDashboard)
 
 
 // * admin / User side
-adminRoutes.get('/getAllUserList',verify,authorizeRoles('admin'),getAllUserList)
-adminRoutes.post('/isBlockUser',verify,authorizeRoles('admin'),isBlockUserController)
+adminRoutes.get('/getAllUserList',verifyTokenAndRole('admin'),getAllUserList)
+adminRoutes.post('/isBlockUser',verifyTokenAndRole('admin'),isBlockUserController)
 
 // * admin / Worker Approval side
-adminRoutes.get('/getAllUnApprovalWorkerlist',verify,authorizeRoles('admin'),getAllUnApprovalWorkerlist)
-adminRoutes.put('/isWorkerApproval/:id',verify,authorizeRoles('admin'),isWorkerApproval)
+adminRoutes.get('/getAllUnApprovalWorkerlist',verifyTokenAndRole('admin'),getAllUnApprovalWorkerlist)
+adminRoutes.put('/isWorkerApproval/:id',verifyTokenAndRole('admin'),isWorkerApproval)
 
 // admin / worker details
-adminRoutes.get('/worker-details/:workerId',verify,authorizeRoles('admin'),workerDetails)
+adminRoutes.get('/worker-details/:workerId',verifyTokenAndRole('admin'),workerDetails)
 
 
 // * admin/ worker side
-adminRoutes.get("/getWorkerList",verify,authorizeRoles('admin'),getALLWorkerListController)
-adminRoutes.patch("/worker/isBlock/:id",verify,authorizeRoles('admin'),isBlock)
+adminRoutes.get("/getWorkerList",verifyTokenAndRole('admin'),getALLWorkerListController)
+adminRoutes.patch("/worker/isBlock/:id",verifyTokenAndRole('admin'),isBlock)
 
 
 // * admin catagory router
-adminRoutes.post("/addCategory",verify,authorizeRoles('admin'),upload.single('CategoryImage'),addCategoryController)
-adminRoutes.get('/fetchCategoryData',verify,authorizeRoles('admin'),getAllCategory)
-adminRoutes.post('/editCategory',verify,authorizeRoles('admin'),upload.single('newImageData'),editCategory)
-adminRoutes.post('/isListVerify',verify,authorizeRoles('admin'),verifyListController)
-adminRoutes.delete('/deleteProduct/:id',verify,authorizeRoles('admin'),deleteProductController)
+adminRoutes.post("/addCategory",verifyTokenAndRole('admin'),upload.single('CategoryImage'),addCategoryController)
+adminRoutes.get('/fetchCategoryData',verifyTokenAndRole('admin'),getAllCategory)
+adminRoutes.post('/editCategory',verifyTokenAndRole('admin'),upload.single('newImageData'),editCategory)
+adminRoutes.post('/isListVerify',verifyTokenAndRole('admin'),verifyListController)
+adminRoutes.delete('/deleteProduct/:id',verifyTokenAndRole('admin'),deleteProductController)
 
 
 // * admin authendication 
-adminRoutes.post('/adminLogout',verify,authorizeRoles('admin'),adminLogoutController)
+adminRoutes.post('/adminLogout',verifyTokenAndRole('admin'),adminLogoutController)
 adminRoutes.post("/adminVerify",AdminVerify)
 
 export default adminRoutes

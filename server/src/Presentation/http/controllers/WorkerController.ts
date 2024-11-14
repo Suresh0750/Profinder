@@ -4,7 +4,7 @@ import {isCheckWorkerEmail} from "../../../app/useCases/worker/forgetPass"
 import {IMulterFile} from "../../../domain/entities/s3entities"
 import {uploadImage} from '../../../app/useCases/utils/uploadImage'
 import {PersonalInformation,WorkerInformation} from '../../../domain/entities/Worker'
-import {Cookie,StatusCode} from '../../../domain/entities/commonTypes'
+import {CookieTypes,StatusCode} from '../../../domain/entities/commonTypes'
 import {hashPassword} from '../../../shared/utils/encrptionUtils'
 import {JwtService} from '../../../infrastructure/service/JwtService'
 import { getUserRequestDataUsecasuse } from "../../../app/useCases/utils/customerUtils";
@@ -170,9 +170,10 @@ export const getSingleWorkerDetails = async (req:Request,res:Response,next:NextF
 }
 
 // * Worker in Project side
-export const AddProjectDetails = async(req:Request,res:Response,next:NextFunction)=>{
+export const addProjectDetails = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-      
+        console.log('addProjectDetails')
+        console.log(req.file)
         const file: IMulterFile |any = req.file
         const imageUrl = await uploadImage(file) 
         req.body.ProjectImage = imageUrl
@@ -185,8 +186,13 @@ export const AddProjectDetails = async(req:Request,res:Response,next:NextFunctio
 }
 export const getProjectDetails = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        const result = await getWorkerProjectData(req.params.id)
-        return res.status(StatusCode.Success).json({success:true,message:'Worker Project Data has been Fetched',result})
+        console.log('params id')
+        console.log(req.params.id)
+        if(req.params.id){
+            const result = await getWorkerProjectData(req.params.id)
+            return res.status(StatusCode.Success).json({success:true,message:'Worker Project Data has been Fetched',result})
+        }
+        return res.status(StatusCode.BadRequest).json({success:false,message:'worker id is required'})
     } catch (error) {
         console.log(`Error from presentation layer-> http->getProjectDetails\n ${error}`)
         next(error)
@@ -272,13 +278,13 @@ export const LoginWorkerController = async (req:Request,res:Response,next:NextFu
         const  {refreshToken,accessToken} = JwtService((loginUsecase?._id||'').toString(),loginUsecase.FirstName,loginUsecase.EmailAddress,(req.body.role || "worker"))  
         
         // * JWT referesh token setUp
-        res.cookie(Cookie.Worker,refreshToken,{
+        res.cookie(CookieTypes.Worker,refreshToken,{
             httpOnly:true,
             secure :true,
             sameSite:'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-        res.cookie('accessToken',accessToken,{
+        res.cookie(CookieTypes.AccessToken,accessToken,{
             maxAge: 15 * 60 * 1000
         })
         const customerData  = {
