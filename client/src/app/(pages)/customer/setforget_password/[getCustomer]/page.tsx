@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import bgImage from '../../../../../../public/images/User/SetOTP_bg.jpg';
-import SetNewPass from '@/components/Utils/commonInputOTP'
+import SetNewPass from '@/components/Utils/CT(commonInputOTP)'
 import {ForgetPasswordPage} from '@/types/utilsTypes'
 
 const SetPassword = ({params}:{params:ForgetPasswordPage}) => {

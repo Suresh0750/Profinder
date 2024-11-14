@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input"
 import { FaEye, FaEyeSlash } from "react-icons/fa"
 import { toast, Toaster } from "sonner"
 import Link from "next/link"
-import GoogleSignIn from "../Utils/googleLogin"
+import GoogleSignIn from "../Utils/GL(googleLogin)"
 import {updateCustomerLogin,updateRole} from '@/lib/features/slices/customerSlice'
 import { useDispatch } from "react-redux";
 

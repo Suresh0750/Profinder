@@ -1,5 +1,0 @@
-
-
-let  workerData = {"_id":"66f239b0523daeb45fb10a51","EmailAddress":"sureshvarma0750@gmail.com","Apt":"rsmantion","Category":"mechanic","City":"pavoorchatram","Country":"India","FirstName":"Suresh","Identity":"https://profinder.s3.eu-north-1.amazonaws.com/uploads/1727150502025_graph BFS.png","LastName":"Sureshvarma","Password":"$2b$10$0cq38qp.v3iYBG.j7T56u.bFrXW9AFOUqNvYceJzR/6YsgvNtQ7/a","PhoneNumber":8552653589,"PostalCode":"62780","Profile":"https://lh3.googleusercontent.com/a/ACg8ocJF97ouQPCrh00FzLMhnV6aLLOVtsgJp9uzNroomIK-lDarMA=s96-c","State":"TN","StreetAddress":"742 west street, Tenkasi at Tamil Nadu","WorkerImage":[{"projectName":"dfa fsdasa","ProjectDescription":"dsadfs fsasdaffdsa","ProjectImage":"https://profinder.s3.eu-north-1.amazonaws.com/uploads/1727617905369_graph1.png","_id":"66f95b75c4c2cf455a4a87b1"}],"__v":0,"createdAt":"2024-09-24T04:01:50.854Z","isVerified":true,"isWorker":false,"reviews":[],"updatedAt":"2024-09-29T13:51:49.223Z","latitude":11.04012,"longitude":76.93576,"isBlock":false}
-
-
