@@ -1,6 +1,6 @@
 
 import { json } from 'body-parser'
-import {AdminMongoose} from '../../../infrastructure/database/mongoose/MongooseAdminRepository'
+import {AdminMongoose} from '../../../infrastructure/database/mongoose/ma(MongooseAdminRepository)'
 import {getWorkerData} from '../../../infrastructure/service/topWorkelist'
 
 

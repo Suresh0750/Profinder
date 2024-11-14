@@ -1,9 +1,9 @@
 
-import {PersonalInformation,WorkerInformation,ProjectDetails,messageTypes,ProfessionalInfoData} from '../../../domain/entities/Worker'
-import {getWorkerRepository} from "../../../infrastructure/database/mongoose/MongooseWorkerRepository"
-import {OtpService} from '../../services/OtpService'
-import {OtpStoreData} from '../utils/OtpStoreData'
-import {verifyRefreshToken} from "../../../infrastructure/service/JwtService"
+import {PersonalInformation,WorkerInformation,ProjectDetails,messageTypes,ProfessionalInfoData} from '../../../domain/entities/w(Worker)'
+import {getWorkerRepository} from "../../../infrastructure/database/mongoose/mw(MongooseWorkerRepository)"
+import {OtpService} from '../../services/o(OtpService)'
+import {OtpStoreData} from '../utils/o(OtpStoreData)'
+import {verifyRefreshToken} from "../../../infrastructure/service/jw(JwtService)"
 import {GeoCoding} from "../../../infrastructure/service/geoCode"
 import { sendMessage } from '../utils/chatUtils'
 import { messageType } from '../../../domain/entities/commonTypes'

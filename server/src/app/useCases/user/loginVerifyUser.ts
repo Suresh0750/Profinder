@@ -1,6 +1,6 @@
 
-import {User} from "../../../domain/entities/User"
-import {getUserRepository} from "../../../infrastructure/database/mongoose/MongooseUserRepository"
+import {User} from "../../../domain/entities/u(User)"
+import {getUserRepository} from "../../../infrastructure/database/mongoose/mur(MongooseUserRepository)"
 import {checkPassword} from  "../../../infrastructure/service/bcrypt"
 
 export const LoginVerify = async (EmailAddress:string,Password:string)=>{

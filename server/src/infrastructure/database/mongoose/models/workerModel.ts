@@ -1,5 +1,5 @@
 import { Document, model, Schema } from "mongoose";
-import {PersonalInformation, ProfessionInformation,WorkerInformation} from '../../../../domain/entities/Worker'
+import {PersonalInformation, ProfessionInformation,WorkerInformation} from '../../../../domain/entities/w(Worker)'
 
 const workerSchema = new Schema<WorkerInformation>({
     FirstName: { type: String, required: true },

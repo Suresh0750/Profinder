@@ -1,7 +1,7 @@
 
-import {getUserRepository} from '../../../infrastructure/database/mongoose/MongooseUserRepository'
-import {OtpService} from '../../services/OtpService'
-import {OtpStoreData} from '../utils/OtpStoreData'
+import {getUserRepository} from '../../../infrastructure/database/mongoose/mur(MongooseUserRepository)'
+import {OtpService} from '../../services/o(OtpService)'
+import {OtpStoreData} from '../utils/o(OtpStoreData)'
 
 
 export const isCheckUserEmail = async (email:string)=>{
