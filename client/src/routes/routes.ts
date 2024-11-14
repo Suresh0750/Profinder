@@ -1,5 +1,5 @@
 
-const changeToHomeRoutes = new Set(["/user/login","/user/UserOtp/", "/user/signup","/worker/login","/worker/signup"]);
+const changeToHomeRoutes = new Set(["/user/login","/user/userOtp/", "/user/signup","/worker/login","/worker/signup"]);
 
 
 

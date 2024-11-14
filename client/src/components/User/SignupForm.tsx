@@ -76,7 +76,7 @@ export function SignupForm() {
       if (res.success) {
         toast.success('User registration successful');
         setTimeout(() => {
-          router.push(`/user/UserOtp/${res.user}`);
+          router.push(`/user/userOtp/${res.user}`);
         }, 500);
       } else {
         toast.error(res?.data?.errorMessage);
