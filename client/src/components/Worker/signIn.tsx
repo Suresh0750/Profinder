@@ -24,7 +24,7 @@ import Link from 'next/link'
 import {updateCustomerLogin,updateRole} from '@/lib/features/slices/customerSlice'
 import { useDispatch } from "react-redux"
 import { updateSignup ,getWorkerData} from "@/lib/features/slices/workerSlice"
-import GooglLogin from '../Utils/workerGoogleWG'
+import GooglLogin from '../Utils/WorkerGoogle'
 
 const formSchema = z.object({
   EmailAddress: z.string().email({

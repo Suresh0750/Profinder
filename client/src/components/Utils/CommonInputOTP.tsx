@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Toaster } from "sonner";
 import { Hourglass } from "react-loader-spinner";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // * Eye icon from react-icons
-import {HandlError} from '@/components/Utils/fm(formValidation)fdda/setPassword' // * from validation
+import {HandlError} from '@/components/Utils/FormValidation/setPassword' // * from validation
 import {useForgetPasswordMutation,useCustomerResendMutation} from '@/lib/features/api/customerApiSlice'
 import {Vortex} from 'react-loader-spinner'
 import {toast} from 'sonner'
