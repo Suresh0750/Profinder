@@ -1,8 +1,8 @@
 
 
 // * common API for User and Worker
-
-import { createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
+import { BaseQueryFn } from "@reduxjs/toolkit/query";
+import { createApi, fetchBaseQuery,FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
 import {OTPData} from '../../../types/otpTypes/otpTypes'
 
 
@@ -10,11 +10,30 @@ const baseQuery = fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
     credentials: 'include',
 });
+const baseQueryWithReAuth: BaseQueryFn<
+    string | FetchArgs, 
+    unknown,            
+    FetchBaseQueryError 
+> = async (args, api, extraOptions) => {
+    const result = await baseQuery(args, api, extraOptions);
+
+ 
+    if (
+        result.error &&
+        (result.error.status === 403 || result.error.status === 401)
+    ) {
+       
+        localStorage.setItem("customerData", "");
+
+    }
+
+    return result;
+};
 
 // Function to get headers
 const getHeaders = (role: string) => ({
     'Role': role, 
-    'Content-Type': 'application/json'  // Specify Content-Type header
+    'Content-Type': 'application/json'  // * Specify Content-Type header
 });
 
 

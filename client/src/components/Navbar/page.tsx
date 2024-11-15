@@ -50,7 +50,11 @@ export default function Navbar() {
       if (result?.success) {
         toast.success(result?.message)
         localStorage.setItem("customerData", '')
-        window.location.replace('/homePage')
+        localStorage.setItem("conversationId", '')
+        localStorage.setItem("workerDetails", '')
+        setTimeout(()=>{
+          window.location.replace('/homePage')
+        },600)
       }
     } catch (error) {
       console.error(error)

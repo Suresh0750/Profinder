@@ -49,10 +49,10 @@ const UserForgetPassword = ({role}:{role:string}) => {
       if (result.success) {
         toast.success(result.message);
 
-        dispatch(updateWorkerId(result?.userEmailValidation))
+      await  dispatch(updateWorkerId(result?.userEmailValidation))
         setTimeout(() => {
           Router.push(`/customer/setforget_password/${role}`);
-        }, 2000);
+        }, 600);
       }
      
     } catch (err: any) {

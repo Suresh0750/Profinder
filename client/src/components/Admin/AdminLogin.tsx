@@ -43,7 +43,7 @@ const AdminLogin = () => {
     }catch(error:any){
       console.log(error)
       {
-        error?.error?.data?.errorMessage  ? toast.error(error?.error?.data?.errorMessage) : toast.error('something wron try again')
+        error?.error?.data?.errorMessage  ? toast.error(error?.error?.data?.errorMessage) : toast.error('something wrong try again')
       } 
     }
    

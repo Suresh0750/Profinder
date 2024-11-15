@@ -45,17 +45,17 @@ export async function middleware(req:NextRequest){
     return NextResponse.redirect(loginUrl)
   }
   
-  if(pathname?.includes('/user') && !pathname?.includes('/user/UserOtp')  && !isUserProtectedRoute(pathname)&&!userVerifyToken){
-    
+  if(pathname?.includes('/user') && !pathname?.includes('/user/UserOtp') && !pathname?.includes('/customer/setforget_password') && !pathname?.includes("/customer/forgetpassword") && !isUserProtectedRoute(pathname)&&!userVerifyToken){
+    console.log('homePage 1')
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }
   if((workerVerifyToken && isUserProtectedRoute(pathname)) || (userVerifyToken && isUserProtectedRoute(pathname)) ){
-   
+    console.log('homePage 2')
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }else if((!workerVerifyToken && !isUserProtectedRoute(pathname) && req.url == '/homePage')||(!workerVerifyToken&& (req.url).includes("/worker/dashboard"))){
-
+    console.log('homePage 3')
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
   }

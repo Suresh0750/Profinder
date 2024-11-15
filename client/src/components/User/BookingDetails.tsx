@@ -15,7 +15,7 @@ import {
   XCircle,
   Receipt,
   MessageSquare,
-
+  BadgeIndianRupee
 } from "lucide-react";
 {/**/}
 
@@ -409,7 +409,7 @@ const downloadInvoice = async () => {
                 </div>
                 <div className="flex items-center justify-between space-x-2">
                 <div className="flex gap-1 items-center">
-                  <DollarSign className="w-5 h-5 text-gray-500" />
+                  <BadgeIndianRupee className="w-5 h-5 text-gray-500" />
                   <span className="font-semibold">Payment :</span>&nbsp;
                   <Badge variant={"default"}>
                     <h2>{selectedWork?.payment}</h2>
