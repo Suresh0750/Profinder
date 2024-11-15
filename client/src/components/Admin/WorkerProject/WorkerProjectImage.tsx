@@ -7,9 +7,9 @@ import { useGetWorkerProjectQuery } from "@/lib/features/api/workerApiSlice";
 
 
 interface ImageData {
-  src: string;
-  alt: string;
-  id: number;
+  ProjectDescription: string;
+  ProjectImage: string;
+  projectName: number;
 }
 
 const ImageGrid = () => {
@@ -49,6 +49,7 @@ const ImageGrid = () => {
 
   const handleButtonClick = async (workerProject: any) => {
     try {
+      console.log(JSON.stringify(workerProject))
       setModalData(workerProject);
       setIsViewDetails(true); // Open modal
     } catch (error) {
@@ -86,6 +87,8 @@ const ImageGrid = () => {
                 src={workerProject.ProjectImage}
                 alt={`${workerProject.projectName} Image`}
                 className="w-full h-full object-cover"
+                width={250}
+                height={250}
               />
 
               {/* Button container with hover effect */}
@@ -115,13 +118,13 @@ const ImageGrid = () => {
             {modalData && (
               <div>
                 <Image
-                  src={modalData.src}
-                  alt={modalData.alt}
+                  src={modalData.ProjectImage}
+                  alt={modalData.ProjectDescription}
                   width={500}
                   height={500}
                   className="object-cover"
                 />
-                <p>{modalData.alt}</p>
+                <p>{modalData.projectName}</p>
               </div>
             )}
           </div>

@@ -89,7 +89,7 @@ const SignupOTP  = ({userId}:{userId:string}) => {
       if(timer!=0 || resendLoading) return //* prevent multiple click
 
       
-      const result = await CustomerResend({userId,role:'worker'}).unwrap()
+      const result = await CustomerResend({customerID:userId,role:'worker'}).unwrap()
       console.log(result)
       if(result?.success){
         toast.success(result?.message)

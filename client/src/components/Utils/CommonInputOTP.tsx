@@ -46,9 +46,8 @@ export default function SetNewPass({role}:{role:string}) {
   });
 
   useEffect(()=>{
-    alert(customerId)
+   
     if(role){
-      alert(customerId)
       setCustomerID(customerId)
       }
 
@@ -60,7 +59,7 @@ export default function SetNewPass({role}:{role:string}) {
     try {
   
       if(timer!=0) return
-      alert(customerID)
+     
       const result = await CustomerResend({role,customerID}).unwrap()
       if(result.success){
         toast.success(result.message)

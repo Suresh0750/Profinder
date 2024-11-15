@@ -98,7 +98,7 @@ const DashboardProfessionalInfo = () => {
         const customerData = JSON.parse(localStorage.getItem("customerData") || '{_id:null}')
         
         if(customerData?._id){
-            alert(customerData?._id)
+           
           
            const workDetails = {
             _id : customerData?._id,
@@ -110,7 +110,7 @@ const DashboardProfessionalInfo = () => {
            try{
                const res = await addtionalProffessionalInfo(workDetails).unwrap()
                if(res.success){
-                   alert(res.message)
+                   
                    toast.success(res.message)
                    dispatch(getWorkerData({...workerData,experience:data?.experience,availability:data?.availability,rate : Number(data?.rate)}))
                 //    setTimeout(()=>{

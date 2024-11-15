@@ -12,6 +12,7 @@ export async function middleware(req:NextRequest){
     const pathname = req.nextUrl.pathname;
     console.log('path name')
     console.log(pathname)
+    console.log(req.method)
   // Improved matcher for static assets
   if (pathname.startsWith("/_next/") || pathname.startsWith("/favicon.ico")) {
     return NextResponse.next();
@@ -45,7 +46,7 @@ export async function middleware(req:NextRequest){
     return NextResponse.redirect(loginUrl)
   }
   
-  if(pathname?.includes('/user') && !pathname?.includes('/user/UserOtp') && !pathname?.includes('/customer/setforget_password') && !pathname?.includes("/customer/forgetpassword") && !isUserProtectedRoute(pathname)&&!userVerifyToken){
+  if(pathname?.includes('/user') && !pathname?.includes('/user/userOtp') && !pathname?.includes('/customer/setforget_password') && !pathname?.includes("/customer/forgetpassword") && !isUserProtectedRoute(pathname)&&!userVerifyToken){
     console.log('homePage 1')
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)

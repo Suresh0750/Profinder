@@ -21,7 +21,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose,refetch }) =>
   const [error, setError] = useState<string>("");
   const [customerData, setCustomerData] = useState<any>({});
 
-  const [workerUploadProject] = useWorkerUploadProjectMutation()
+  const [workerUploadProject,{isLoading}] = useWorkerUploadProjectMutation()
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -68,7 +68,7 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose,refetch }) =>
     e.preventDefault();
     setError(""); // Reset error before validation
   
-    if (!validateForm()) return;
+    if (!validateForm() || isLoading) return;
   
     const formData = new FormData();
     if(customerData?._id) formData.append("_id", customerData?._id);
@@ -124,6 +124,8 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose,refetch }) =>
                 src={URL.createObjectURL(image)}
                 alt="Preview"
                 className="mt-2 w-full h-48 object-cover rounded-md"
+                width={250}
+                height={250}
               />
             )}
           </div>
