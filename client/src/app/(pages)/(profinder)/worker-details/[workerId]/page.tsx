@@ -7,7 +7,7 @@ import { useGetSingleWorkerDetailsQuery } from '@/lib/features/api/workerApiSlic
 import { useGetReviewQuery } from '@/lib/features/api/customerApiSlice'
 import { useConversationMutation } from '@/lib/features/api/userApiSlice'
 import defaultImage from '../../../../../../public/images/worker/defaultImage.png'
-import MaterialCarousel from '@/components/W(wokerDetailscarousel)'
+import MaterialCarousel from '@/components/WwokerDetailscarousel'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
