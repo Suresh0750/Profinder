@@ -1,5 +1,5 @@
 import { IOTPRepository } from "../../../domain/repositories/otp";
-import { customerOTPModel } from "../../../infrastructure/database/mongoose/models/OTPModel";
+import { customerOTPModel } from "../../../infrastructure/database/mongoose/models/otp";
 import { OTPRepository } from "../../../infrastructure/database/mongoose/otp";  // * OTP mongooseRepository there we write mongoose query
  
 

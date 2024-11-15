@@ -7,13 +7,13 @@ import { AddCategory,addCategoryData,filterSales } from "../../../domain/entitie
 import {IAdminMongoose} from "../../../domain/repositories/admin"
 
 // * Model
-import {CategoryModel} from "./models/AdminModel"
-import {WorkerModel} from "./models/workerModel"
-import {UserModel} from "./models/UserModel"
-import { ResentActivityModel } from "./models/RecentActivityModel"
-import { ReviewModel } from "./models/ReviewModel"
-import { PaymentModel } from "./models/paymentModel"
-import { RequestModel } from "./models/RequestModel"
+import {CategoryModel} from "./models/admin"
+import {WorkerModel} from "./models/worker"
+import {UserModel} from "./models/user"
+import { ResentActivityModel } from "./models/recentActivity"
+import { ReviewModel } from './models/review'
+import { PaymentModel } from "./models/payment"
+import { RequestModel } from "./models/request"
 
 
 export const AdminMongoose = () : IAdminMongoose =>({

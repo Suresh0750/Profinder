@@ -1,9 +1,9 @@
 import { IOTPRepository } from "../../../domain/repositories/otp";
 // import { CustomerOTP } from "../../../domain/entities/customerOTP";
 import { CustomerOTP } from "../../../domain/entities/customerOTP";
-import { customerOTPModel } from "./models/OTPModel";
-import {UserModel} from './models/UserModel'
-import {WorkerModel} from "./models/workerModel"
+import { customerOTPModel } from "./models/otp";
+import {UserModel} from './models/user'
+import {WorkerModel} from "./models/worker"
 
 export const OTPRepository = (): IOTPRepository => ({
   createOTP: async (

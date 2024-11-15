@@ -5,12 +5,12 @@ import { User,loginDetails,editprofileTypes,conversationTypes,messageTypes } fro
 import { IgetUserRepository } from "../../../domain/repositories/user";
 
 // * Model
-import {UserModel} from './models/UserModel'
-import {ConversationModel} from './models/ConversationModel'
-import { MessageModel } from './models/MessageModel';
-import {RequestModel} from './models/RequestModel'
-import { ResentActivityModel } from './models/RecentActivityModel';
-import { ReviewModel } from './models/ReviewModel';
+import {UserModel} from './models/user'
+import {ConversationModel} from './models/conversation'
+import { MessageModel } from './models/message';
+import {RequestModel} from './models/request'
+import { ResentActivityModel } from './models/recentActivity';
+import { ReviewModel } from './models/review';
 
 
 export const getUserRepository = () : IgetUserRepository =>({

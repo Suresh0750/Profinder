@@ -3,13 +3,13 @@ import {IgetWorkerRepository} from '../../../domain/repositories/worker'
 import {PersonalInformation, WorkerInformation,ProjectDetails,messageTypes} from '../../../domain/entities/worker'
 
 // * model
-import { WorkerModel } from './models/workerModel'
-import {RequestModel} from './models/RequestModel'
-import {ResentActivityModel} from './models/RecentActivityModel'
-import { ConversationModel } from './models/ConversationModel'
-import { MessageModel } from './models/MessageModel'
-import {ReviewModel} from './models/ReviewModel'
-import {PaymentModel} from './models/paymentModel'
+import { WorkerModel } from './models/worker'
+import {RequestModel} from './models/request'
+import {ResentActivityModel} from './models/recentActivity'
+import { ConversationModel } from './models/conversation'
+import { MessageModel } from './models/message'
+import { ReviewModel } from './models/review';
+import {PaymentModel} from './models/payment'
 
 const {ObjectId} = Types
 export const getWorkerRepository = ():IgetWorkerRepository =>({
