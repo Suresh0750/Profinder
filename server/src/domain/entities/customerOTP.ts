@@ -19,7 +19,8 @@ export interface getVerifyOTP {
 
 
 export interface ResendOTP {
-    userId :string,
+    customerID ? : string
+    userId ?:string
     role : string
 }
 

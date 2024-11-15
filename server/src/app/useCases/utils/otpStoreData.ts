@@ -1,11 +1,12 @@
 import { IOTPRepository } from "../../../domain/repositories/otp";
-import { customerOTPModel } from "../../../infrastructure/database/mongoose/models/o(OTPModel)";
+import { customerOTPModel } from "../../../infrastructure/database/mongoose/models/OTPModel";
 import { OTPRepository } from "../../../infrastructure/database/mongoose/otp";  // * OTP mongooseRepository there we write mongoose query
  
 
 export const ResendOTPStore = async (customerId: string, OtpPIN: number) => {
   try {
     // console.log("req entered OtpStoreData controler");
+    console.log('resend otp')
     const expirationTime = new Date(Date.now() + 60 * 60 * 1000);
     const OtpRepo: IOTPRepository = OTPRepository();
     await OtpRepo.deleteOTP(customerId)   // * for deleting the old OTP data

@@ -20,5 +20,4 @@ export interface ICustomerQueryRepository {
     getReview(workerId:string) :Promise<getReviewTypes[] | undefined>
     checkUserPayed(workerId:string,userId:string) : Promise<any>
     paymentDetails(requestId:string) : Promise<any>
-    // myMethod():string
 }

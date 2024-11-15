@@ -6,15 +6,15 @@ import { WorkerInformation } from "../../../domain/entities/worker";
 import { ICustomerQueryRepository } from "../../../domain/repositories/customer";
 
 // * database model
-import { CategoryModel } from "./models/a(AdminModel)";
-import {UserModel} from './models/u(UserModel)'
+import { CategoryModel } from "./models/AdminModel";
+import {UserModel} from './models/UserModel'
 import {WorkerModel} from './models/workerModel'
-import {RequestModel} from './models/r(RequestModel)'
-import {ReviewModel} from './models/rq(ReviewModel)'
+import {RequestModel} from './models/RequestModel'
+import {ReviewModel} from './models/ReviewModel'
 
 // * Mongoose types
 import {Types} from 'mongoose'
-import { ResentActivityModel } from "./models/r(RecentActivityModel)";
+import { ResentActivityModel } from "./models/RecentActivityModel";
 import { request } from "@esri/arcgis-rest-request";
 const {ObjectId} = Types
 

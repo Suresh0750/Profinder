@@ -4,12 +4,12 @@ import {PersonalInformation, WorkerInformation,ProjectDetails,messageTypes} from
 
 // * model
 import { WorkerModel } from './models/workerModel'
-import {RequestModel} from './models/r(RequestModel)'
-import {ResentActivityModel} from './models/r(RecentActivityModel)'
-import { ConversationModel } from './models/c(ConversationModel)'
-import { MessageModel } from './models/m(MessageModel)'
-import {ReviewModel} from './models/rq(ReviewModel)'
-import {PaymentModel} from './models/p(paymentModel)'
+import {RequestModel} from './models/RequestModel'
+import {ResentActivityModel} from './models/RecentActivityModel'
+import { ConversationModel } from './models/ConversationModel'
+import { MessageModel } from './models/MessageModel'
+import {ReviewModel} from './models/ReviewModel'
+import {PaymentModel} from './models/paymentModel'
 
 const {ObjectId} = Types
 export const getWorkerRepository = ():IgetWorkerRepository =>({

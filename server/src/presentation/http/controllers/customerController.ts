@@ -224,10 +224,10 @@ export const ForgetPassWordController = async(req:Request,res:Response,next:Next
        const setNewPass =  await ForgetPassWordUseCase(req.body)
 
        if(setNewPass){
-        res.status(200).json({success:true,message:"Your password has been successfully updated!"})
+       return res.status(200).json({success:true,message:"Your password has been successfully updated!"})
        }
 
-       res.status(500).json({ message: "Server error. Please try again later" });
+       return res.status(500).json({ message: "Server error. Please try again later" });
         
     } catch (error) {
         console.log(`Error from ForgetPassWordController\n${error}`)

@@ -9,18 +9,13 @@ import {getWorkerRepository} from '../../../infrastructure/database/mongoose/wor
 
 export const EditCategoryUseCases = async(categoryData:AddCategory)=>{
     try {
-        console.log(`Req reached in EditCategoryUseCases`)
 
         delete categoryData.newImage 
         const {_id} = categoryData
         const getCategoryName = await AdminMongoose().getEditCategoryName((_id || ''))
-        console.log("getCategoryName",getCategoryName)
         const changeCategory = await AdminMongoose().EditeCategoryQuery(categoryData)
-        console.log(`EditeCategory data `)
         if(getCategoryName&& categoryData && getCategoryName?.categoryName!==categoryData?.categoryName ){
-            
-            await getWorkerRepository().chagneExitWorkerCategoryName(getCategoryName?.categoryName,categoryData?.categoryName)  // * change all worker category name if admin change their modal
-            
+            await getWorkerRepository().chagneExitWorkerCategoryName(getCategoryName?.categoryName,categoryData?.categoryName)  // * change all worker category name if admin change their modal            
         }
     
         return 

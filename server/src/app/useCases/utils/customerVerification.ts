@@ -67,19 +67,21 @@ export const customerResentOTP = async(customerData:ResendOTP)=>{
         // console.log(`Req reached usCases utils cutomerResentOTP`)
 
         const {getUserDataResendOTP,getWorkerDataResendOTP} = OTPRepository()
-        if(customerData.role=='user'){
-            const userEmail : string | undefined= await getUserDataResendOTP(customerData.userId) 
+        console.log(customerData.role)
+        if(customerData.role=='user' && customerData.customerID){
+          
+            const userEmail : string | undefined= await getUserDataResendOTP(customerData.customerID) 
             if(userEmail){
-                const userData  = await OtpService(customerData.userId,userEmail)
-                ResendOTPStore(customerData.userId,Number(userData?.customerOTP))      // * Restore the OTP data in mongodb database
+                const userData  = await OtpService(customerData.customerID,userEmail)
+                await ResendOTPStore(customerData.customerID,Number(userData?.customerOTP))      // * Restore the OTP data in mongodb database
             }
-        }else {
-            const userEmail : string | undefined= await getWorkerDataResendOTP(customerData.userId)
+        }else if(customerData.customerID){
+            const workerEmail : string | undefined= await getWorkerDataResendOTP(customerData.customerID)
             console.log(`customerResentotp in worker role`) 
       
-            if(userEmail){
-                const userData  = await OtpService(customerData.userId,userEmail)
-                ResendOTPStore(customerData.userId,Number(userData?.customerOTP))      // * Restore the OTP data in mongodb database
+            if(workerEmail){
+                const workerData  = await OtpService(customerData.customerID,workerEmail)
+                await ResendOTPStore(customerData.customerID,Number(workerData?.customerOTP))      // * Restore the OTP data in mongodb database
             }
 
         }
