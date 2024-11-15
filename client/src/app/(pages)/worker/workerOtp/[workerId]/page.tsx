@@ -1,5 +1,5 @@
 
-import SignUPOTP from '@/components/Worker/SignupOTP'
+import SignUPOTP from '@/components/Worker/so(SignupOTP)'
 
 const WorkerOTP = ({params}:{params:any})=>{
 
