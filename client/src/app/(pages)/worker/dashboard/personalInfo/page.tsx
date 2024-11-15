@@ -1,7 +1,7 @@
 
 import React from 'react';
 
-import DashboardPersonalInfo from '@/components/Worker/board/PersonalInfo';
+import DashboardPersonalInfo from '@/components/Worker/Dashboard/PersonalInfo';
 
 const PersonalInfo = () => {
   return (

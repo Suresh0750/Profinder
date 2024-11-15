@@ -1,6 +1,6 @@
 
 import React from 'react'
-import Dashboard from '@/components/Worker/board/Dashboard'
+import Dashboard from '@/components/Worker/Dashboard/Dashboard'
 import {useDashboardQuery} from '@/lib/features/api/workerApiSlice'
 const WorkerDashboard: React.FC = () => {
 
