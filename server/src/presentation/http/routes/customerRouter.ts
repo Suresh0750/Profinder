@@ -32,11 +32,11 @@ customerRouter.post("/review",verifyTokenAndRole('customer'),ReviewController)
 // * payment gatway
 
 customerRouter.post("/paymetAPI",verifyTokenAndRole('customer'), paymetnAPIController)
-customerRouter.post("/savePaymentId",paymentIdController)
+customerRouter.post("/savePaymentId",verifyTokenAndRole('customer'),paymentIdController)
 customerRouter.get("/payment-details/:requestId",verifyTokenAndRole('customer'), paymentDetails)
 
 // * router for Request 
-customerRouter.post('/userRequestWorker',userRequestWorkerController)
+customerRouter.post('/userRequestWorker',verifyTokenAndRole('customer'),userRequestWorkerController)
 
 
 customerRouter.post('/verifyOTP',CustomerOtpController)

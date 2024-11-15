@@ -33,7 +33,7 @@ userRouter.post('/checkEmailForgetPass',isEmailValidate,isCheckEmail)   // * che
 
 // * user dashboard
 userRouter.get('/profile/:id',verifyTokenAndRole('user'),profile)
-userRouter.put('/updateprofile',upload.single('newImageData'),editprofile)
+userRouter.put('/updateprofile',upload.single('newImageData'),verifyTokenAndRole('user'),editprofile)
 userRouter.get('/booking/:id',verifyTokenAndRole('user'),getBooking)
 userRouter.get('/paymentId/:requestId',paymentId)
 
