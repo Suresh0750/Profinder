@@ -80,6 +80,7 @@ export const verifyRefreshToken = (req: Request, res: Response): CustomerDetails
         res.clearCookie(CookieTypes.User);
         res.clearCookie(CookieTypes.Worker);
         res.clearCookie(CookieTypes.Admin)
+        res.clearCookie(CookieTypes.AccessToken)
     } catch (error) {
         console.log('Error from refreshToken', error);
     }
