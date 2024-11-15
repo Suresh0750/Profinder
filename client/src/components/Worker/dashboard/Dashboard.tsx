@@ -1,5 +1,5 @@
 "use client"
-import { DashboardHeader, ViewRequest } from "@/components/Worker/dashboard/WD(wokerDashboard)"
+import { DashboardHeader, ViewRequest } from "@/components/Worker/Dashboard/WD(wokerDashboard)"
 import { 
   DollarSign, 
   CheckCircle, 

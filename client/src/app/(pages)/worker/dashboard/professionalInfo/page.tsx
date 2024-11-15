@@ -1,5 +1,5 @@
 
-import DashboardProfessionalInfo from '@/components/Worker/dashboard/P(professionalInfo)';
+import DashboardProfessionalInfo from '@/components/Worker/Dashboard/P(professionalInfo)';
 
 const ProfessionalInfo = () => {
    
