@@ -3,11 +3,10 @@ import {LoginVerify} from "../../../app/useCases/worker/loginVerifyWorker"
 import {isCheckWorkerEmail} from "../../../app/useCases/worker/forgetPass"
 import {IMulterFile} from "../../../domain/entities/s3entities"
 import {uploadImage} from '../../../app/useCases/utils/uploadImage'
-import {PersonalInformation,WorkerInformation} from '../../../domain/entities/worker'
+import {WorkerInformation} from '../../../domain/entities/worker'
 import {CookieTypes,StatusCode} from '../../../domain/entities/commonTypes'
 import {hashPassword} from '../../../shared/utils/encrptionUtils'
 import {JwtService} from '../../../infrastructure/service/jwt'
-import { getUserRequestDataUsecasuse } from "../../../app/useCases/utils/customerUtils";
 import {
     professionalUsecase,
     WorkerUsecase,
@@ -153,15 +152,11 @@ export const isRejectWorkController = async(req:Request,res:Response,next:NextFu
 
 
 
-
 // * get worker Single worker Details
 
 export const getSingleWorkerDetails = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        // const requestData = await getUserRequestDataUsecasuse(req.params.userId,req.params.workerid)
-    
         const result = await getSingleWorkerDetailsUsecases(req.params.workerid)
-        // if(requestData) return res.status(StatusCode.Success).json({success:true,message:'single worker details has been fetched',result,requestData})
         return res.status(StatusCode.Success).json({success:true,message:'single worker details has been fetched',result})
     } catch (error) {
         console.log(`Error from presentation layer-> http->getSingleWorkerDetails\n ${error}`)
@@ -172,8 +167,8 @@ export const getSingleWorkerDetails = async (req:Request,res:Response,next:NextF
 // * Worker in Project side
 export const addProjectDetails = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log('addProjectDetails')
-        console.log(req.file)
+        // console.log('addProjectDetails')
+        // console.log(req.file)
         const file: IMulterFile |any = req.file
         const imageUrl = await uploadImage(file) 
         req.body.ProjectImage = imageUrl
@@ -186,8 +181,8 @@ export const addProjectDetails = async(req:Request,res:Response,next:NextFunctio
 }
 export const getProjectDetails = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log('params id')
-        console.log(req.params.id)
+        // console.log('params id')
+        // console.log(req.params.id)
         if(req.params.id){
             const result = await getWorkerProjectData(req.params.id)
             return res.status(StatusCode.Success).json({success:true,message:'Worker Project Data has been Fetched',result})
@@ -209,12 +204,7 @@ export const PersonalInformationControll = async (req:Request,res:Response, next
         const bcyptPass = await hashPassword(req.body.Password)   // * hash the password
         const workerDetails = req.body
         workerDetails.Password = bcyptPass    // * asign the bcrypt pass
-        res.cookie('isAuthenticated', 'true', { 
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
-            maxAge: 3600 // 1 hour
-          })
+       
         return res.status(StatusCode.Success).json({success:true,workerDetails})
     }catch(error){
         console.log(`Error from presentation layer-> http->PersonalInformation\n ${error}`)
@@ -230,7 +220,7 @@ export const ProfessionalInfoControll = async (req:Request,res:Response,next:Nex
         req.body.Identity = imageUrl
         const workerId = await WorkerUsecase(req.body)
       
-        res.status(200).json({success:true,message:'Worker Details has been register',worker : workerId})
+        res.status(StatusCode.Success).json({success:true,message:'Worker Details has been register',worker : workerId})
     } catch (error) {
         console.log(`Error from presentation layer-> http->ProfessionalInfoControll\n ${error}`)
         next(error) 
@@ -242,9 +232,9 @@ export const isCheckEmail = async (req:Request,res:Response,next:NextFunction)=>
     try {
         const userEmailValidation = await isCheckWorkerEmail(req.body.email)
         if(userEmailValidation){
-            res.status(200).json({success:true,message:'verified success',userEmailValidation})
+        return res.status(StatusCode.Success).json({success:true,message:'verified success',userEmailValidation})
         }else {
-            res.status(404).json({
+        return res.status(StatusCode.NotFound).json({
                 success: false,
                 message: 'This email is not registered. Please check your email address.',
               });}
@@ -260,7 +250,7 @@ export const getWorkerDataController = async (req:Request,res:Response,next:Next
         const {workerToken} = req.cookies
         if(!workerToken) res.status(StatusCode.Forbidden).json({ message: "Unauthenticated" });
         const workerData = await getWorkerData(workerToken)
-        res.status(StatusCode.Success).json({success:true,message:'success',workerData})
+        return res.status(StatusCode.Success).json({success:true,message:'success',workerData})
     } catch (error) {
         console.log(`Error from presentation layer-> http->getWorkerDataController\n ${error}`)
         next(error) 
@@ -308,7 +298,7 @@ export const addtionalProfessionalData = async(req:Request,res:Response,next:Nex
     
        const result = await professionalUsecase(req.body)
      
-        res.status(200).json({success:true,message:'successfully updated'})
+       return res.status(StatusCode.Success).json({success:true,message:'successfully updated'})
     }catch(error){
         console.log(`Error from Presntation->addtionalProfessionalData ${error}`)
         next(error) 

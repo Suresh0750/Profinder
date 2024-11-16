@@ -25,7 +25,7 @@ const customerRouter = Router()
 
 
 // * Review of worker
-customerRouter.get("/review/:id",verifyTokenAndRole('customer'),getReviewController)
+customerRouter.get("/review/:id",getReviewController)
 customerRouter.post("/review",verifyTokenAndRole('customer'),ReviewController)
 // customerRouter.get("/getReview",getReviewUsecases)
 
@@ -46,7 +46,7 @@ customerRouter.post('/setForgotPassword',ForgetPassWordController)
 customerRouter.post('/CustomerGoogleLogin',upload.single('Identity'),GoogleLogin)
 
 customerRouter.post("/cutomerLogout",verifyTokenAndRole('customer'),CustomerLogoutController)
-// customerRouter.post("/customerLogIn",customerLogIn) 
+
 customerRouter.post("/customerGoogleVerification",WorkerGoogleLoginWithRegistrastion)   // * worker login with google
 
 // customerRouter.post

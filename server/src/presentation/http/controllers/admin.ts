@@ -1,7 +1,7 @@
 
 import { Request,Response,NextFunction } from "express"
 import {AdminVerifyUseCases} from '../../../app/useCases/admin/verify'
-import Jwt from 'jsonwebtoken'
+
 // * useCases
 import {uploadImage} from '../../../app/useCases/utils/uploadImage'
 import {getALLWorkerUseCases,getDetails, isBlockUsecases}  from '../../../app/useCases/admin/wokerSide'

@@ -36,7 +36,7 @@ export const getBooking = async(req:Request,res:Response,next:NextFunction)=>{
     try{
       
         const {bookingDetails,reviewDetails}  = await getBookingUsecases(req.params.id)
-        console.log(JSON.stringify(bookingDetails))
+        // console.log(JSON.stringify(bookingDetails))
         return res.status(StatusCode.Success).json({success:true,message:'data has been fetched',result:bookingDetails,reviewDetails})
     }catch(error){
         console.log(`Error from Presntation->controllers->getBooking \n${error}`)
@@ -145,9 +145,9 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
                 _id:loginUsecase._id,
                 customerName : loginUsecase.username,
                 customerEmail : loginUsecase.EmailAddress,
-                role : 'user'
+                role : Role.User
             }
-            res.status(StatusCode.Success).json({success:true,message:'Login successful',customerData}) 
+         return   res.status(StatusCode.Success).json({success:true,message:'Login successful',customerData}) 
         }   
     }catch(error){
         console.log(`Error from Presntation->controllers ${error}`)
@@ -164,9 +164,9 @@ export const isCheckEmail = async(req:Request,res:Response,next:NextFunction)=>{
         const userEmailValidation = await isCheckUserEmail(req.body.email)
         
         if(userEmailValidation){
-            res.status(200).json({success:true,message:'verified success',userEmailValidation})
+         return   res.status(StatusCode.Success).json({success:true,message:'verified success',userEmailValidation})
         }else {
-            res.status(404).json({
+         return   res.status(StatusCode.NotFound).json({
                 success: false,
                 message: 'This email is not registered. Please check your email address.',
               });}

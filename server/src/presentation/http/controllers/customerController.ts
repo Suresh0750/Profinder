@@ -4,7 +4,7 @@ import { Request,Response,NextFunction } from "express"
 import {OtpVerifyUseCases} from "../../../app/useCases/utils/otpStoreData"
 import {getVerifyOTP} from '../../../domain/entities/customerOTP'
 import {JwtService} from '../../../infrastructure/service/jwt'
-import {CookieTypes,StatusCode} from '../../../domain/entities/commonTypes'
+import {CookieTypes,Role,StatusCode} from '../../../domain/entities/commonTypes'
 import {WorkerInformation} from '../../../domain/entities/worker'
 import {userVerification,workerVerification,ForgetPassWordUseCase,customerResentOTP,GoogleLoginUseCases, workerGoogleVerification, GoogleLoginWorkerRegister} from '../../../app/useCases/utils/customerVerification'
 import { uploadImage } from "../../../app/useCases/utils/uploadImage"
@@ -162,7 +162,7 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
                     _id:userData?._id,
                     customerName : userData?.username,
                     customerEmail : userData?.EmailAddress,
-                    role : 'user'
+                    role : Role.User
                 } 
                 
                 res.status(StatusCode.Success).json({success:true,message:'OTP valid and user verified',customerData})
@@ -188,7 +188,7 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
                     _id : workerData?._id,
                     customerName : workerData?.FirstName,
                     customerEmail : workerData?.EmailAddress,
-                    role : 'worker'
+                    role : Role.Wokrer
                 }
 
                 res.status(StatusCode.Success).json({success:true,message:'OTP valid and worker verified',customerData})
@@ -260,7 +260,7 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
         _id: result._id,
         customerName : result.FirstName,
         customerEmail : result.EmailAddress,
-        role : 'worker'
+        role : Role.Wokrer
     }
         return res.status(StatusCode.Success).json({success:true,message:'Worker successfully login',customerData})
     } catch (error) {
@@ -272,7 +272,7 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
 export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
     try {
      
-        if(req?.body?.role == "user"){
+        if(req?.body?.role == Role.User){
         
             const userData :any = await GoogleLoginUseCases(req.body)
 
@@ -297,11 +297,11 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                     _id: userData._id,
                     customerName : userData.username,
                     customerEmail : userData.EmailAddress,
-                    role : 'user'
+                    role : Role.User
                 }
             return res.status(StatusCode.Success).json({success:true,message:"successfully login",customerData})
             }
-        }else if(req.body.role ='worker'){
+        }else if(req.body.role ==Role.Wokrer){
   
             const file: IMulterFile | any = req.file
           
@@ -329,7 +329,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                     _id: customerDetails._id,
                     customerName : customerDetails.FirstName,
                     customerEmail : customerDetails.EmailAddress,
-                    role : 'worker'
+                    role : Role.Wokrer
                 }
 
              return   res.status(StatusCode.Success).json({success:true,message:"successfully login",customerData})
@@ -344,7 +344,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
 }
 
 
-export const CustomerLogoutController =async (req:Request,res:Response,next:NextFunction)=>{
+export const CustomerLogoutController = async (req:Request,res:Response,next:NextFunction)=>{
     try {
 
         res.clearCookie(CookieTypes.Worker, {
@@ -367,16 +367,7 @@ export const CustomerLogoutController =async (req:Request,res:Response,next:Next
     }
 }
 
-export const customerLogIn = async (req:Request,res:Response,next:NextFunction)=>{
-    try {
 
-        console.log(req.cookies)
-      
-    } catch (error) {
-        console.log(`Error from customerLogIn\n${error}`)
-        next(error)
-    }
-}
 
 
 
