@@ -23,9 +23,10 @@ const IdentityModal = ({ isOpen, onClose, image, workerId}: { isOpen: boolean, o
             if(result?.success){
                 toast.success(result.message)
                 onClose() 
+                window.location.reload()
                 setTimeout(()=>{
                     Router.push(`/admin/dashboard`)
-                })
+                },600)
                 // refetch()
             }
         } catch (error:any) {
