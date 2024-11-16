@@ -16,8 +16,8 @@ declare module 'express-session' {
 export function verifyToken(token: string, secretKey: string) {
     try {
         return jwt.verify(token, secretKey) as CustomerDetails;
-    } catch (error) {
-        console.log('verify token', error);
+    } catch (error:any) {
+        console.log('verify token', error?.message);
         return null;
     }
 }

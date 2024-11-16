@@ -288,10 +288,10 @@ export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
             res.cookie(CookieTypes.AccessToken,accessToken,{
                 maxAge: 2 * 60 * 1000
             })    
-            res.status(StatusCode.Success).json({success:true,message:'login verify successful'})
+         return   res.status(StatusCode.Success).json({success:true,message:'login verify successful'})
         }    
       
-        res.status(StatusCode.Unauthorized).json({success:false,message:'Invalid credentials'})
+        return res.status(StatusCode.Unauthorized).json({success:false,message:'Invalid credentials'})
 
     }catch(error){
         console.log(`Error from addCategoryController\n${error}`)
