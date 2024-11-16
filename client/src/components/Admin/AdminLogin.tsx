@@ -41,10 +41,7 @@ const AdminLogin = () => {
       }
 
     }catch(error:any){
-      console.log(error)
-      {
-        error?.error?.data?.errorMessage  ? toast.error(error?.error?.data?.errorMessage) : toast.error('something wrong try again')
-      } 
+        error?.data?.message  ? toast.error(error?.data?.message) : toast.error('something wrong try again')
     }
    
   };

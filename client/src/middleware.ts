@@ -6,13 +6,10 @@ import { isUserProtectedRoute } from './routes/routes';
 import { cookies } from 'next/headers';
 
 export async function middleware(req:NextRequest){
-  // const isAuthenticated = req.cookies.get('isAuthenticated')
-  // console.log('isAuthenticated',isAuthenticated)
+
     const cookieStore = cookies();
     const pathname = req.nextUrl.pathname;
-    console.log('path name')
-    console.log(pathname)
-    console.log(req.method)
+
   // Improved matcher for static assets
   if (pathname.startsWith("/_next/") || pathname.startsWith("/favicon.ico")) {
     return NextResponse.next();
