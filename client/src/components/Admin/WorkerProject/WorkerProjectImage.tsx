@@ -7,7 +7,7 @@ import { useGetWorkerProjectQuery } from "@/lib/features/api/workerApiSlice";
 
 
 interface ImageData {
-  ProjectDescription: string;
+  ProjectDescription: string; 
   ProjectImage: string;
   projectName: number;
 }

@@ -205,7 +205,7 @@ export default function ServiceWorkerListPage() {
                 </CardContent>
                 <CardFooter className="flex justify-between p-4">
                   <Button variant="secondary">{worker.Category}</Button>
-                  <Button>Read More</Button>
+                  <Button onClick={() => handleRedirectWorkerPage(worker._id,worker)}>Read More</Button>
                 </CardFooter>
               </Card>
             ))}
