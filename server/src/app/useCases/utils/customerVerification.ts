@@ -7,14 +7,14 @@ import {OTPRepository} from '../../../infrastructure/database/mongoose/otp'
 import {getUserRepository} from '../../../infrastructure/database/mongoose/user'
 import {getWorkerRepository} from '../../../infrastructure/database/mongoose/worker'
 import {CustomerQueryRepository} from '../../../infrastructure/database/mongoose/customer'
-import {ResendOTP,GoogleLogintypes} from '../../../domain/entities/customerOTP'  // * resend otp data types
+import {ResendOTP,GoogleLoginTypes} from '../../../domain/entities/customerOTP'  // * resend otp data types
 import {User} from '../../../domain/entities/user'  // * resend otp data types
 import {OtpService} from "../../services/otpService"
 import {ResendOTPStore,OtpVerifyUseCases} from './otpStoreData'   // * store otp data in database and verif OTP
 import { hashPassword } from '../../../shared/utils/encrptionUtils'
-
+// GoogleLoginTypes
 // * types
-import {forgetPasswordDataType} from '../../../domain/entities/customerOTP'
+import {ForgetPasswordDataType} from '../../../domain/entities/customerOTP'
 import { WorkerInformation } from '../../../domain/entities/worker'
 
 
@@ -68,20 +68,20 @@ export const customerResentOTP = async(customerData:ResendOTP)=>{
 
         const {getUserDataResendOTP,getWorkerDataResendOTP} = OTPRepository()
         console.log(customerData.role)
-        if(customerData.role=='user' && customerData.customerID){
+        if(customerData.role=='user' && customerData.customerId){
           
-            const userEmail : string | undefined= await getUserDataResendOTP(customerData.customerID) 
+            const userEmail : string | undefined= await getUserDataResendOTP(customerData.customerId) 
             if(userEmail){
-                const userData  = await OtpService(customerData.customerID,userEmail)
-                await ResendOTPStore(customerData.customerID,Number(userData?.customerOTP))      // * Restore the OTP data in mongodb database
+                const userData  = await OtpService(customerData.customerId,userEmail)
+                await ResendOTPStore(customerData.customerId,Number(userData?.customerOTP))      // * Restore the OTP data in mongodb database
             }
-        }else if(customerData.customerID){
-            const workerEmail : string | undefined= await getWorkerDataResendOTP(customerData.customerID)
+        }else if(customerData.customerId){
+            const workerEmail : string | undefined= await getWorkerDataResendOTP(customerData.customerId)
             console.log(`customerResentotp in worker role`) 
       
             if(workerEmail){
-                const workerData  = await OtpService(customerData.customerID,workerEmail)
-                await ResendOTPStore(customerData.customerID,Number(workerData?.customerOTP))      // * Restore the OTP data in mongodb database
+                const workerData  = await OtpService(customerData.customerId,workerEmail)
+                await ResendOTPStore(customerData.customerId,Number(workerData?.customerOTP))      // * Restore the OTP data in mongodb database
             }
 
         }
@@ -93,7 +93,7 @@ export const customerResentOTP = async(customerData:ResendOTP)=>{
     }
 }
 
-export const ForgetPassWordUseCase = async (forgetPasswordData:forgetPasswordDataType)=>{
+export const ForgetPassWordUseCase = async (forgetPasswordData:ForgetPasswordDataType)=>{
     try {
 
         const verifyOTP = await OtpVerifyUseCases(Number(forgetPasswordData?.formData?.otpValue),forgetPasswordData.customerId)
@@ -125,14 +125,14 @@ export const GoogleLoginWorkerRegister = async(customerData:WorkerInformation)=>
         delete customerData.role
      
         await getWorkerRepository().insertWorker(customerData)
-        return getWorkerRepository().findWorker(customerData.EmailAddress)
+        return getWorkerRepository().findWorker(customerData.emailAddress)
     } catch (error) {
         
     }
 }
 
 // * Google Login UseCases 
-export const GoogleLoginUseCases = async (customerData:GoogleLogintypes )=>{
+export const GoogleLoginUseCases = async (customerData:GoogleLoginTypes )=>{
     try {
         
         if(customerData.role=='user'){
@@ -140,15 +140,15 @@ export const GoogleLoginUseCases = async (customerData:GoogleLogintypes )=>{
             // console.log(customerData)
             const UserData : User = {
                 username : customerData.username,
-                PhoneNumber : 0,
-                EmailAddress : customerData.EmailAddress,
-                Password : '',
+                phoneNumber : 0,
+                emailAddress : customerData.emailAddress,
+                password : '',
                 isVerified : true,
-                Address : ''
+                address : ''
             }
             await UserGoogleLogin(UserData)             // * create the user if already there means it won't create. Used Upsert
             const {findUserByEmail} = getUserRepository()
-            return findUserByEmail(customerData.EmailAddress)
+            return findUserByEmail(customerData.emailAddress)
         }
     } catch (error) {
         console.log(`Error from app->usecase->utils->GoogleLoginUseCases\n${error}`)

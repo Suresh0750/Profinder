@@ -3,15 +3,15 @@ import {
     PersonalInformation,
     ProjectDetails,
     WorkerInformation,
-    getProjectData,
-    workerRequest,
-    messageTypes,
+    GetProjectData,
+    WorkerRequest,
+    MessageTypes,
 } from '../entities/worker'
-import {conversationTypes,messageType,RecentActivityType} from '../entities/commonTypes'
+import {ConversationTypes,MessageType,RecentActivityType} from '../entities/commonTypes'
 import {Types} from 'mongoose'
 
 export interface IgetWorkerRepository{
-    createWorker (workerData:PersonalInformation) : Promise<PersonalInformation | null>
+    createWorker (workerData:WorkerInformation) : Promise<WorkerInformation | null>
     findWorker(workerEmail:string) : Promise<PersonalInformation | null>
     ischeckEmail(userEmail:string): Promise<string | undefined>
     setNewPassWord(customerId:string,newPass:string) :Promise<void>
@@ -20,18 +20,18 @@ export interface IgetWorkerRepository{
     insertWorker (customerData:WorkerInformation) : Promise<WorkerInformation | null>
     chagneExitWorkerCategoryName(existName:string,newName:string) :Promise<void>   // * here the worker category will update if Admin change their category
     addWorkerProjectDetails(_id:string,ProjectDetails:ProjectDetails):Promise<void> // * worker add project Details
-    getProjectDetailsQuery(_id:string): Promise<getProjectData | null>
+    getProjectDetailsQuery(_id:string): Promise<GetProjectData | null>
     getSingleWorkerDetailsQuery(_id:string) : Promise<WorkerInformation | null>
-    getAllRequestQuery(workerId:string) : Promise<workerRequest[]> // fetch request of worker data
+    getAllRequestQuery(workerId:string) : Promise<WorkerRequest[]> // fetch request of worker data
     isAcceptWorkQuery(_id:string,isPayment:number):Promise<void>
     isRejectWorkQuery(_id:string) : Promise<void>
     IsActivityQuery(requestId:string,paymentId:string) : Promise<void>
     paymentData (requestId:string,payment:number,paymentId:number) : Promise<void>
-    getChatsNameQuery(workerId:string) : Promise<conversationTypes[]>
-    messageQuery(data:messageTypes) : Promise<messageTypes>
+    getChatsNameQuery(workerId:string) : Promise<ConversationTypes[]>
+    messageQuery(data:MessageTypes) : Promise<MessageTypes>
     updatemessage({_id,lastMessage}:{_id:Types.ObjectId,lastMessage:string}) : Promise<void>
-    fetchMessage(conversationId:string):Promise<messageType[] | null>
-    getSingleMsg(message:string):Promise<messageType |null>
+    fetchMessage(conversationId:string):Promise<MessageType[] | null>
+    getSingleMsg(message:string):Promise<MessageType |null>
     updateIsReadQuery(conversationId:string) :Promise<void>
     isResendActivityQuery(requestId:string,payment:number,wokerId:string,userId:string):Promise<void>
     countResentWorkQuery(workerId:string) :Promise<any>

@@ -1,7 +1,8 @@
 import {Types} from 'mongoose'
 const { ObjectId } = Types; 
 
-import { User,loginDetails,editprofileTypes,conversationTypes,messageTypes } from "../../../domain/entities/user";
+import { User,EditProfileTypes,ConversationTypes } from "../../../domain/entities/user";
+import {MessageType} from "../../../domain/entities/commonTypes";
 import { IgetUserRepository } from "../../../domain/repositories/user";
 
 // * Model
@@ -9,8 +10,10 @@ import {UserModel} from './models/user'
 import {ConversationModel} from './models/conversation'
 import { MessageModel } from './models/message';
 import {RequestModel} from './models/request'
-import { ResentActivityModel } from './models/recentActivity';
+import { RecentActivityModel } from './models/recentActivity';
 import { ReviewModel } from './models/review';
+import { MessageTypes } from '../../../domain/entities/worker';
+
 
 
 export const getUserRepository = () : IgetUserRepository =>({
@@ -34,7 +37,7 @@ export const getUserRepository = () : IgetUserRepository =>({
     },
     insertUserDetails : async(user:User)=>{
         try{
-            await UserModel.updateOne({EmailAddress:user.EmailAddress},{$set:user},{upsert:true})
+            await UserModel.updateOne({EmailAddress:user.emailAddress},{$set:user},{upsert:true})
             return 
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->insertUserDetails\n`,error)
@@ -83,19 +86,19 @@ export const getUserRepository = () : IgetUserRepository =>({
             throw error
         }
     },
-    updateprofile : async({EmailAddress,username,profile,PhoneNumber}:editprofileTypes)=>{
+    updateprofile : async({emailAddress,username,profile,phoneNumber}:EditProfileTypes)=>{
         try {
             if(profile){
-                await UserModel.updateOne({EmailAddress},{username,PhoneNumber,profile})
+                await UserModel.updateOne({emailAddress},{username,phoneNumber,profile})
             }else{
-                await UserModel.updateOne({EmailAddress},{username,PhoneNumber})
+                await UserModel.updateOne({emailAddress},{username,phoneNumber})
             }
         } catch (error) {
             // console.log(`Error from infrastructure->mongoseUser->updateprofile\n`,error)
             throw error
         }
     },
-    conversationQuery : async(data:conversationTypes)=>{
+    conversationQuery : async(data:ConversationTypes)=>{
         try {
             await new ConversationModel(data).save()
         } catch (error) {
@@ -124,7 +127,7 @@ export const getUserRepository = () : IgetUserRepository =>({
             throw error
         }
     },
-    updateConversation:async(data:conversationTypes)=>{
+    updateConversation:async(data:ConversationTypes)=>{
         try{
             await ConversationModel.updateOne({userId:new ObjectId(data.userId)},{$set:{lastMessage:data?.lastMessage},$inc:{workerUnread:1}})
         }catch(error){
@@ -141,9 +144,14 @@ export const getUserRepository = () : IgetUserRepository =>({
             throw error
         }
     },
-    createMessage : async(data:messageTypes)=>{
-        try {
-           return await MessageModel.create(data)
+    createMessage : async(data:MessageType)=>{
+        try { 
+            const createdMessage =   await  new MessageModel(data).save();
+            const messageObject = createdMessage.toObject();
+            return {
+                ...messageObject,
+                conversationId: messageObject.conversationId?.toString() || "", 
+            };
         } catch (error) {
             // console.log(`Error from infrastructure->mongoseUser->createMessage\n`,error)
             throw error
@@ -177,7 +185,7 @@ export const getUserRepository = () : IgetUserRepository =>({
     },
     getPaymentId : async(requestId:string)=>{
         try{
-            return await ResentActivityModel.findOne({requestId:new ObjectId(requestId)},{paymentId:1,_id:0})
+            return await RecentActivityModel.findOne({requestId:new ObjectId(requestId)},{paymentId:1,_id:0})
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->getPaymentId\n`,error)
             throw error

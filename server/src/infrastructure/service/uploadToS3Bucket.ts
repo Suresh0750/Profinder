@@ -30,7 +30,7 @@ export const uploadToS3Bucket = async (file: IMulterFile) => {
  
     //*  Create and send the PutObjectCommand
     const command = new PutObjectCommand(params);
-    const uploadResponse = await s3Client.send(command);
+    const x = await s3Client.send(command);
 
     // Return a success response or URL if needed
     return `https://${process.env.S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${params.Key}`;

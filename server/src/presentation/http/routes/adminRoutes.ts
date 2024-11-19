@@ -44,11 +44,11 @@ adminRoutes.get('/dashboard-review',verifyTokenAndRole('admin'),reviewDashboard)
 
 
 // * admin / User side
-adminRoutes.get('/getAllUserList',verifyTokenAndRole('admin'),getAllUserList)
+adminRoutes.get('/allUserlist',verifyTokenAndRole('admin'),getAllUserList)
 adminRoutes.post('/isBlockUser',verifyTokenAndRole('admin'),isBlockUserController)
 
 // * admin / Worker Approval side
-adminRoutes.get('/getAllUnApprovalWorkerlist',verifyTokenAndRole('admin'),getAllUnApprovalWorkerlist)
+adminRoutes.get('/allUnApprovalWorkerlist',verifyTokenAndRole('admin'),getAllUnApprovalWorkerlist)
 adminRoutes.put('/isWorkerApproval/:id',verifyTokenAndRole('admin'),isWorkerApproval)
 
 // admin / worker details
@@ -56,7 +56,7 @@ adminRoutes.get('/worker-details/:workerId',verifyTokenAndRole('admin'),workerDe
 
 
 // * admin/ worker side
-adminRoutes.get("/getWorkerList",verifyTokenAndRole('admin'),getALLWorkerListController)
+adminRoutes.get("/workerList",verifyTokenAndRole('admin'),getALLWorkerListController)
 adminRoutes.patch("/worker/isBlock/:id",verifyTokenAndRole('admin'),isBlock)
 
 

@@ -1,7 +1,7 @@
 
-import { RequestData } from "../../../domain/entities/customerTypes";  
+import { ServiceRequest } from "../../../domain/entities/customerTypes";  
 import { ReviewTypes } from "../../../domain/entities/commonTypes";  
-import { User,loginDetails } from "../../../domain/entities/user";
+import { User } from "../../../domain/entities/user";
 import { WorkerInformation } from "../../../domain/entities/worker";
 import { ICustomerQueryRepository } from "../../../domain/repositories/customer";
 
@@ -14,14 +14,14 @@ import {ReviewModel} from './models/review'
 
 // * Mongoose types
 import {Types} from 'mongoose'
-import { ResentActivityModel } from "./models/recentActivity";
+import { RecentActivityModel } from "./models/recentActivity";
 import { request } from "@esri/arcgis-rest-request";
 const {ObjectId} = Types
 
 export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
     UserGoogleLogin : async (user:User) =>{
         try {
-            const userDoc  = await UserModel.updateOne({EmailAddress:user.EmailAddress},{$set:{user}},{upsert:true});
+            const userDoc  = await UserModel.updateOne({EmailAddress:user.emailAddress},{$set:{user}},{upsert:true});
             return userDoc
         } catch (error) {
             // console.log(`Error from infrastructure->mongoseUser->createUser\n`,error)
@@ -30,7 +30,7 @@ export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
     },
     UserWorkerLogin : async(workerData:WorkerInformation)=>{
         try{
-            return await WorkerModel.updateOne({EmailAddress:workerData.EmailAddress},{$set:{workerData}},{upsert:true})
+            return await WorkerModel.updateOne({EmailAddress:workerData.emailAddress},{$set:{workerData}},{upsert:true})
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->UserWorkerLogin\n`,error)
             throw error
@@ -69,7 +69,7 @@ export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
         }
     },
     // * userRequest to worker
-    userRequestQuery : async(userRequestDetails:RequestData)=>{
+    userRequestQuery : async(userRequestDetails:ServiceRequest)=>{
         try {
             await RequestModel.create(userRequestDetails)
         } catch (error) {
@@ -103,7 +103,7 @@ export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
     },
     checkUserPayed:async(workerId:string,userId:string)=>{
         try {         
-            return await ResentActivityModel.findOne({workerId:new ObjectId(workerId),userId:new ObjectId(userId)},{paymentId:1,_id:0})
+            return await RecentActivityModel.findOne({workerId:new ObjectId(workerId),userId:new ObjectId(userId)},{paymentId:1,_id:0})
 
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->checkUserPayed\n`,error)

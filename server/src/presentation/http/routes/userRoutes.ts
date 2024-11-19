@@ -45,6 +45,5 @@ userRouter.get('/message/:id',verifyTokenAndRole('user'),getMessage)
 
 
 
-
 export default userRouter
 

@@ -1,111 +1,104 @@
-// * worker Project details]
-import {Types} from 'mongoose'
+import { Types } from 'mongoose';
 
+// * Worker Project details
 export interface ProjectDetails {
-    _id? : string,
-    projectName : string,
-    ProjectDescription : string,
-    ProjectImage : string
+    _id?: string;
+    projectName: string;
+    projectDescription: string;
+    projectImage: string;
 }
 
-
-export interface PersonalInformation{
-    _id ? : string,
-    FirstName : string,
-    LastName : string,
-    PhoneNumber : number,
-    EmailAddress : string,
-    Password : string,
-    Profile : String,
-    isVerified? : Boolean,
-    latitude?: number,
-    longitude?: number,
+// * Personal Information
+export interface PersonalInformation {
+    _id?: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: number; 
+    emailAddress: string;
+    password: string;
+    profile: string;
+    isVerified?: boolean; 
+    latitude?: number;
+    longitude?: number;
 }
 
-export interface ProfessionInformation{ 
-    Category : String,
-    Country : String,
-    StreetAddress : String,
-    State : String,
-    City : String,
-    Apt : String,
-    Identity : String,
-    PostalCode : Number,
-    WorkerImage? : any,
-    reviews? : string[],
-    isVerified? : Boolean,
-    isWorker ? : Boolean,
-    experience? : String,
-    availability ? : String,
-    rate ? :Number,
+// * Profession Information
+export interface ProfessionInformation {
+    category: string;
+    country: string;
+    streetAddress: string;
+    state: string;
+    city: string;
+    apt: string;
+    identity: string;
+    postalCode: string; 
+    workerImage?: ProjectDetails[]; 
+    isVerified?: boolean;
+    isWorker?: boolean;
+    experience?: string;
+    availability?: string;
+    rate?: number;
 }
 
-
+// * Worker Information combining Personal and Profession Info
 export type WorkerInformation = PersonalInformation & ProfessionInformation & {
-    _id?: string; 
+    _id?: string;
     role?: string;
-    isBlock? : boolean;
+    isBlocked?: boolean;
 };
 
-export type getProjectData = {
-    WorkerImage :[{
-        projectName:string,
-        ProjectDescription : string,
-        ProjectImage : string,
-        _id : string
-    }]
-}
+// * Project Data (Worker Image)
+export type GetProjectData = {
+    workerImage: ProjectDetails[]; 
+};
 
+// * Request Data
+export type WorkerRequest = {
+    service: string;
+    worker: string;
+    user: string;
+    preferredDate: string;
+    preferredTime: string;
+    serviceLocation: string;
+    additionalNotes: string;
+    userId: string;
+    workerId: string;
+    isAccept: boolean;
+};
 
-// * request data 
+// * Message Types
+export type MessageTypes = {
+    conversationId?: string | Types.ObjectId;
+    message: string;
+    sender: Types.ObjectId;
+    isRead: boolean;
+    lastMessage?: string;
+    createdAt?: Date | string;
+    updatedAt?: Date | string;
+    __v?: number;
+};
 
-
-export type workerRequest = {
-    service : string,
-    worker :string,
-    user : string,
-    preferredDate : string,
-    preferredTime : string,
-    servicelocation : string,
-    AdditionalNotes : string,
-    userId : string,
-    workerId : string,
-    isAccept :string
-}
-
-export type messageTypes = {
-    conversationId : Types.ObjectId | string,
-    message : string,
-    sender : string,
-    lastMessage?: string
-    isRead ?: boolean
-    createdAt? : Date | string,
-    updatedAt?: Date | string,
-    __v ? : number
-}
 
 export type ProfessionalInfoData = {
-    coord :{
-        lat : number,
-        lon : number
-    },
-    mapAddress : any,
-    Category : string,
-    StreetAddress : string,
-    City : string,
-    Apt : string,
-    State : string,
-    Country : string,
-    PostalCode : string,
-    FirstName : string,
-    LastName : string,
-    PhoneNumber : number,
-    EmailAddress : string,
-    Password : string,
-    Profile : string,
-    Identity : string,
-    latitude : string,
-    longitude : string,
-    lon : string | number,
-    lat : string | number,
-}
+    coord: {
+        lat: number;
+        lon: number;
+    };
+    mapAddress: any;
+    category: string;
+    streetAddress: string;
+    city: string;
+    apt: string;
+    state: string;
+    country: string;
+    postalCode: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: number;
+    emailAddress: string;
+    password: string;
+    profile: string;
+    identity: string;
+    latitude: number;
+    longitude: number;
+};

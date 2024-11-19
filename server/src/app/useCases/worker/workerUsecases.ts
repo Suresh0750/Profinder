@@ -1,12 +1,12 @@
 
-import {PersonalInformation,WorkerInformation,ProjectDetails,messageTypes,ProfessionalInfoData} from '../../../domain/entities/worker'
+import {PersonalInformation,WorkerInformation,ProjectDetails,ProfessionalInfoData, MessageTypes} from '../../../domain/entities/worker'
 import {getWorkerRepository} from "../../../infrastructure/database/mongoose/worker"
 import {OtpService} from '../../services/otpService'
 import {OtpStoreData} from '../utils/otpStoreData'
 import {verifyRefreshToken} from "../../../infrastructure/service/jwt"
 import {GeoCoding} from "../../../infrastructure/service/geoCode"
 import { sendMessage } from '../utils/chatUtils'
-import { messageType } from '../../../domain/entities/commonTypes'
+import { MessageType } from '../../../domain/entities/commonTypes'
 import {Types} from 'mongoose'
 export const {ObjectId} = Types
 
@@ -67,7 +67,7 @@ export const fetchMessageUsecases = async(conversationId:string)=>{
     }
 }
 
-export const messageUsecases = async(data:messageType)=>{
+export const messageUsecases = async(data:MessageTypes)=>{
     try {       
         const {message,conversationId} = data
         await getWorkerRepository().messageQuery(data)
@@ -147,11 +147,11 @@ export const getSingleWorkerDetailsUsecases= async (_id:string)=>{
 // * worker upload project details usecses
 export const workerProjectUsecases = async (workerProjectDetails:ProjectDetails)=>{
     try {
-        const {_id,projectName,ProjectDescription,ProjectImage} = workerProjectDetails
+        const {_id,projectName,projectDescription,projectImage} = workerProjectDetails
         const ProjectDetails = {
             projectName,
-            ProjectDescription,
-            ProjectImage 
+            projectDescription,
+            projectImage 
         }
 
         if(_id) await getWorkerRepository().addWorkerProjectDetails(_id,ProjectDetails)
@@ -177,7 +177,7 @@ export const workerExist = async (workerData:PersonalInformation) =>{
     try {
       
         const {findWorker} = getWorkerRepository()
-        return await findWorker(workerData.EmailAddress) // * check the worker already exite or not  
+        return await findWorker(workerData.emailAddress) // * check the worker already exite or not  
 
     } catch (error) {
             console.log(`Error from workerExist`,error)
@@ -188,40 +188,40 @@ export const workerExist = async (workerData:PersonalInformation) =>{
 export const WorkerUsecase= async(workerData:ProfessionalInfoData)=>{
     try {
         
-        let {FirstName,LastName,PhoneNumber,EmailAddress,PostalCode,Password,lat,lon,Profile,Identity,Category,Country,State,City,StreetAddress,Apt,coord,mapAddress} = workerData
+        let {firstName,lastName,phoneNumber,emailAddress,postalCode,password,latitude,longitude,profile,identity,category,country,state,city,streetAddress,apt,coord,mapAddress} = workerData
 
    
     
         let data = {
-            FirstName,
-            LastName,
-            PhoneNumber,
-            EmailAddress,
-            Password,
-            Profile,
-            Identity,
-            Apt ,
-            Category,
-            Country,
-            State,
-            City,
-            PostalCode,
-            StreetAddress,
-            latitude : Number(lat),
-            longitude : Number(lon)
+            firstName,
+            lastName,
+            phoneNumber,
+            emailAddress,
+            password,
+            profile,
+            identity,
+            apt ,
+            category,
+            country,
+            state,
+            city,
+            postalCode,
+            streetAddress,
+            latitude : Number(latitude),
+            longitude : Number(longitude)
         }
 
         mapAddress = JSON.parse(mapAddress)
         
-        if(mapAddress?.Country) data.Country = mapAddress?.Country
-        if(mapAddress?.postcode) data.PostalCode = mapAddress?.postcode
-        if(mapAddress?.state) data.State = mapAddress?.state
+        if(mapAddress?.Country) data.country = mapAddress?.Country
+        if(mapAddress?.postcode) data.postalCode = mapAddress?.postcode
+        if(mapAddress?.state) data.state = mapAddress?.state
 
         const {createWorker} = getWorkerRepository()
       
         const workerDetails = await createWorker(data)
 
-        const {customerOTP,customerId} = await OtpService((workerDetails?._id)?.toString(),(workerDetails?.EmailAddress || ''))
+        const {customerOTP,customerId} = await OtpService((workerDetails?._id)?.toString(),(workerDetails?.emailAddress || ''))
         await OtpStoreData(customerId,customerOTP)
         return customerId
     } catch (error) {

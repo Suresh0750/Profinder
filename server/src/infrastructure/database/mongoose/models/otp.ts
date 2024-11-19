@@ -8,16 +8,16 @@ const OTPModel = new Schema({
     customerId: String,
     OtpPIN: Number,
     otpExpiration: Date,
-    creatdAt : {
+    createdAt : {
         type : Date,
         default : Date.now,
-        index : {expires:'1m'}
+        // index : {expires:'1m'}
     }
-});
+},{ timestamps: true } );
 
 // // Create a TTL index on the otpExpiration field
-// OTPModel.index({ otpExpiration: 1 }, { expireAfterSeconds: 60 });
+OTPModel.index({ otpExpiration: 1 }, { expireAfterSeconds: 60 });
 
-const customerOTPModel = model('customerOTPData', OTPModel);
+const OtpModel = model('Otp', OTPModel,"otps");
 
-export  {customerOTPModel};
+export  {OtpModel};

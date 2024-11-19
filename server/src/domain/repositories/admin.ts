@@ -1,4 +1,4 @@
-import { AddCategory,addCategoryData,filterSales} from "../entities/admin";
+import { AddCategory} from "../entities/admin";
 import {WorkerInformation} from "../entities/worker"
 import {User} from "../entities/user"
 

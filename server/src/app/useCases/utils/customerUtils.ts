@@ -3,7 +3,7 @@ import {CustomerQueryRepository} from '../../../infrastructure/database/mongoose
 
 
 // * types 
-import { RequestData } from '../../../domain/entities/customerTypes'
+import { ServiceRequest } from '../../../domain/entities/customerTypes'
 import { CustomError,ReviewTypes } from '../../../domain/entities/commonTypes';
 
 // * Filter the workers according to the user's location
@@ -68,7 +68,7 @@ export const getUserRequestDataUsecasuse = async(userId:string,workerId:string)=
 
 // * userRequest usecses
 
-export const userRequestUsecases = async (userRequestDetails:RequestData)=>{
+export const userRequestUsecases = async (userRequestDetails:ServiceRequest)=>{
     try {
         const result = await CustomerQueryRepository().checkExitstRequestQuery(userRequestDetails?.userId,userRequestDetails?.workerId);
         // console.log(`Request from userRequestUseCases`)
@@ -79,10 +79,10 @@ export const userRequestUsecases = async (userRequestDetails:RequestData)=>{
             throw error
         }
 
-        const AdditionalNotes = userRequestDetails.additionalNotes // * change the name convention
+        const additionalNotes = userRequestDetails.additionalNotes // * change the name convention
         delete userRequestDetails.additionalNotes 
         // console.log(userRequestDetails)
-        return await CustomerQueryRepository().userRequestQuery({...userRequestDetails,AdditionalNotes})
+        return await CustomerQueryRepository().userRequestQuery({...userRequestDetails,additionalNotes})
 
     } catch (error) {
         console.log(`Error from useCases->utils-> userRequestUsecases \n${error}`)

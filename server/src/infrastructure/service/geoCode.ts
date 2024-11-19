@@ -6,9 +6,9 @@ import {WorkerInformation} from '../../domain/entities/worker'
 export const GeoCoding = async (workerData:any)=>{
   // console.log(`Request reached Geocoding`)
   
-const {Country,PostalCode,State,City,StreetAddress}: WorkerInformation = workerData
+const {country,postalCode,state,city,streetAddress}: WorkerInformation = workerData
 // * Construct the full address
-const fullAddress = `${City}, ${State}, ${PostalCode}, ${Country}`;
+const fullAddress = `${city}, ${state}, ${postalCode}, ${country}`;
 
 const encodedAddress = encodeURIComponent(fullAddress);
 

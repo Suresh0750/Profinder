@@ -4,7 +4,7 @@ import {isCheckWorkerEmail} from "../../../app/useCases/worker/forgetPass"
 import {IMulterFile} from "../../../domain/entities/s3entities"
 import {uploadImage} from '../../../app/useCases/utils/uploadImage'
 import {WorkerInformation} from '../../../domain/entities/worker'
-import {CookieTypes,StatusCode} from '../../../domain/entities/commonTypes'
+import {CookieTypes,Role,StatusCode} from '../../../domain/entities/commonTypes'
 import {hashPassword} from '../../../shared/utils/encrptionUtils'
 import {JwtService} from '../../../infrastructure/service/jwt'
 import {
@@ -96,7 +96,7 @@ export const messageController = async(req:Request,res:Response,next:NextFunctio
     }
 }
 
-export const getChatsName = async(req:Request,res:Response,next:NextFunction)=>{
+export const connectedUsers = async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const result = await getChatsNameUsecases(req.params.Id)
         return res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
@@ -262,10 +262,10 @@ export const LoginWorkerController = async (req:Request,res:Response,next:NextFu
         const loginUsecase : WorkerInformation | boolean = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
        
         if(!loginUsecase) throw new Error('check email and password')
-        else if(loginUsecase.isBlock){
+        else if(loginUsecase.isBlocked){
            return res.status(StatusCode.Forbidden).json({success:false,errorMessage: "This worker is blocked and cannot perform this action." }) 
         }
-        const  {refreshToken,accessToken} = JwtService((loginUsecase?._id||'').toString(),loginUsecase.FirstName,loginUsecase.EmailAddress,(req.body.role || "worker"))  
+        const  {refreshToken,accessToken} = JwtService((loginUsecase?._id||'').toString(),loginUsecase.firstName,loginUsecase.emailAddress,(req.body.role || Role.Wokrer))  
         
         // * JWT referesh token setUp
         res.cookie(CookieTypes.Worker,refreshToken,{
@@ -279,8 +279,8 @@ export const LoginWorkerController = async (req:Request,res:Response,next:NextFu
         })
         const customerData  = {
             _id: loginUsecase._id,
-            customerName : loginUsecase.FirstName,
-            customerEmail : loginUsecase.EmailAddress,
+            customerName : loginUsecase.firstName,
+            customerEmail : loginUsecase.emailAddress,
             role : 'worker'
         }
         return res.status(StatusCode.Success).json({success:true,message:'Login successful',customerData}) 

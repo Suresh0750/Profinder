@@ -1,38 +1,42 @@
-import { Document, model, Schema } from "mongoose";
-import {PersonalInformation, ProfessionInformation,WorkerInformation} from '../../../../domain/entities/worker'
+import { Document, model, Schema, Types } from 'mongoose';
+import { WorkerInformation } from '../../../../domain/entities/worker';
 
-const workerSchema = new Schema<WorkerInformation>({
-    FirstName: { type: String, required: true },
-    LastName: { type: String, required: true },
-    PhoneNumber: { type: Number, required: true },  
-    EmailAddress: { type: String, required: true, unique: true },
-    Password: { type: String, required: true },
-    Profile: { type: String, default: "" },
-    Category: { type: String, required: true },
-    Country: { type: String, required: true },
-    StreetAddress: { type: String, required: true },
-    latitude : {type:Number,requied: true},   // * latitude  and longitude 
-    longitude : {type:Number,requied: true},
-    State: { type: String, required: true },
-    City: { type: String, required: true },
-    Apt: { type: String, default: "" },
-    Identity: { type: String, required: true },
-    PostalCode: { type: String, required: true },  
-    WorkerImage: [{
+// Worker Schema
+const workerSchema = new Schema<WorkerInformation & Document>(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    phoneNumber: { type: Number, required: true },
+    emailAddress: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    profile: { type: String, default: "" },
+    category: { type: String, required: true },
+    country: { type: String, required: true },
+    streetAddress: { type: String, required: true },
+    latitude: { type: Number, required: true },
+    longitude: { type: Number, required: true },
+    state: { type: String, required: true },
+    city: { type: String, required: true },
+    apt: { type: String, default: "" },
+    identity: { type: String, required: true },
+    postalCode: { type: String, required: true },
+    workerImage: [
+      {
         projectName: { type: String, required: true },
-        ProjectDescription: { type: String, required: true },
-        ProjectImage: { type: String, required: true }
-      }], 
-    reviews: [{ type: String }], 
-    experience : {type:String},
-    availability : {type:String},
-    rate : {type:Number},
-    isVerified : {type:Boolean, default:false},
-    isWorker : {type:Boolean,default:false},
-    isBlock : {type:Boolean,default:false}
-}, { timestamps: true });
+        projectDescription: { type: String, required: true },
+        projectImage: { type: String, required: true },
+      },
+    ],
+    experience: { type: String },
+    availability: { type: String },
+    rate: { type: Number },
+    isVerified: { type: Boolean, default: false },
+    isWorker: { type: Boolean, default: false },
+    isBlocked: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
 
-
-const WorkerModel = model<WorkerInformation & Document>('workerdetails', workerSchema);
+const WorkerModel = model<WorkerInformation & Document>('Worker', workerSchema, 'workers'); 
 
 export { WorkerModel };

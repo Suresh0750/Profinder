@@ -1,6 +1,6 @@
 
-import { User ,editprofileTypes,conversationTypes,messageTypes} from "../entities/user";
-import {messageType,RequestType} from "../entities/commonTypes";
+import { User ,EditProfileTypes,ConversationTypes,MessageTypes} from "../entities/user";
+import {ServiceRequest,MessageType} from "../entities/commonTypes";
 
 
 // * Repositories types
@@ -13,16 +13,16 @@ export interface IgetUserRepository{
     setNewPassWord(customerId:string,newPass:string) :Promise<void> ;
     getDataFindById(userId:string) : Promise<User | null>
     Profile(_id:string) : Promise<User | null>
-    updateprofile({username,PhoneNumber,EmailAddress,profile}:editprofileTypes) : Promise<void>
-    conversationQuery(data:conversationTypes):Promise<void>
-    fetchConversation(userId: string): Promise<conversationTypes[] | null>
-    checkConversation(userId:string,workerId:string):Promise<conversationTypes | null>
-    updateConversation(data:conversationTypes) : Promise<void>
+    updateprofile({username,phoneNumber,emailAddress,profile}:EditProfileTypes) : Promise<void>
+    conversationQuery(data:ConversationTypes):Promise<void>
+    fetchConversation(userId: string): Promise<ConversationTypes[] | null>
+    checkConversation(userId:string,workerId:string):Promise<ConversationTypes | null>
+    updateConversation(data:ConversationTypes) : Promise<void>
     findconversationId(userId:string,workerId:string): Promise<{ _id: string; } | null>
-    createMessage(data:messageTypes) : Promise<messageType>
+    createMessage(data: MessageType): Promise<MessageType>
     updateIsReadQuery(conversationId:string) :Promise<void>
-    fetchMessageQuery(conversationId:string) :Promise<messageType[]>
-    getBooking(userId:string) : Promise<RequestType[] | null>
+    fetchMessageQuery(conversationId:string) :Promise<MessageTypes[]>
+    getBooking(userId:string) : Promise<ServiceRequest[] | null>
     getPaymentId(requestId:string):Promise<{paymentId:string} | null>
     getReviewID(userId:string):Promise<string[]> 
 }

@@ -286,7 +286,7 @@ export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })    
             res.cookie(CookieTypes.AccessToken,accessToken,{
-                maxAge: 2 * 60 * 1000
+                maxAge: 15 * 60 * 1000
             })    
          return   res.status(StatusCode.Success).json({success:true,message:'login verify successful'})
         }    

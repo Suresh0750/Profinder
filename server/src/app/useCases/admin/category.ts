@@ -1,6 +1,6 @@
 
 // * types
-import {AddCategory,addCategoryData} from '../../../domain/entities/admin'
+import {AddCategory} from '../../../domain/entities/admin'
 
 // * Mongoose Query
 import {AdminMongoose} from "../../../infrastructure/database/mongoose/admin"
@@ -26,21 +26,18 @@ export const EditCategoryUseCases = async(categoryData:AddCategory)=>{
     }
 }
 
-export const AddCategoryUseCases = async(categoryDetails:addCategoryData)=>{
+export const AddCategoryUseCases = async(categoryDetails:AddCategory)=>{
     try {
         // * call mongoose query
         console.log(`req reached AddCategory Usecases`)
         
         const categoryData = {
-            categoryName : categoryDetails.CategoryName,
-            categoryDescription : categoryDetails.Description,
+            categoryName : categoryDetails.categoryName,
+            categoryDescription : categoryDetails.categoryDescription,
             categoryImage : categoryDetails.categoryImage,
         }
         const {AddCategoryQuery}  = AdminMongoose()  
-        // const categoryExist = await CheckExistCategory(categoryDetails.CategoryName) 
-
-        // if(categoryExist) return false  // * check whether category is there are not
-
+ 
         return await AddCategoryQuery(categoryData)
         
     } catch (error) {

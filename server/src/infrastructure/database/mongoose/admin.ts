@@ -1,7 +1,7 @@
 import {Types} from 'mongoose'
 const {ObjectId} = Types
 // * Object types
-import { AddCategory,addCategoryData,filterSales } from "../../../domain/entities/admin"
+import { AddCategory,filterSales } from "../../../domain/entities/admin"
 
 // * Repository types
 import {IAdminMongoose} from "../../../domain/repositories/admin"
@@ -10,7 +10,7 @@ import {IAdminMongoose} from "../../../domain/repositories/admin"
 import {CategoryModel} from "./models/admin"
 import {WorkerModel} from "./models/worker"
 import {UserModel} from "./models/user"
-import { ResentActivityModel } from "./models/recentActivity"
+import { RecentActivityModel } from "./models/recentActivity"
 import { ReviewModel } from './models/review'
 import { PaymentModel } from "./models/payment"
 import { RequestModel } from "./models/request"
@@ -122,7 +122,7 @@ export const AdminMongoose = () : IAdminMongoose =>({
     },
     totalRevenue :async()=>{
         try{
-            return await ResentActivityModel.aggregate([
+            return await RecentActivityModel.aggregate([
                 {
               $group:{_id:null,payment:{$sum:{$cond:[{$ne:["$paymentId",null]},"$payment",0]}}}
                   }
@@ -190,7 +190,7 @@ export const AdminMongoose = () : IAdminMongoose =>({
     },
     getCompletedWorkerCount :async()=>{
         try {
-            return await ResentActivityModel.aggregate([
+            return await RecentActivityModel.aggregate([
                 {
                   $group: {
                     _id: "$workerId",   

@@ -8,7 +8,7 @@ export const LoginVerify = async (EmailAddress:string,Password:string)=>{
 
         if(!actualWorker) throw new Error("Invalid EmailAddress")
         else{
-            const isCheckPass =  await checkPassword(Password,actualWorker?.Password)
+            const isCheckPass =  await checkPassword(Password,actualWorker?.password)
             return isCheckPass ? actualWorker : false 
         }
     }catch(err){

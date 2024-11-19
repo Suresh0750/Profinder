@@ -39,9 +39,10 @@ export const verifyTokenAndRole = (role: string) => {
         const accessToken = req.cookies[CookieTypes.AccessToken];
         if (accessToken) {
             payload = verifyToken(accessToken, String(process.env.ACCESS_TOKEN_SECRET));
-        }
+        }   
 
         if (!payload || !accessToken) {
+            console.log('accessToken vanished',accessToken)
             payload = verifyRefreshToken(req, res);
         }
 

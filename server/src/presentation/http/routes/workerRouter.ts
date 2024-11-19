@@ -16,12 +16,12 @@ import {
     getAllRequestController,
     isAcceptWorkController,
     isRejectWorkController,
-    getChatsName,
     messageController,
     fetchMessage,
     dashboard,
     upcomingWorkers,
-    workComplete
+    workComplete,
+    connectedUsers
     } from "../controllers/worker"
 
 
@@ -35,8 +35,8 @@ workerRouter.put('/markStatus/:status/:id',verifyTokenAndRole('worker'),workComp
 
 // * chats in worker side
 
-workerRouter.get('/message/:Id',verifyTokenAndRole('worker'),getChatsName)
-workerRouter.post('/message',verifyTokenAndRole('worker'),messageController)
+workerRouter.get('/connected-users/:Id',verifyTokenAndRole('worker'),connectedUsers)
+workerRouter.put('/message',verifyTokenAndRole('worker'),messageController)
 workerRouter.get('/fetchmessage/:Id',verifyTokenAndRole('worker'),fetchMessage)
 
 

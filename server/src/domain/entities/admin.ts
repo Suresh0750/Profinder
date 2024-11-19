@@ -6,8 +6,8 @@ export interface IMulterFile {
     encoding: string;
     mimetype: string;
     size: number;
-    buffer: Buffer; // For memory storage
-    stream?: ReadStream; // Optional, used with disk storage
+    buffer: Buffer; 
+    stream?: ReadStream;
 }
 
 
@@ -35,12 +35,12 @@ export interface AddCategory{
 }
 
 
-export interface addCategoryData{
-    _id ?: string,
-    CategoryName:string,
-    Description: string,
-    categoryImage:string
-}
+// export interface AddCategoryData{
+//     _id ?: string,
+//     categoryName:string,
+//     categoryDescription: string,
+//     categoryImage:string
+// }
 
 // * Admin verify data
 

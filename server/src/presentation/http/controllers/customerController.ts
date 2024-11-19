@@ -2,7 +2,7 @@
 
 import { Request,Response,NextFunction } from "express"
 import {OtpVerifyUseCases} from "../../../app/useCases/utils/otpStoreData"
-import {getVerifyOTP} from '../../../domain/entities/customerOTP'
+import {GetVerifyOTP} from '../../../domain/entities/customerOTP' 
 import {JwtService} from '../../../infrastructure/service/jwt'
 import {CookieTypes,Role,StatusCode} from '../../../domain/entities/commonTypes'
 import {WorkerInformation} from '../../../domain/entities/worker'
@@ -138,15 +138,15 @@ export const getCategoryName = async(req:Request,res:Response,next:Function)=>{
 export const CustomerOtpController = async(req:Request,res:Response,next:NextFunction)=>{
     try{
 
-        const {otpValue,userId}:getVerifyOTP = req.body
+        const {otpValue,userId}:GetVerifyOTP = req.body
         const isVerifyOTP = await OtpVerifyUseCases(otpValue,userId)
         if(isVerifyOTP ){
             
             if(req.body.role == 'user'){
-                const userData =  await  userVerification(req.body.userId,(req.body.role || "user"))   // * call to verify the customer or update the verify status in database
+                const userData =  await  userVerification(req.body.userId,(req.body.role || Role.User))   // * call to verify the customer or update the verify status in database
               
 
-                const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(userData?.username || ''),(userData?.EmailAddress || ''),(req.body.role || "user"))   // * mongose Id converted as a string
+                const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(userData?.username || ''),(userData?.emailAddress || ''),(req.body.role ||Role.User))   // * mongose Id converted as a string
                 // * JWT referesh token setUp
                 res.cookie(CookieTypes.User,refreshToken,{
                     httpOnly:true,
@@ -161,7 +161,7 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
                 const customerData = {
                     _id:userData?._id,
                     customerName : userData?.username,
-                    customerEmail : userData?.EmailAddress,
+                    customerEmail : userData?.emailAddress,
                     role : Role.User
                 } 
                 
@@ -171,7 +171,7 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
 
                 const workerData =  await  workerVerification(req.body.userId) 
 
-                const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(workerData?.FirstName || ''),(workerData?.EmailAddress || ''),(req.body.role || "worker"))   // * mongose Id converted as a string
+                const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(workerData?.firstName || ''),(workerData?.emailAddress || ''),(req.body.role || Role.Wokrer))   // * mongose Id converted as a string
                 // * JWT referesh token setUp
         
                 res.cookie(CookieTypes.Worker,refreshToken,{
@@ -186,8 +186,8 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
 
                 const customerData = {
                     _id : workerData?._id,
-                    customerName : workerData?.FirstName,
-                    customerEmail : workerData?.EmailAddress,
+                    customerName : workerData?.firstName,
+                    customerEmail : workerData?.emailAddress,
                     role : Role.Wokrer
                 }
 
@@ -241,10 +241,10 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
         const result :(WorkerInformation | null | undefined)= await workerGoogleVerification(req.body.email)
       
         if(!result) return res.status(StatusCode.NotFound).json({success:false,message:`Worker has't register`,modal:true})
-        else if(result?.isBlock){
+        else if(result?.isBlocked){
         return res.status(StatusCode.Forbidden).json({success:false,errorMessage: "This worker is blocked and cannot perform this action." }) 
         }else{
-        const  {refreshToken,accessToken} = JwtService(((result._id)?.toString() || ''),result.FirstName,result.EmailAddress,'worker')
+        const  {refreshToken,accessToken} = JwtService(((result._id)?.toString() || ''),result.firstName,result.emailAddress,Role.Wokrer)
         // * JWT referesh token setUp
         res.cookie(CookieTypes.Worker,refreshToken,{
             httpOnly:true,
@@ -258,8 +258,8 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
     }
     const customerData  = {
         _id: result._id,
-        customerName : result.FirstName,
-        customerEmail : result.EmailAddress,
+        customerName : result.firstName,
+        customerEmail : result.emailAddress,
         role : Role.Wokrer
     }
         return res.status(StatusCode.Success).json({success:true,message:'Worker successfully login',customerData})
@@ -291,7 +291,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                 })
                 res.cookie(CookieTypes.AccessToken,accessToken,{
                     // maxAge: 15 * 60 * 1000
-                    maxAge: 2 * 60 * 1000
+                    maxAge: 15 * 60 * 1000
                 })
                 const customerData  = {
                     _id: userData._id,
@@ -313,7 +313,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
             if(!customerDetails)  return res.status(StatusCode.NotFound).json({success:false,message:'server error'})
 
             if(customerDetails?._id){
-                const  {refreshToken,accessToken} = JwtService((customerDetails?._id).toString(),customerDetails.FirstName,customerDetails.EmailAddress, "worker")  
+                const  {refreshToken,accessToken} = JwtService((customerDetails?._id).toString(),customerDetails.firstName,customerDetails.emailAddress, Role.Wokrer)  
                 // * JWT referesh token setUp
                 res.cookie(CookieTypes.Worker,refreshToken,{
                     httpOnly:true,
@@ -323,12 +323,12 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                 })
                 res.cookie(CookieTypes.AccessToken,accessToken,{
                     // maxAge: 15 * 60 * 1000
-                    maxAge: 2 * 60 * 1000
+                    maxAge: 15 * 60 * 1000
                 })
                 const customerData  = {
                     _id: customerDetails._id,
-                    customerName : customerDetails.FirstName,
-                    customerEmail : customerDetails.EmailAddress,
+                    customerName : customerDetails.firstName,
+                    customerEmail : customerDetails.emailAddress,
                     role : Role.Wokrer
                 }
 

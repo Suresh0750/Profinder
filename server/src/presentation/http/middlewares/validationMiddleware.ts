@@ -5,8 +5,8 @@ import { body,validationResult } from "express-validator";
 
 // * singup server side validation
 export const validateUserSignUp = [
-    body('EmailAddress').isEmail().withMessage('Invalid email format'),
-    body('Password').isLength({min:6}).withMessage('Password must be at least 6 characters long'),
+    body('emailAddress').isEmail().withMessage('Invalid email format'),
+    body('password').isLength({min:6}).withMessage('Password must be at least 6 characters long'),
     (req:Request,res:Response,next:NextFunction)=>{
         try {
             const errors = validationResult(req)
@@ -19,7 +19,6 @@ export const validateUserSignUp = [
             console.log(`Error from validation middleware`,error)
             next(error)
         }
-        
     }
 ]
 

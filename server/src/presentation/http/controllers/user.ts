@@ -16,6 +16,7 @@ import {
     getBookingUsecases,
     paymentIdUsecases
 } from "../../../app/useCases/user/user";
+import { generateOtpAccessToken } from "../../../app/services/token";
 
 
 
@@ -107,7 +108,16 @@ export const profile = async(req:Request,res:Response,next:NextFunction)=>{
 
 export const userSignupController = async (req:Request,res:Response,next:NextFunction)=>{
     try {
+        console.log('reached userSignup constroller')
+        console.log(req.body)
         const user:string = await createUser(req.body);
+        const token = await generateOtpAccessToken(user)
+        res.cookie(CookieTypes.Token,token,{
+            maxAge:15*60*1000,  
+            httpOnly: true,         
+            secure :true,
+            sameSite: 'strict'
+        })
         res.status(StatusCode.Success).json({user,success:true})
     } catch (err) {
         console.log(err)
@@ -117,6 +127,8 @@ export const userSignupController = async (req:Request,res:Response,next:NextFun
 
 export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
     try{
+        console.log('request reached controller')
+        console.log(req.body)
         const loginUsecase :any = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
       
         if(!loginUsecase){
@@ -139,7 +151,7 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
             res.cookie(CookieTypes.AccessToken,accessToken,{
-                maxAge: 2 * 60 * 1000
+                maxAge: 15 * 60 * 1000
             })
             const customerData = {
                 _id:loginUsecase._id,

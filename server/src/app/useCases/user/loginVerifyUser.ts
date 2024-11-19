@@ -9,7 +9,7 @@ export const LoginVerify = async (EmailAddress:string,Password:string)=>{
         const actualUser = await  loginVerifyQuery(EmailAddress)
         if(!actualUser) throw new Error("Invalid EmailAddress")
         else{
-            const isCheckPass =  await checkPassword(Password,actualUser?.Password)
+            const isCheckPass =  await checkPassword(Password,actualUser?.password)
             return isCheckPass ? actualUser : false
         }
 

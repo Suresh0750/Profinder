@@ -1,27 +1,25 @@
+import { Types } from 'mongoose';
 
-import {Types} from 'mongoose'
-
-
-export interface RequestData {
-    service : string,
-    worker :string,
-    preferredDate : string,
-    preferredTime : number | string,
-    servicelocation : string,
-    AdditionalNotes? : string,
-    userId : string,
-    workerId : string,
-    isAccept ?: string,
-    additionalNotes?:string
+// More specific name for the request
+export interface ServiceRequest {
+    service: string;
+    worker: string;
+    preferredDate: string;
+    preferredTime: number | string;
+    serviceLocation: string;
+    additionalNotes?: string; 
+    userId: string;
+    workerId: string;
+    isAccept?: string; 
 }
 
-export interface getReviewTypes {
-    _id?:Types.ObjectId
-    coment : string,
-    userId :{
-        _id : Types.ObjectId,
-        profile : string,
-        username :string
-    },
-    workerId : Types.ObjectId
+export interface Review {
+    _id?: Types.ObjectId;
+    comment: string; 
+    userId: {
+        _id: Types.ObjectId;
+        profile: string;
+        username: string;
+    };
+    workerId: Types.ObjectId;
 }

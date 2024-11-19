@@ -2,9 +2,10 @@
 // * chat application send the message between user and worker
 
 import {io} from '../../../server'
-import {messageType} from '../../../domain/entities/commonTypes'
+import {MessageType} from '../../../domain/entities/commonTypes'
 
-export const sendMessage =async (message:messageType)=>{
+
+export const sendMessage =async (message:MessageType)=>{
     try {
 
         // console.log('call socket')

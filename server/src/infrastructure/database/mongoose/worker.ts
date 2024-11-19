@@ -1,11 +1,11 @@
 import {Types} from 'mongoose'
 import {IgetWorkerRepository} from '../../../domain/repositories/worker'
-import {PersonalInformation, WorkerInformation,ProjectDetails,messageTypes} from '../../../domain/entities/worker'
+import {PersonalInformation, WorkerInformation,ProjectDetails,MessageTypes} from '../../../domain/entities/worker'
 
 // * model
 import { WorkerModel } from './models/worker'
 import {RequestModel} from './models/request'
-import {ResentActivityModel} from './models/recentActivity'
+import {RecentActivityModel} from './models/recentActivity'
 import { ConversationModel } from './models/conversation'
 import { MessageModel } from './models/message'
 import { ReviewModel } from './models/review';
@@ -13,11 +13,11 @@ import {PaymentModel} from './models/payment'
 
 const {ObjectId} = Types
 export const getWorkerRepository = ():IgetWorkerRepository =>({
-    createWorker: async(workerData:PersonalInformation)=>{
+    createWorker: async(workerData:WorkerInformation)=>{
         try {
             const workerDetails = new WorkerModel(workerData); 
             await workerDetails.save();
-            return await WorkerModel.findOne({EmailAddress:workerData.EmailAddress})
+            return await WorkerModel.findOne({emailAddress:workerData.emailAddress})
             
         } catch (error) {
             // console.log(`Erro from infrastructure->database->MongooseWorkerRepository\n`,error)
@@ -26,8 +26,8 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
     },
     insertWorker:async (customerData:WorkerInformation )=>{
         try {
-            const {FirstName,LastName,PhoneNumber,EmailAddress,Password,Profile,Category,Country,StreetAddress,State,City,Apt,Identity,PostalCode} = customerData
-            const workerDetails = await WorkerModel.updateOne({EmailAddress:customerData.EmailAddress},{$set:{FirstName,LastName,PhoneNumber,EmailAddress,Password,Profile,Category,Country,StreetAddress,State,City,Apt,Identity,PostalCode,isVerified:true}},{upsert:true})
+            const {firstName,lastName,phoneNumber,emailAddress,password,profile,category,country,streetAddress,state,city,apt,identity,postalCode} = customerData
+            const workerDetails = await WorkerModel.updateOne({emailAddress:customerData.emailAddress},{$set:{firstName,lastName,phoneNumber,emailAddress,password,profile,category,country,streetAddress,state,city,apt,identity,postalCode,isVerified:true}},{upsert:true})
             return customerData
         } catch (error) {
             // console.log(`Erro from infrastructure->database->insertWorker\n`,error)
@@ -64,7 +64,7 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
         try { 
             console.log(`req reached workerLoginVerify`)
      
-            const workerFetchDetails =  await WorkerModel.findOne({EmailAddress:workerEmail})
+            const workerFetchDetails =  await WorkerModel.findOne({emailAddress:workerEmail})
 
           return workerFetchDetails
         } catch (error) {
@@ -140,7 +140,7 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
     },
     IsActivityQuery : async(requestId:string,paymentId:string)=>{
         try {
-            await ResentActivityModel.updateOne({requestId:new ObjectId(requestId)},{$set:{paymentId}})
+            await RecentActivityModel.updateOne({requestId:new ObjectId(requestId)},{$set:{paymentId}})
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->IsActivityQuery->\n`,error)
             throw error
@@ -162,7 +162,7 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
             throw error
         }
     },
-    messageQuery : async(data:messageTypes)=>{
+    messageQuery : async(data:MessageTypes)=>{
         try {
             return await new MessageModel(data).save()
         } catch (error) {
@@ -207,14 +207,14 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
     },
     isResendActivityQuery : async(requestId:string,payment:number,workerId:string,userId:string)=>{
         try {
-            await  ResentActivityModel.create({requestId,payment,workerId,userId})
+            await  RecentActivityModel.create({requestId,payment,workerId,userId})
         } catch (error) {
             throw error 
         }
     },
     countResentWorkQuery: async(workerId:string)=>{
         try{
-            return await ResentActivityModel.aggregate([
+            return await RecentActivityModel.aggregate([
                 { $match: {workerId: new ObjectId(workerId)} },
                 {
                     $group: {
@@ -280,7 +280,7 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
     },
     getRecentActivity : async(workerId:string)=>{
         try {
-            return await ResentActivityModel.find({workerId:new ObjectId(workerId)}).populate("requestId","user workerId").populate("workerId","Category")
+            return await RecentActivityModel.find({workerId:new ObjectId(workerId)}).populate("requestId","user workerId").populate("workerId","Category")
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->getRecentActivity->\n`,error)
             throw error 
@@ -305,7 +305,7 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
     },
     getUpcomingWorks : async(workerId:string)=>{
         try {
-            return await ResentActivityModel.find({workerId}).populate('requestId','_id preferredDate preferredTime servicelocation AdditionalNotes payment paymentId').populate('userId','_id username EmailAddress Address PhoneNumber')
+            return await RecentActivityModel.find({workerId}).populate('requestId','_id preferredDate preferredTime servicelocation AdditionalNotes payment paymentId').populate('userId','_id username EmailAddress Address PhoneNumber')
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->ratingQuery->\n`,error)
             throw error 
@@ -313,7 +313,7 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
     },
     workCompleteQuery : async(_id:string,isCompleted:boolean,status:string)=>{
         try {
-            return await ResentActivityModel.findByIdAndUpdate({_id:new ObjectId(_id)},{$set:{isCompleted: isCompleted,status}})
+            return await RecentActivityModel.findByIdAndUpdate({_id:new ObjectId(_id)},{$set:{isCompleted: isCompleted,status}})
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->workComplete->\n`,error)
             throw error 

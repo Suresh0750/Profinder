@@ -1,6 +1,6 @@
 
 import { StatusCode } from "../../../domain/entities/commonTypes";
-import { User ,profileTypes,conversationTypes} from "../../../domain/entities/user";
+import { User ,ProfileTypes,ConversationTypes} from "../../../domain/entities/user";
 import { IgetUserRepository } from "../../../domain/repositories/user";
 import { getUserRepository } from "../../../infrastructure/database/mongoose/user";
 import { hashPassword } from "../../../shared/utils/encrptionUtils";
@@ -57,11 +57,11 @@ export const getConversationUsecases = async(id:string)=>{
 }
 
 
-export const conversationUsecases = async(data:conversationTypes)=>{
+export const conversationUsecases = async(data:ConversationTypes)=>{
   try {
     console.log('conversation Usecases')
     console.log(data)
-    const checkExist :conversationTypes|null = await getUserRepository().checkConversation(String(data?.userId),String(data?.workerId))
+    const checkExist :ConversationTypes|null = await getUserRepository().checkConversation(String(data?.userId),String(data?.workerId))
     // console.log('Checkexist')
     // console.log(JSON.stringify(checkExist)) 
     if(checkExist){
@@ -70,11 +70,11 @@ export const conversationUsecases = async(data:conversationTypes)=>{
          // * user click messge box in single worker details page side here no message
       await getUserRepository().conversationQuery(data)  // * create conversation
     }
-    const conversationId = await getUserRepository().findconversationId(String(data?.userId),String(data?.workerId))
-    if(data?.lastMessage && conversationId?._id) {
-     const result =  await getUserRepository().createMessage({conversationId:conversationId?._id,sender:data?.userId,message:data?.lastMessage})
-     console.log(`create the new document`)
-     await sendMessage(result)
+    const conversation = await getUserRepository().findconversationId(String(data?.userId),String(data?.workerId))
+    if(data?.lastMessage && conversation?._id) {
+     const result =  await getUserRepository().createMessage({conversationId:conversation?._id || '',sender:data?.userId,message:data?.lastMessage})
+     console.log(`create the new document`)    
+      await sendMessage(result)
     }
     
     return 
@@ -85,13 +85,13 @@ export const conversationUsecases = async(data:conversationTypes)=>{
 }
 
 // * profile side
-export const EditprofileUsecases = async(data:profileTypes)=>{
+export const EditprofileUsecases = async(data:ProfileTypes)=>{
   try{
-      const {username,email,phone,profile} = data
+      const {username,emailAddress,phoneNumber,profile} = data
       const userData = {
         username,
-        PhoneNumber:phone,
-        EmailAddress : email,
+        phoneNumber,
+        emailAddress,
         profile
       }
       return getUserRepository().updateprofile(userData)
@@ -116,17 +116,16 @@ export const createUser = async (userData: User) => {
     console.log(`req comes usecase createUser`);
     const {findUserByEmail,insertUserDetails,createUser}: IgetUserRepository = getUserRepository();
     const isExistUser: User | null = await findUserByEmail(
-      userData.EmailAddress
+      userData.emailAddress
     );
     if (isExistUser && isExistUser?.isVerified) {
       throw new Error("Email is already exist");
     }
 
-    const hashPass = await hashPassword(userData.Password); // * here we used to hash the password
-    userData.Password = hashPass;
+    const hashPass = await hashPassword(userData.password); // * here we used to hash the password
+    userData.password = hashPass;
     let _id: string | undefined;
     if (isExistUser && !isExistUser?.isVerified) {
-      
       await insertUserDetails(userData);
       userData = isExistUser;
       _id = isExistUser._id;
@@ -135,7 +134,7 @@ export const createUser = async (userData: User) => {
       _id = userData._id;
     }
 
-    const { customerOTP, customerId } = await OtpService(_id, userData.EmailAddress); // * call the otpService
+    const { customerOTP, customerId } = await OtpService(_id, userData.emailAddress); // * call the otpService
     console.log(`${customerOTP} -- ${customerId}==>`);
     await OtpStoreData(customerId, customerOTP);
     return customerId;

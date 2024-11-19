@@ -1,7 +1,7 @@
 
 // * server status code
 
-import { conversation } from "../../presentation/http/controllers/user";
+import { Token } from 'aws-sdk';
 import {Types} from 'mongoose'
 
 
@@ -29,7 +29,8 @@ export enum StatusCode {
     Admin = "adminToken",
     Worker = "workerToken",
     User = "userToken",
-    AccessToken = 'accessToken'
+    AccessToken = 'accessToken',
+    Token = 'token'
  }
 
  export enum Role{
@@ -75,7 +76,7 @@ export interface CustomError extends Error {
   statusCode?: number;
 }
 
-export type conversationTypes = {
+export type ConversationTypes = {
   userId : Types.ObjectId
   workerId:Types.ObjectId,
   lastMessage : string,
@@ -86,14 +87,15 @@ export type conversationTypes = {
 
 // * message 
 
-export interface messageType {
-_id? : Types.ObjectId
-conversationId : Types.ObjectId
-sender : string
-message : string
-isRead : boolean
-createdAt : Date
-updatedAt :Date
+export interface MessageType {
+_id? : Types.ObjectId 
+conversationId : Types.ObjectId | string  
+sender : string | Types.ObjectId
+lastMessage ? : string
+message ?: string
+isRead? : boolean 
+createdAt? : Date | string
+updatedAt?:Date | string
 __v ? : number
 }
 
@@ -119,20 +121,21 @@ export interface RecentActivityType{
   __v ? : number
 }
 
-export interface RequestType{
-  _id : Types.ObjectId,
-  service : string,
-  worker : string,
-  user :string,
-  preferredData : string,
-  preferredTime : string,
-  servicelocation : string,
-  AdditionalNotes : string,
-  userId :  Types.ObjectId,
-  workerId :  Types.ObjectId,
-  isAccept : string,
-  payment : number,
-  createdAt : Date
-  updatedAt :Date
-  __v ? : number
+
+export interface ServiceRequest {
+  _id: Types.ObjectId;
+  service: string;
+  worker: string;
+  user: string;
+  preferredDate: Date;
+  preferredTime: string;
+  serviceLocation: string;
+  additionalNotes: string;
+  userId: Types.ObjectId;
+  workerId: Types.ObjectId;
+  isAccepted: boolean;
+  payment: number;
+  createdAt: Date;
+  updatedAt: Date;
+  __v?: number;
 }

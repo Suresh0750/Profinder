@@ -1,7 +1,7 @@
 import { IOTPRepository } from "../../../domain/repositories/otp";
 // import { CustomerOTP } from "../../../domain/entities/customerOTP";
 import { CustomerOTP } from "../../../domain/entities/customerOTP";
-import { customerOTPModel } from "./models/otp";
+import { OtpModel } from "./models/otp";
 import {UserModel} from './models/user'
 import {WorkerModel} from "./models/worker"
 
@@ -12,7 +12,7 @@ export const OTPRepository = (): IOTPRepository => ({
     otpExpiration: Date
   ) => {
     try {
-      const otpDoc = new customerOTPModel({
+      const otpDoc = new OtpModel({
         customerId,
         OtpPIN,
         otpExpiration,
@@ -32,7 +32,7 @@ export const OTPRepository = (): IOTPRepository => ({
     try {
       // * varifyOTP 
 
-      const CustomerOtpData = await customerOTPModel.findOne({customerId});
+      const CustomerOtpData = await OtpModel.findOne({customerId});
 
       if(CustomerOtpData?.OtpPIN==otpValue) return true
       else throw new Error('OTP mismatch. Please try again.')
@@ -64,7 +64,7 @@ export const OTPRepository = (): IOTPRepository => ({
 
       const userData = await UserModel.findById({_id:customerId});
 
-      return userData?.EmailAddress
+      return userData?.emailAddress
     }catch(error){
       // console.log( `Error from infrastruture->database->MongooseOtpRepository  \n ${error}`)
       throw error
@@ -75,7 +75,7 @@ export const OTPRepository = (): IOTPRepository => ({
 
       const workerData = await WorkerModel.findById({_id:customerId});
 
-      return workerData?.EmailAddress
+      return workerData?.emailAddress
     }catch(error){
       // console.log( `Error from infrastruture->database->MongooseOtpRepository  \n ${error}`)
       throw error
@@ -83,7 +83,7 @@ export const OTPRepository = (): IOTPRepository => ({
   },
   deleteOTP: async (customerId:string) =>{
     try{
-      await customerOTPModel.deleteOne({customerId})
+      await OtpModel.deleteOne({customerId})
     }catch(error){
       // console.log(`Error from infrastruture->database->ResendOTPStore  \n ${error}`)
       throw error
