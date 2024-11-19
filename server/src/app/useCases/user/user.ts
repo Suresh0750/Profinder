@@ -139,8 +139,8 @@ export const createUser = async (userData: User) => {
     await OtpStoreData(customerId, customerOTP);
     return customerId;
 
-  } catch (err) {
-    console.log(`error from usecase in createUser`, err);
+  } catch (err:any) {
+    console.log(`error from usecase in createUser`, err?.message);
     throw err;
   }
 };

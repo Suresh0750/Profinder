@@ -46,7 +46,7 @@ export const getUserRepository = () : IgetUserRepository =>({
     },
     loginVerifyQuery : async(userEmail:string)=>{
         try {   
-            const userFetchDetails =  await UserModel.findOne({EmailAddress:userEmail})
+            const userFetchDetails =  await UserModel.findOne({emailAddress:userEmail})
            return userFetchDetails
         } catch (error) {
             // console.log(`Error from infrastructure->mongoseUser->loginVerify\n`,error)

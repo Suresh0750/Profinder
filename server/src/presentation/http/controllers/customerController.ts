@@ -147,6 +147,7 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
               
 
                 const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(userData?.username || ''),(userData?.emailAddress || ''),(req.body.role ||Role.User))   // * mongose Id converted as a string
+                res.clearCookie(CookieTypes.Token)
                 // * JWT referesh token setUp
                 res.cookie(CookieTypes.User,refreshToken,{
                     httpOnly:true,

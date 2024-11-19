@@ -129,7 +129,7 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
     try{
         console.log('request reached controller')
         console.log(req.body)
-        const loginUsecase :any = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
+        const loginUsecase :any = await LoginVerify(req.body?.emailAddress,req.body?.password)
       
         if(!loginUsecase){
             res.status(StatusCode.Unauthorized)
