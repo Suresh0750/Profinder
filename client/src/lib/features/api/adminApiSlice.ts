@@ -8,31 +8,13 @@ const baseQuery = fetchBaseQuery({
     credentials: 'include',  
    
 });
-const baseQueryWithReAuth: BaseQueryFn<
-    string | FetchArgs, 
-    unknown,            
-    FetchBaseQueryError 
-> = async (args, api, extraOptions) => {
-    const result = await baseQuery(args, api, extraOptions);
 
- 
-    if (
-        result.error &&
-        (result.error.status === 403 || result.error.status === 401)
-    ) {
-       
-        localStorage.setItem("customerData", "");
-
-    }
-
-    return result;
-};
 
 
 // * Function to get headers
 const getHeaders = (role: string) => ({
     'Role': role, 
-    'Content-Type': 'application/json'  // Specify Content-Type header
+    'Content-Type': 'application/json'  
 });
 
 
@@ -223,3 +205,220 @@ export const {
     useSalesReportQuery,
     useCategoryListQuery,
 } = adminApi;
+
+
+import axios from "axios"
+
+const axiosInstance = axios.create({
+    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    headers : {
+        "Content-Type" : "application/json"
+    },
+    withCredentials : true,
+})
+
+
+export const addCategory = async(data: FormData)=>{
+    try{
+        const response = await axiosInstance.post(`/admin/addCategory`,{data});
+        return response.data;
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const adminLogin =  async(data:AdminCredentials) =>{
+    try{
+        const response = await axiosInstance.post(`/admin/adminVerify`,{data});
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+export const fetchCategories =  async() =>{
+    try{
+        const response = await axiosInstance.get(`/admin/fetchCategoryData`);
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+export const editCategory =  async(data: EditCategoryType | any) =>{
+    try{
+        const response = await axiosInstance.post(`/admin/editCategory`,{data});
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const toggleCategoryListing = async(data:{_id:string,isListed:boolean})=>{
+    const response = await axiosInstance.post(`/admin/isListVerify`,{data});
+    return response.data
+}
+
+export const deleteProduct = async (data:string)=>{
+    try{
+        const response = await axiosInstance.delete(`/admin/deleteProduct/${data}`);
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const adminLogout = async ()=>{
+    try{
+        const response = await axiosInstance.post(`/admin/adminLogout`);
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchWorkerList = async()=>{
+    try{
+        const response = await axiosInstance.get(`/admin/workerList`);
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchUserList = async ()=>{
+    try{
+        const response = await axiosInstance.get(`/admin/allUserlist`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const toggleUserBlock = async (data:{isBlock:boolean,_id:string})=>{
+    try{
+        const response = await axiosInstance.post(`/admin/isBlockUser`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchUnapprovedWorkers = async()=>{
+    try{
+        const response = await axiosInstance.get(`/admin/allUnApprovalWorkerlist`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+
+export const approveWorker =  async (workerId:string)=>{
+    try{
+        const response = await axiosInstance.put(`/admin/isWorkerApproval/${workerId}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchDashboardOverview = async()=>{
+    try{
+        const response = await axiosInstance.get(`/admin/dashboardOverview`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchDashboardData = async ()=>{
+    try{
+        const response = await axiosInstance.get(`/admin/dashboard`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchWorkerDashboardData = async ()=>{
+    try{
+        const response = await axiosInstance.get(`/admin/dashboardWorker`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchReviewDashboardData = async ()=>{
+    try{
+        const response = await axiosInstance.get(`/admin/dashboard-review`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchSalesReport = async (data:any)=>{
+    try{
+        const response = await axiosInstance.get(`/admin/sales-report`,{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const categoryList = async()=>{
+    try{
+        const response = await axiosInstance.get(`/admin/categoryList`);
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const downloadSalesReport = async (data:any)=>{
+    try{
+        const params = data
+        const response = await axiosInstance.get(`/admin/download-sales`,{params});
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const workerData = async (data:any)=>{
+    try{
+        const response = await axiosInstance.get(`/admin/worker-details/${data}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const blockWorker = async (data:string)=>{
+    try{
+        const response = await axiosInstance.patch(`/admin/worker/isBlock/${data}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}

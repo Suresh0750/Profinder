@@ -133,3 +133,125 @@ export const {
     useBookingQuery,
     usePaymentIdQuery,
 } = userApi
+
+
+
+import axios from 'axios'
+
+const axiosInstance = axios.create({
+    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    headers : {
+        "Content-Type" : "application/json"
+    },
+    withCredentials : true,
+})
+
+// * for add the photo
+const axiosInstance1 = axios.create({
+    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    withCredentials : true,
+})
+
+
+// * Error handler
+export const handleAxiosError = (error: any) => {
+    console.log(error)
+    const errorMessage = error?.response?.data?.errorMessage || "Unexpected error occurred.";
+    return new Error(errorMessage);
+};
+
+export const signUp = async (data:any)=>{
+    try{
+        const response = await axiosInstance.post(`/user/userSignup`,data)
+        return response.data
+    }catch(error:any){
+        console.log(error)
+        const errorMessage = error?.response?.data?.errorMessage || "Unexpected error occurred.";
+        throw new Error(errorMessage); 
+    }
+}
+
+export const logIn = async (data: any) => {
+    try {
+        const response = await axiosInstance.post("/user/loginverify", data);
+        return response.data;
+    } catch (error: any) {      
+        throw handleAxiosError(error)
+    }
+};
+
+export const checkEmailForgetPass = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post("/user/checkEmailForgetPass",{data})
+        return response.data
+    }catch(error:any){
+        throw handleAxiosError(error)
+    }
+}
+export const profile = async(data:string)=>{
+    try{
+        const response = await axiosInstance.get(`/user/profile/${data}`)
+        return response.data
+    }catch(error:any){
+        throw handleAxiosError(error)
+    }
+}
+export const updateprofile = async(data:string)=>{
+    try{
+        const response = await axiosInstance1.put(`/user/updateprofile`,{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const conversation  = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post(`/user/conversation`,{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchAllConversation = async(userId:string)=>{
+    try{
+        const response = await axiosInstance.get(`/user/conversation/${userId}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchAllMessage = async(conversationId:string)=>{
+    try{
+        const response = await axiosInstance.get(`/user/message/${conversationId}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const booking = async(userId:string)=>{
+    try{
+        const response = await axiosInstance.get(`/user/booking/${userId}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const paymentId = async (requestId:string)=>{
+    try{
+        const response = await axiosInstance.get(`/user/paymentId/${requestId}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}

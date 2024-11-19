@@ -5,7 +5,7 @@ import axios from 'axios';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useSignUpMutation } from '@/lib/features/api/userApiSlice';
+import { useSignUpMutation,signUp} from '@/lib/features/api/userApiSlice';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Toaster, toast } from 'sonner';
@@ -16,37 +16,13 @@ import { PulseLoader } from 'react-spinners';
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // for password visibility
 import { updateCustomerLogin, updateRole } from '@/lib/features/slices/customerSlice';
 import { useDispatch } from 'react-redux';
+import { userSignupformSchema } from '@/lib/formSchema';
 
-// Form schema validation using Zod
-const formSchema = z.object({
-  username: z.string().min(5, { message: "Username must be at least 5 characters." }),
-  PhoneNumber: z.preprocess((val) => {
-    if (typeof val === "string" && val.trim() === "") return undefined;
-    const parsed = parseInt(val as string, 10);
-    return isNaN(parsed) ? undefined : parsed;
-  }, z.number({
-    invalid_type_error: "Phone number must be a number.",
-    required_error: "Phone number is required.",
-  })
-    .int({ message: "Phone number must be an integer." })
-    .positive({ message: "Phone number must be positive." })
-    .refine((val) => val.toString().length === 10, { message: "Phone number should be exactly 10 digits long." })),
-  EmailAddress: z.string().email({ message: "Please enter a valid email address." }),
-  Address: z.string().min(10, { message: "Address must be at least 10 characters long." }),
-  Password: z.string().min(6, { message: "Password must be at least 6 characters long" })
-    .regex(/[A-Za-z]/, { message: "Password must contain at least one letter" })
-    .regex(/\d/, { message: "Password must contain at least one number" })
-    .regex(/[@$!%*?&]/, { message: "Password must contain at least one special character" }),
-  ConfirmPass: z.string().nonempty({ message: "Confirm password cannot be empty" }),
-}).refine((data) => data.Password === data.ConfirmPass, {
-  message: "Passwords don't match",
-  path: ["ConfirmPass"],
-});
 
 // Signup Form component
 export function SignupForm() {
   const [isLoading, setLoading] = useState(false);
-  const [SignUp] = useSignUpMutation();
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -54,39 +30,35 @@ export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof userSignupformSchema>>({
+    resolver: zodResolver(userSignupformSchema),
     defaultValues: {
       username: "",
-      PhoneNumber: 0,
-      EmailAddress: "",
-      Address: "",
-      Password: "",
-      ConfirmPass: "",
+      phoneNumber: 0,
+      emailAddress: "",
+      address: "",
+      password: "",
+      confirmPass: "",
     },
   });
 
   // Handle form submission
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof userSignupformSchema>) {
     try {
       if (isLoading) return;
+      
       setLoading(true);
-
-      const res = await SignUp(values).unwrap();
+      const res = await signUp(values)
+      console.log(res)
       if (res.success) {
         toast.success('User registration successful');
         setTimeout(() => {
           router.push(`/user/userOtp/${res.user}`);
         }, 500);
-      } else {
-        toast.error(res?.data?.errorMessage);
       }
-    } catch (err: any) {
-      console.log(err)
-    {
-      err.data.errorMessage ? toast.error(err.data.errorMessage) :  toast.error("Server error. Please try again.");
-    }
-     
+    } catch (error: any) {
+      console.log(error)
+      toast.error(error.message  || "An error occurred.")
     } finally {
       setLoading(false);
     }
@@ -112,7 +84,7 @@ export function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="PhoneNumber"
+            name="phoneNumber"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone Number</FormLabel>
@@ -125,7 +97,7 @@ export function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="EmailAddress"
+            name="emailAddress"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email Address</FormLabel>
@@ -138,7 +110,7 @@ export function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="Address"
+            name="address"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Address</FormLabel>
@@ -151,7 +123,7 @@ export function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="Password"
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
@@ -178,7 +150,7 @@ export function SignupForm() {
           />
           <FormField
             control={form.control}
-            name="ConfirmPass"
+            name="confirmPass"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Confirm Password</FormLabel>

@@ -7,7 +7,8 @@ import {Checkbox} from "../ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useLoginMutation } from "@/lib/features/api/userApiSlice"
+import { useLoginMutation,logIn } from "@/lib/features/api/userApiSlice"
+
 import {
   Form,
   FormControl,
@@ -58,18 +59,22 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await Login(values).unwrap()
+      // const res = await Login(values).unwrap()
+      const res = await logIn({emailAddress:values?.EmailAddress,password:values?.Password})
+      console.log(res)
+
       if (res.success) {
      
         localStorage.setItem("customerData",JSON.stringify(res.customerData))
 
         toast.success(res.message)
         setTimeout(() => {
-          Router.push("/homePage")
+          Router.replace("/homePage")
         }, 3000)
       }
-    } catch (error: any) {
-      toast.error(error?.data?.errorMessage || "An error occurred.")
+    } catch (error: any) { 
+      console.log(error)
+      toast.error(error  || "An error occurred.")
     }
   }
 

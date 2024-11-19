@@ -76,3 +76,33 @@ export const professionalInfoFormSchema = z.object({
   }).nullable(),
   PostalCode: z.string().min(5, { message: "Postal code is required." }),
 })
+
+
+
+
+// * User
+
+export const userSignupformSchema = z.object({
+  username: z.string().min(5, { message: "Username must be at least 5 characters." }),
+  phoneNumber: z.preprocess((val) => {
+    if (typeof val === "string" && val.trim() === "") return undefined;
+    const parsed = parseInt(val as string, 10);
+    return isNaN(parsed) ? undefined : parsed;
+  }, z.number({
+    invalid_type_error: "Phone number must be a number.",
+    required_error: "Phone number is required.",
+  })
+    .int({ message: "Phone number must be an integer." })
+    .positive({ message: "Phone number must be positive." })
+    .refine((val) => val.toString().length === 10, { message: "Phone number should be exactly 10 digits long." })),
+  emailAddress: z.string().email({ message: "Please enter a valid email address." }),
+  address: z.string().min(10, { message: "Address must be at least 10 characters long." }),
+  password: z.string().min(6, { message: "Password must be at least 6 characters long" })
+    .regex(/[A-Za-z]/, { message: "Password must contain at least one letter" })
+    .regex(/\d/, { message: "Password must contain at least one number" })
+    .regex(/[@$!%*?&]/, { message: "Password must contain at least one special character" }),
+  confirmPass: z.string().nonempty({ message: "Confirm password cannot be empty" }),
+}).refine((data) => data.password === data.confirmPass, {
+  message: "Passwords don't match",
+  path: ["confirmPass"],
+});

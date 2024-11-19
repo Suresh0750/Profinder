@@ -73,7 +73,7 @@ export function LoginForm() {
         localStorage.setItem("customerData",JSON.stringify(res?.customerData))  
 
         setTimeout(() => {
-          Router.push("/homePage")
+          Router.replace("/homePage")
         }, 3000)
       }else if(res?.status==403){
         toast.error(res?.data?.message)

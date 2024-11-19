@@ -186,3 +186,174 @@ export const {
     useGetReviewQuery,
     usePaymentDetailsQuery
 } = customerApi
+
+import axios from 'axios'
+
+const axiosInstance = axios.create({
+    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    headers : {
+        "Content-Type" : "application/json"
+    },
+    withCredentials : true,
+})
+
+export const customerOtp = async (data:OTPData)=>{
+    try{
+        const response = await axiosInstance.post(`/customer/verifyOTP`,{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const customerResend = async(data:OTPData)=>{
+    try{
+        const response = await axiosInstance.post(`/customer/resentOTP`,{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const forgetPassword = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post(`/customer/setForgotPassword`,{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const CustomerGoogleLogin = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post(`/customer/CustomerGoogleLogin`,{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const customerLogout = async ()=>{
+    try{
+        const response = await axiosInstance.post(`/customer/cutomerLogout`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const customerLogin = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post("/customer/customerLogIn",{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const customerGoogleVerification = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post("/customer/customerGoogleVerification",{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const listWorkerData = async(data:{latitude:number,longitude:number})=>{
+    try{
+        const response = await axiosInstance.get(`/customer/getALLVerifiedWorker/${data.latitude}/${data.longitude}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchCategoryName = async()=>{
+    try{
+        const response = await axiosInstance.get("/customer/getCategoryName")
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchNearByWorkerList = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post(`/customer/getNearByWorkerDetails/${data}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const requestToWorker = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post('/customer/userRequestWorker',{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const payU = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post("/customer/paymetAPI",{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const savePaymentId = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post("/customer/savePaymentId",{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const submitReview = async(data:any)=>{
+    try{
+        const response = await axiosInstance.post("/customer/review",{data})
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const fetchReview = async(workerId:string)=>{
+    try{
+        const response = await axiosInstance.get(`/customer/review/${workerId}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
+export const paymentDetails = async(requestId:string)=>{
+    try{
+        const response = await axiosInstance.get(`/customer/payment-details/${requestId}`)
+        return response.data
+    }catch(error:any){
+        console.log(error.errMessage)
+        throw error
+    }
+}
+
