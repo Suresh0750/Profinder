@@ -101,7 +101,7 @@ export default function InputOtp({ userId }: { userId: string }) {
        
         localStorage.setItem("customerData",JSON.stringify(res.customerData))
         setTimeout(()=>{
-          Router.push('/homePage')
+          Router.replace('/homePage')
         },3000)
       } else {
         toast.error(res.message);

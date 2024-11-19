@@ -2,8 +2,9 @@
 
 import {NextRequest,NextResponse} from 'next/server'
 import { jwtVerify } from "jose";
-import { isUserProtectedRoute } from './routes/routes';
+import { isUserProtectedRoute, productOtp } from './routes/routes';
 import { cookies } from 'next/headers';
+
 
 export async function middleware(req:NextRequest){
 
@@ -41,6 +42,17 @@ export async function middleware(req:NextRequest){
     
     const loginUrl = new URL("/homePage",req.url)
     return NextResponse.redirect(loginUrl)
+  }
+
+  if(pathname.includes('/user/userOtp')){
+    let isProduct = await productOtp(req)
+    console.log('otp page')
+    console.log(isProduct)
+    if(!isProduct){
+      const loginUrl = new URL('/homePage',req.url)
+      return NextResponse.redirect(loginUrl)
+    }
+    return NextResponse.next() 
   }
   
   if(pathname?.includes('/user') && !pathname?.includes('/user/userOtp') && !pathname?.includes('/customer/setforget_password') && !pathname?.includes("/customer/forgetpassword") && !isUserProtectedRoute(pathname)&&!userVerifyToken){
