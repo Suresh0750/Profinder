@@ -24,21 +24,8 @@ import Link from "next/link"
 import GoogleSignIn from "../Utils/GoogleLogin"
 import {updateCustomerLogin,updateRole} from '@/lib/features/slices/customerSlice'
 import { useDispatch } from "react-redux";
+import { UserSignInFormSchema } from "@/lib/formSchema"
 
-
-const formSchema = z.object({
-  EmailAddress: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  Password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters long" })
-    .regex(/[A-Za-z]/, { message: "Password must contain at least one letter" })
-    .regex(/\d/, { message: "Password must contain at least one number" })
-    .regex(/[@$!%*?&]/, {
-      message: "Password must contain at least one special character",
-    }),
-})
 
 export function LoginForm() {
   const [selectBox, setSelectBox] = useState(false)
@@ -49,18 +36,18 @@ export function LoginForm() {
 
   const dispatch  = useDispatch()
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof UserSignInFormSchema>>({
+    resolver: zodResolver(UserSignInFormSchema),
     defaultValues: {
-      EmailAddress: "",
-      Password: "",
+      emailAddress: "",
+      password: "",
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof UserSignInFormSchema>) {
     try {
-      // const res = await Login(values).unwrap()
-      const res = await logIn({emailAddress:values?.EmailAddress,password:values?.Password})
+      
+      const res = await logIn(values)
       console.log(res)
 
       if (res.success) {
@@ -74,7 +61,7 @@ export function LoginForm() {
       }
     } catch (error: any) { 
       console.log(error)
-      toast.error(error  || "An error occurred.")
+      toast.error(error?.message  || "An error occurred.")
     }
   }
 
@@ -86,7 +73,7 @@ export function LoginForm() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 text-lg">
             <FormField
               control={form.control}
-              name="EmailAddress"
+              name="emailAddress"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xl font-bold">User Email</FormLabel>
@@ -104,7 +91,7 @@ export function LoginForm() {
             />
             <FormField
               control={form.control}
-              name="Password"
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xl font-bold">User Password</FormLabel>

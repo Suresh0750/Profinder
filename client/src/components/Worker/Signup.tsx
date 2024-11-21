@@ -19,13 +19,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PulseLoader } from 'react-spinners';
-import profilePic from "../../../public/images/Admin/category/Carpenter.jpg";
 import { CgAdd } from 'react-icons/cg';
 import { useState } from 'react';
-import {useWorkerSignUpMutation} from '@/lib/features/api/workerApiSlice'
+import {useWorkerSignUpMutation,signUp} from '@/lib/features/api/workerApiSlice'
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // * Eye icon from react-icons
 import {signUPformSchema} from '../../lib/formSchema' // * form Schema
-import { useDispatch,useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {updateSignup} from '../../lib/features/slices/workerSlice'
 import Link from 'next/link'
 
@@ -43,21 +42,19 @@ export default function WorkerSignUp() {
   // * Password visible control
   const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for confirm password visibility
+  const [isLoading,setIsloading] = useState<boolean>(false)
 
 
-  // * Api (or) RTK query
-  const [WorkerSignUp,{isLoading}] = useWorkerSignUpMutation()
-  // <PulseLoader size={6} color="#ffffff" />
 
   const form = useForm<z.infer<typeof signUPformSchema>>({
     resolver: zodResolver(signUPformSchema),
     defaultValues: {
-      FirstName: "",
-      LastName: "",
-      PhoneNumber: "",
-      EmailAddress: "",
-      Password: "",
-      ConfirmPass: "",
+      firstName: "",
+      lastName: "",
+      phoneNumber: "",
+      emailAddress: "",
+      password: "",
+      confirmPass: "",
     },
   });
 
@@ -76,21 +73,23 @@ export default function WorkerSignUp() {
   async function onSubmit(values: z.infer<typeof signUPformSchema>) {
     try {
 
-      let checkNumber :(RegExpMatchArray | any )= values.PhoneNumber.match(/(\d+)/)
+      let checkNumber :(RegExpMatchArray | any )= values.phoneNumber.match(/(\d+)/)
       if(!profilePicFile) return toast.error('Please select profile picture') ;
       if(checkNumber[0].length!=10) return toast.error('should give valid number')  // * here check Phone number field is number or not
 
       if (isLoading) return;
 
+      setIsloading(true)
       const formData:any = new FormData()
-      formData.append('FirstName', values.FirstName);
-      formData.append('LastName', values.LastName);
-      formData.append('PhoneNumber', values.PhoneNumber);
-      formData.append('EmailAddress', values.EmailAddress);
-      formData.append('Password', values.Password);
+      formData.append('firstName', values.firstName);
+      formData.append('lastName', values.lastName);
+      formData.append('phoneNumber', values.phoneNumber);
+      formData.append('emailAddress', values.emailAddress);
+      formData.append('password', values.password);
       formData.append('profileImage',profilePicFile)
 
-      const res = await WorkerSignUp(formData).unwrap()
+      // const res = await WorkerSignUp(formData).unwrap()
+      const res = await signUp(formData)
   
     if(res.success){
       // console.log(res.workerDetails)
@@ -104,13 +103,16 @@ export default function WorkerSignUp() {
       toast.error('somethin wrong try again')
     }
       
-    } catch (err : any) {
-      console.log(err);
-      {
-        err?.data?.errorMessage ? toast.error( err.data.errorMessage) : toast.error('Error: Registration failed. Please check your input and try again.');
-      }
+    } catch (error : any) {
+      console.log(error);
+      toast.error(error?.message)
+      // {
+      //   err?.data?.errorMessage ? toast.error( err.data.errorMessage) : toast.error('Error: Registration failed. Please check your input and try again.');
+      // }
      
-    } 
+    }finally{
+      setIsloading(false)
+    }
   }
 
   return (
@@ -122,7 +124,7 @@ export default function WorkerSignUp() {
             <div className='flex gap-12'>
               <FormField
                 control={form.control}
-                name="FirstName"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>First Name</FormLabel>
@@ -139,7 +141,7 @@ export default function WorkerSignUp() {
               />
               <FormField
                 control={form.control}
-                name="LastName"
+                name="lastName"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Last Name</FormLabel>
@@ -157,7 +159,7 @@ export default function WorkerSignUp() {
             </div>
             <FormField
               control={form.control}
-              name="PhoneNumber"
+              name="phoneNumber"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
@@ -174,7 +176,7 @@ export default function WorkerSignUp() {
             />
             <FormField
               control={form.control}
-              name="EmailAddress"
+              name="emailAddress"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email Address</FormLabel>
@@ -192,7 +194,7 @@ export default function WorkerSignUp() {
             />
              <FormField
               control={form.control}
-              name="Password"
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
@@ -218,7 +220,7 @@ export default function WorkerSignUp() {
             />
            <FormField
               control={form.control}
-              name="ConfirmPass"
+              name="confirmPass"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>

@@ -7,7 +7,7 @@ import {Checkbox} from "../ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useLoginMutation } from "@/lib/features/api/workerApiSlice"
+import { useLoginMutation,login } from "@/lib/features/api/workerApiSlice"
 import { PulseLoader } from 'react-spinners';
 import {
   Form,
@@ -25,43 +25,33 @@ import {updateCustomerLogin,updateRole} from '@/lib/features/slices/customerSlic
 import { useDispatch } from "react-redux"
 import { updateSignup ,getWorkerData} from "@/lib/features/slices/workerSlice"
 import GooglLogin from '../Utils/WorkerGoogle'
+import { workerLoginFormSchema } from "@/lib/formSchema"
 
-const formSchema = z.object({
-  EmailAddress: z.string().email({
-    message: "Please enter a valid email address.",
-  }),
-  Password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters long" })
-    .regex(/[A-Za-z]/, { message: "Password must contain at least one letter" })
-    .regex(/\d/, { message: "Password must contain at least one number" })
-    .regex(/[@$!%*?&]/, {
-      message: "Password must contain at least one special character",
-    }),
-})
 
 export function LoginForm() {
   const [selectBox, setSelectBox] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
-  const [Login,{isLoading}] = useLoginMutation()
+  const [isLoading,setIsloading] = useState<boolean>(false)
+  
 
   const Router = useRouter()
   const dispatch = useDispatch()
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof workerLoginFormSchema>>({
+    resolver: zodResolver(workerLoginFormSchema),
     defaultValues: {
-      EmailAddress: "",
-      Password: "",
+      emailAddress: "",
+      password: "",
     },
   })
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof workerLoginFormSchema>) {
     try {
       if(isLoading) return 
 
-
-      const res = await Login(values).unwrap()
+      setIsloading(true)
+      // const res = await Login(values).unwrap()
+      const res = await login(values)
       
       if (res.success) {
         console.log(res)
@@ -75,12 +65,13 @@ export function LoginForm() {
         setTimeout(() => {
           Router.replace("/homePage")
         }, 3000)
-      }else if(res?.status==403){
-        toast.error(res?.data?.message)
       }
     } catch (error: any) {
       console.log(error)
-      toast.error(error?.data?.errorMessage)
+      console.log(error?.message)
+      toast.error(error?.message)
+    }finally{
+      setIsloading(false)
     }
   }
 
@@ -94,7 +85,7 @@ export function LoginForm() {
           >
             <FormField
               control={form.control}
-              name="EmailAddress"
+              name="emailAddress"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xl font-bold">User Email</FormLabel>
@@ -112,7 +103,7 @@ export function LoginForm() {
             />
             <FormField
               control={form.control}
-              name="Password"
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xl font-bold">

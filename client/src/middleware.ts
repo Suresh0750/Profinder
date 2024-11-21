@@ -18,13 +18,13 @@ export async function middleware(req:NextRequest){
 
   // /user/profile
   
-  const workerVerifyToken = await verifyToken("workerToken",req)
-  const userVerifyToken = await verifyToken("userToken",req)
+  const workerVerifyToken = await verifyToken("workerRefreshToken",req)
+  const userVerifyToken = await verifyToken("userRefreshToken",req)
 
 
   // * product admin router
   if(pathname.includes('/admin')){
-    const adminVerifyToken = await AdminVerifyToken("adminToken",req)
+    const adminVerifyToken = await AdminVerifyToken("adminRefreshToken",req)
   if (!adminVerifyToken && pathname!='/admin/login'){
       const loginUrl = new URL("/admin/login",req.url)
       return NextResponse.redirect(loginUrl)

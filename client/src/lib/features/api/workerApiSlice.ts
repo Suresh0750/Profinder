@@ -204,40 +204,38 @@ const axiosInstance = axios.create({
     withCredentials : true,
 })
 
-try{
-
-}catch(error:any){
-    console.log(error.errMessage)
-    throw error
+// * Error handler
+export const handleAxiosError = (error:any)=>{
+    console.log(error)
+    const errorMessage = error?.response?.data?.errorMessage || "Unexpected error occurred";
+    console.log(errorMessage)
+    return new Error(errorMessage)
 }
 
 export const signUp = async(data:FormValues)=>{
     try{
-        const response = await axiosInstance.post(`/worker/personalinfo`,{data})
+        const response = await axiosInstance.post(`/worker/personalinfo`,data)
         return response.data
-    }catch(err:any){
-        console.log(err.errMessage)
-        throw err
+    }catch(error:any){
+        throw handleAxiosError(error)
     }
 }
 
 export const professionalInfo = async(data:any)=>{
     try{
-        const response = await axiosInstance.post(`/worker/ProfessionalInfo`,{data})
+        const response = await axiosInstance.post(`/worker/ProfessionalInfo`,data)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
 export const checkWorkerEmailForgetPass = async(data:any)=>{
     try{
-        const response = await axiosInstance.post(`/worker/checkEmailForgetPass`,{data})
+        const response = await axiosInstance.post(`/worker/checkEmailForgetPass`,data)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
     
 }
@@ -247,29 +245,26 @@ export const fetchWorkerDetails = async()=>{
         const response = await axiosInstance.get(`/worker/getWorkerData`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
 
 export const login = async(data:any)=>{
     try{
-        const response = await axiosInstance.get(`/worker/loginverify`,{data})
+        const response = await axiosInstance.post(`/worker/loginverify`,data)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
 export const uploadProject = async(data:any)=>{
     try{
-        const response = await axiosInstance.post(`/worker/uploadWorkerProject`,{data})
+        const response = await axiosInstance.post(`/worker/uploadWorkerProject`,data)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -278,8 +273,7 @@ export const fetchProject = async(data:any)=>{
         const response = await axiosInstance.get(`/worker/getWorkerProject/${data}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -288,8 +282,7 @@ export const fetchSingleWorkerDetails = async(data:any)=>{
         const response = await axiosInstance.get(`/worker/singleWorkerDetails/${data}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -298,8 +291,7 @@ export const fetchAllRequest = async(data:any)=>{
         const response = await axiosInstance.get(`/worker/getRequestData/${data}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -308,8 +300,7 @@ export const acceptWork = async(data:{_id:string,isPayment:number,userId:string}
         const response = await axiosInstance.put(`/worker/isAcceptWork/${JSON.stringify(data)}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -318,8 +309,7 @@ export const rejectWork = async(data:any)=>{
         const response = await axiosInstance.put(`/worker/rejectWork/${data}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -328,18 +318,16 @@ export const connectedUsers = async(data:string)=>{
         const response = await axiosInstance.get(`/worker/connected-users/${data}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
 export const updateMessage = async(data:any)=>{
     try{
-        const response = await axiosInstance.put(`/worker/message`,{data})
+        const response = await axiosInstance.put(`/worker/message`,data)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -349,8 +337,7 @@ export const fetchMessage = async (data:string)=>{
         const response = await axiosInstance.get(`/worker/fetchmessage/${data}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -359,8 +346,7 @@ export const dashboard = async (data:string)=>{
         const response = await axiosInstance.get(`/worker/dashboard/${data}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -369,8 +355,7 @@ export const fetchUpcomingWorks = async(data:any)=>{
         const response = await axiosInstance.get(`/worker/upcoming-workers/${data}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -379,17 +364,15 @@ export const updateWorkStatus = async(data:{status:string,_id:string})=>{
         const response = await axiosInstance.put(`/worker/markStatus/${data.status}/${data._id}`)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
 export const addtionalProffessionalInfo = async(data:{_id:string,experience:string,rate:number,availability:string})=>{
     try{
-        const response = await axiosInstance.put(`/worker/addtionalProfessionalDetails`,{data})
+        const response = await axiosInstance.put(`/worker/addtionalProfessionalDetails`,data)
         return response.data
     }catch(error:any){
-        console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }

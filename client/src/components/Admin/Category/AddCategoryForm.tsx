@@ -4,7 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FormSchema } from "@/lib/formSchema";
-import { useAddCategoryFormMutation } from "../../../lib/features/api/adminApiSlice";
+import { useAddCategoryFormMutation,addCategory } from "../../../lib/features/api/adminApiSlice";
 import {
   Form,
   FormControl,
@@ -24,8 +24,9 @@ import {useState} from 'react'
 const AddCategoryForm = () => {
   const router = useRouter();
 
+  const [isLoading,setIsLoading] = useState<boolean>(false)
   // * Admin RTK api
-  const [AddCategoryForm, { isError, isLoading }] = useAddCategoryFormMutation();
+  // const [AddCategoryForm, { isError, isLoading }] = useAddCategoryFormMutation();
   const [page,setPage]= useState(1)
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -42,22 +43,19 @@ const AddCategoryForm = () => {
       const formData: FormData = new FormData();
 
       if(isLoading) return // * prevent the multiple click
-
-      formData.append("CategoryName", data.CategoryName);
-      formData.append("Description", data.Description);
+      setIsLoading(true)
+      formData.append("categoryName", data.CategoryName);
+      formData.append("categoryDescription", data.Description);
       if (data.CategoryImage) {
-        formData.append("CategoryImage", data.CategoryImage);
+        formData.append("categoryImage", data.CategoryImage);
       }
 
- 
-      const res = await AddCategoryForm(formData).unwrap();
+      const res = await addCategory(formData)
       
       if (res?.success) {
         toast.success(res?.message); 
-
         router.push("/admin/category");
         window.location.reload()
-       
       } else {
         console.log(res)
         toast.error(`Something went wrong, try again`);
@@ -68,6 +66,8 @@ const AddCategoryForm = () => {
         error?.data?.message ? toast.error(error?.data?.message) : toast.error("Server error");
       }
       
+    } finally{
+      setIsLoading(false)
     }
   }
 

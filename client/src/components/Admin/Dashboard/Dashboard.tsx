@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {toast,Toaster} from 'sonner'
 // API 
-import { useDashboardQuery } from '@/lib/features/api/adminApiSlice'
+import {fetchDashboardData } from '@/lib/features/api/adminApiSlice'
 
 // * types
 import {DashboardHeadCard} from '@/types/adminTypes'
@@ -30,29 +30,32 @@ const Dashboard = () => {
                                               },
                                           ],
                                       });
-  const { data, error } = useDashboardQuery({});
+  const [isLoading,setIsLoading] =  useState<boolean>(false)
+  
+
   const router = useRouter();
 
   useEffect(() => {
     
-    if(data?.result){
-      setDashboard(data?.result)
+    const loadDashboardData = async()=>{
+      try{
+        if(isLoading) return
+        alert('hello')
+        setIsLoading(true)   // * prevent the Multiple api trigger
+        const res = await fetchDashboardData()
+        if(res?.result){
+          setDashboard(res?.result)
+        }
+      }catch(error:any){
+        console.log(error?.message)
+        toast.error(error?.message)
+      }finally{
+        setIsLoading(false)
+      }
     }
-    
-}, [data]); 
-  useEffect(() => {
-    if (
-      error &&
-      (error as FetchBaseQueryError).status === 401 &&
-      (error as FetchBaseQueryError).data
-    ) {
-      const errorMessage = ((error as FetchBaseQueryError).data as { message?: string }).message;
-      toast.error(errorMessage || "Unauthorized access");
-      setTimeout(() => {
-        router.push("/admin/login");
-      }, 1000);
-    }
-  }, [error, router]);
+    loadDashboardData()
+}, []); 
+
   return (
     <>
       <Card>

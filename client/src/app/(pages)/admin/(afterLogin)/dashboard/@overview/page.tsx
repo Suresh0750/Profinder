@@ -4,7 +4,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { Bar, BarChart, Line, LineChart, ResponsiveContainer, XAxis, YAxis, PieChart, Pie, Cell, Tooltip } from "recharts"
 import {useEffect,useState} from 'react'
-import {useDashboardOverviewQuery} from '@/lib/features/api/adminApiSlice'
+import {fetchDashboardOverview} from '@/lib/features/api/adminApiSlice'
+
 
 // * service
 import {revenueCalculation,jobStatusService,getWorkerDistribution} from '@/lib/service/admin/dashboard'
@@ -20,15 +21,25 @@ export default function OverviewPage() {
   const [revenue,setRevenue] = useState<revenueData[]>([])
   const [jobStatus,setJobStatus] = useState<jobStatusTypes[]>([])
   const [workerData,setWorkerdata] = useState<workerDataTypes[]>([])
-  const {data} = useDashboardOverviewQuery({})
+ 
   useEffect(()=>{
-    if(data?.result && Object?.keys(data?.result)?.length>1){  
-      setRevenue(revenueCalculation(data?.result?.revenueData))
-      setJobStatus(jobStatusService(data?.result?.jobStatus))
-      setWorkerdata(getWorkerDistribution(data?.result?.workerDistribution,data?.result?.getAllCategory))
+    const loadDashboardOverviewData = async ()=>{
+      try{
+        // const res = await fetchDashboardOverview()
+        // if(res?.result){
+        //   setRevenue(revenueCalculation(res?.result?.revenueData))
+        //   setJobStatus(jobStatusService(res?.result?.jobStatus))
+        //   setWorkerdata(getWorkerDistribution(res?.result?.workerDistribution,res?.result?.getAllCategory))
+          setRevenue(revenueCalculation([]))
+          setJobStatus(jobStatusService([]))
+          setWorkerdata(getWorkerDistribution([],[]))
+        // }
+      }catch(error){
+        console.log(error)
+      }
     }
-
-  },[data])
+    loadDashboardOverviewData()
+  },[])
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7 mb-3">

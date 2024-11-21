@@ -25,7 +25,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Edit, Trash2, Image as ImageIcon } from 'lucide-react'
-import { useFetchCategoryDataQuery, useEditCategoryAPIMutation, useListUnlistAPIMutation, useDeleteProductAPIMutation } from "@/lib/features/api/adminApiSlice"
+import { useFetchCategoryDataQuery, useEditCategoryAPIMutation, useListUnlistAPIMutation, useDeleteProductAPIMutation, fetchCategories } from "@/lib/features/api/adminApiSlice"
 
 interface Category {
   _id: string
@@ -43,18 +43,33 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null)
-
+  const [error,setError] =  useState<boolean>(false)
+  const [isLoading,setIsLoading] = useState<boolean>(false)
   const router = useRouter()
-  const { data: categoryData, error, isLoading } = useFetchCategoryDataQuery(undefined)
+
   const [editCategoryAPI] = useEditCategoryAPIMutation()
   const [listUnlistAPI] = useListUnlistAPIMutation()
   const [deleteProductAPI] = useDeleteProductAPIMutation()
 
   useEffect(() => {
-    if (categoryData) {
-      setCategories(categoryData.totalCategory || [])
+    alert('hello')
+    const FetchCategoryAPI = async ()=>{
+      try{
+        setIsLoading(true)
+        const res = await fetchCategories()
+        console.log(res)
+        if(res?.success){
+          setCategories(res?.totalCategory || [])
+        }
+      }catch(error:any){
+        console.log(error?.message)
+        setError(true)
+      }finally{
+        setIsLoading(false)
+      }
     }
-  }, [categoryData])
+    FetchCategoryAPI()
+  }, [])
 
   useEffect(() => {
     const filtered = categories.filter(category => 

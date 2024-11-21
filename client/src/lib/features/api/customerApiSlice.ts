@@ -227,7 +227,7 @@ export const forgetPassword = async(data:any)=>{
     }
 }
 
-export const CustomerGoogleLogin = async(data:any)=>{
+export const customerGoogleLogin = async(data:any)=>{
     try{
         const response = await axiosInstance.post(`/customer/CustomerGoogleLogin`,{data})
         return response.data

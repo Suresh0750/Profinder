@@ -19,32 +19,32 @@ export const FormSchema = z.object({
   // * worker signUP shcema for form validation
 
   export const signUPformSchema = z.object({
-            FirstName: z.string().min(1, {
+            firstName: z.string().min(1, {
               message: "First name is required.",
             }),
-            LastName: z.string().min(1, {
+            lastName: z.string().min(1, {
               message: "Last name is required.",
             }),
-            PhoneNumber: z.string().length(10, {
+            phoneNumber: z.string().length(10, {
               message: "Phone number should be exactly 10 digits long.",
             }),
-            EmailAddress: z.string().email({
+            emailAddress: z.string().email({
               message: "Please enter a valid email address.",
             }),
-            Password: z.string()
+            password: z.string()
               .min(6, { message: "Password must be at least 6 characters long" })
               .regex(/[A-Za-z]/, { message: "Password must contain at least one letter" })
               .regex(/\d/, { message: "Password must contain at least one number" })
               .regex(/[@$!%*?&]/, {
                 message: "Password must contain at least one special character",
               }),
-            ConfirmPass: z.string().nonempty({
+            confirmPass: z.string().nonempty({
               message: "Confirm password cannot be empty",
             }),
             
-          }).refine((data) => data.Password === data.ConfirmPass, {
+          }).refine((data) => data.password === data.confirmPass, {
             message: "Passwords don't match",
-            path: ["ConfirmPass"],
+            path: ["confirmPass"],
           });
 
 
@@ -82,6 +82,25 @@ export const professionalInfoFormSchema = z.object({
 
 // * User
 
+// * user login
+
+
+export const UserSignInFormSchema = z.object({
+  emailAddress: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" })
+    .regex(/[A-Za-z]/, { message: "Password must contain at least one letter" })
+    .regex(/\d/, { message: "Password must contain at least one number" })
+    .regex(/[@$!%*?&]/, {
+      message: "Password must contain at least one special character",
+    }),
+})
+
+
+
 export const userSignupformSchema = z.object({
   username: z.string().min(5, { message: "Username must be at least 5 characters." }),
   phoneNumber: z.preprocess((val) => {
@@ -106,3 +125,20 @@ export const userSignupformSchema = z.object({
   message: "Passwords don't match",
   path: ["confirmPass"],
 });
+
+
+// * worker
+
+export const workerLoginFormSchema = z.object({
+  emailAddress: z.string().email({
+    message: "Please enter a valid email address.",
+  }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" })
+    .regex(/[A-Za-z]/, { message: "Password must contain at least one letter" })
+    .regex(/\d/, { message: "Password must contain at least one number" })
+    .regex(/[@$!%*?&]/, {
+      message: "Password must contain at least one special character",
+    }),
+})

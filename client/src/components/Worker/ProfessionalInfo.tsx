@@ -28,27 +28,27 @@ import GoogleMapComponent from './GoogleMapComponent'
 // import { professionalInfoFormSchema } from '@/lib/formSchema'
 
 const professionalInfoFormSchema = z.object({
-  Category: z.string().min(1, { message: "Category is required." }),
-  Country: z.object({
+  category: z.string().min(1, { message: "Category is required." }),
+  country: z.object({
     value: z.string(),
     label: z.string()
   }).nullable(),
-  StreetAddress: z.string().min(1, { message: "Street address is required." }),
-  City: z.object({
+  streetAddress: z.string().min(1, { message: "Street address is required." }),
+  city: z.object({
     value: z.string(),
     label: z.string()
   }).nullable(),
-  Identity: z
+  identity: z
     .any()
     .refine((file) => file instanceof File, {
       message: "Identity document is required and must be a valid file.",
     }),
-  Apt: z.string().max(10, { message: "Apt/Suite should be less than 10 characters." }).optional(),
-  State: z.object({
+  apt: z.string().max(10, { message: "Apt/Suite should be less than 10 characters." }).optional(),
+  state: z.object({
     value: z.string(),
     label: z.string()
   }).nullable(),
-  PostalCode: z.string().min(1, { message: "Postal code is required." }),
+  postalCode: z.string().min(1, { message: "Postal code is required." }),
 })
 type SelectOption = {
   value: string
@@ -107,14 +107,14 @@ export default function ProfessionalInfoForm() {
   const form = useForm<FormValues>({
     resolver: zodResolver(professionalInfoFormSchema),
     defaultValues: {
-      Category: "",
-      Country: null,
-      StreetAddress: "",
-      City: null,
-      Identity: undefined,
-      Apt: "",
-      State: null,
-      PostalCode: "",
+      category: "",
+      country: null,
+      streetAddress: "",
+      city: null,
+      identity: undefined,
+      apt: "",
+      state: null,
+      postalCode: "",
     },
   })
   type SelectOption = {
@@ -126,19 +126,19 @@ export default function ProfessionalInfoForm() {
 
   const onCategoryChange = (selectedOption: SingleValue<SelectOption>) => {
     if (selectedOption) {
-      form.setValue('Category', selectedOption.value)
+      form.setValue('category', selectedOption.value)
     } else {
-      form.setValue('Category', "")
+      form.setValue('category', "")
     }
   }
 
 
   const onCountryChange = (selectedOption: SingleValue<SelectOption>) => {
-    form.setValue('Country', selectedOption)
-    form.setValue('State', null)
-    form.setValue('City', null)
-    form.setValue('StreetAddress', '')
-    form.setValue('PostalCode', '')
+    form.setValue('country', selectedOption)
+    form.setValue('state', null)
+    form.setValue('city', null)
+    form.setValue('streetAddress', '')
+    form.setValue('postalCode', '')
     
     if (selectedOption) {
       const states = State.getStatesOfCountry(selectedOption.value)
@@ -151,12 +151,12 @@ export default function ProfessionalInfoForm() {
   }
 
   const onStateChange = (selectedOption: SingleValue<SelectOption>) => {
-    form.setValue('State', selectedOption)
-    form.setValue('City', null)
-    form.setValue('StreetAddress', '')
-    form.setValue('PostalCode', '')
+    form.setValue('state', selectedOption)
+    form.setValue('city', null)
+    form.setValue('streetAddress', '')
+    form.setValue('postalCode', '')
     
-    const countryValue = form.getValues('Country')?.value
+    const countryValue = form.getValues('country')?.value
     if (countryValue && selectedOption) {
       const cities = City.getCitiesOfState(countryValue, selectedOption.value)
       setCityOptions(cities.map(city => ({ value: city.name, label: city.name })))
@@ -167,23 +167,23 @@ export default function ProfessionalInfoForm() {
   }
 
   const onCityChange = (selectedOption: SingleValue<SelectOption>) => {
-    form.setValue('City', selectedOption)
+    form.setValue('city', selectedOption)
     updateAddress()
   }
 
   const updateAddress = () => {
-    const country = form.getValues('Country')?.label || ''
-    const state = form.getValues('State')?.label || ''
-    const city = form.getValues('City')?.label || ''
-    const street = form.getValues('StreetAddress') || ''
-    const postalCode = form.getValues('PostalCode') || ''
+    const country = form.getValues('country')?.label || ''
+    const state = form.getValues('state')?.label || ''
+    const city = form.getValues('city')?.label || ''
+    const street = form.getValues('streetAddress') || ''
+    const postalCode = form.getValues('postalCode') || ''
 
     setAddress(`${street}, ${city}, ${state}, ${country}, ${postalCode}`)
   }
 
   useEffect(() => {
     updateAddress()
-  }, [form.watch(['Country', 'State', 'City', 'StreetAddress', 'PostalCode'])])
+  }, [form.watch(['country', 'state', 'city', 'streetAddress', 'postalCode'])])
 
   
   const onSubmit = async (values: FormValues) => {
@@ -192,15 +192,15 @@ export default function ProfessionalInfoForm() {
 
       const formData = new FormData()
 
-      if (values.Identity instanceof File) {
-        formData.append('Identity', values.Identity)
+      if (values.identity instanceof File) {
+        formData.append('identity', values.identity)
       }
       formData.append('lat', getCoords?.lat.toString());
       formData.append('lon', getCoords?.lon.toString());      
       formData.append('mapAddress', JSON.stringify(getAddress))
       
       for (const [key, value] of Object.entries(values)) {
-        if (key !== "Identity") {
+        if (key !== "identity") {
           if (value && typeof value === 'object' && 'value' in value) {
             formData.append(key, value.value)
           } else if (value) {
@@ -238,7 +238,7 @@ export default function ProfessionalInfoForm() {
             <div className='w-[50%]'>
               <FormField
                 control={form.control}
-                name="Category"
+                name="category"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Select category</FormLabel>
@@ -257,7 +257,7 @@ export default function ProfessionalInfoForm() {
               />
               
               <Controller
-                name="Country"
+                name="country"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
@@ -277,7 +277,7 @@ export default function ProfessionalInfoForm() {
               />
               
               <Controller
-                name="State"
+                name="state"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
@@ -290,7 +290,7 @@ export default function ProfessionalInfoForm() {
                       onChange={onStateChange}
                       value={field.value}
                       isClearable
-                      isDisabled={!form.getValues('Country')}
+                      isDisabled={!form.getValues('country')}
                     />
                     <FormMessage />
                   </FormItem>
@@ -298,7 +298,7 @@ export default function ProfessionalInfoForm() {
               />
               
               <Controller
-                name="City"
+                name="city"
                 control={form.control}
                 render={({ field }) => (
                   <FormItem>
@@ -311,7 +311,7 @@ export default function ProfessionalInfoForm() {
                       onChange={onCityChange}
                       value={field.value}
                       isClearable
-                      isDisabled={!form.getValues('State')}
+                      isDisabled={!form.getValues('state')}
                     />
                     <FormMessage />
                   </FormItem>
@@ -321,7 +321,7 @@ export default function ProfessionalInfoForm() {
             <div className='w-[50%]'>
               <FormField
                 control={form.control}
-                name="StreetAddress"
+                name="streetAddress"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Street address</FormLabel>
@@ -342,7 +342,7 @@ export default function ProfessionalInfoForm() {
               />
               <FormField
                 control={form.control}
-                name="Apt"
+                name="apt"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Apt / Suite</FormLabel>
@@ -359,7 +359,7 @@ export default function ProfessionalInfoForm() {
               />
               <FormField
                 control={form.control}
-                name="PostalCode"
+                name="postalCode"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Postal Code</FormLabel>
@@ -380,7 +380,7 @@ export default function ProfessionalInfoForm() {
               />
               <FormField
                 control={form.control}
-                name="Identity"
+                name="identity"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-lg">Identity</FormLabel>

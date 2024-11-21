@@ -41,9 +41,9 @@ const UserForgetPassword = ({role}:{role:string}) => {
       let result ;
       // * Call the API
       if(role=='user'){
-       result = await checkEmailForgetPass({ email,role }).unwrap();
+       result = await checkEmailForgetPass({ emailAddress : email,role }).unwrap();
       }else {
-        result = await CheckWorkerEmailForget({ email,role }).unwrap();
+        result = await CheckWorkerEmailForget({ emailAddress:email,role }).unwrap();
 
       }
       if (result.success) {

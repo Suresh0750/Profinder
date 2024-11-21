@@ -17,8 +17,8 @@ export interface EditCategoryType {
 
 
 export interface AdminCredentials {
-    adminEmail : string,
-    adminPass : string
+    emailAddress : string,
+    password : string
 }
 
 export interface showCategory {

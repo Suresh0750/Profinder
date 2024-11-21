@@ -5,14 +5,14 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import {AdminCredentials} from '@/types/adminTypes'
-import {useAdminVeriyAPIMutation} from '@/lib/features/api/adminApiSlice'
+import {useAdminVeriyAPIMutation,adminLogin} from '@/lib/features/api/adminApiSlice'
 import { Toaster, toast } from 'sonner';
 import {useRouter} from 'next/navigation'
 
 const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading,setIsLoading] = useState<boolean>(false)
 
-  const [AdminVeriyAPI,{isLoading}]  = useAdminVeriyAPIMutation()
 
   // * Admin form login
   const {
@@ -27,21 +27,27 @@ const AdminLogin = () => {
     try{
       if(isLoading) return 
 
-      const result = await AdminVeriyAPI(data).unwrap()
+      setIsLoading(true)
+
+      const result = await adminLogin(data)
 
       if(result?.success){
         toast.success(result.message)
         setTimeout(()=>{
-          Router.push('/admin/dashboard')
+          Router.replace('/admin/dashboard')
         })
       }else{
         const {error}:any = result
         console.log(error)
-        toast.error(error?.data?.message)
+        toast.error(error?.message)
+        // toast.error(error?.data?.message)
       }
 
     }catch(error:any){
-        error?.data?.message  ? toast.error(error?.data?.message) : toast.error('something wrong try again')
+      console.log(error)
+      toast.error(error?.message)
+    }finally{
+      setIsLoading(false)
     }
    
   };
@@ -52,15 +58,15 @@ const AdminLogin = () => {
       className="flex flex-col gap-5 mt-8 mx-5 pb-5"
     >
       <div className="flex flex-col">
-        <label htmlFor="adminEmail" className="text-lg">
+        <label htmlFor="emailAddress" className="text-lg">
           Admin Email
         </label>
         <input
           type="email"
-          id="adminEmail"
+          id="emailAddress"
           className="p-2 mt-1 focus:border border-b-2 border-gray-500 bg-transparent focus:outline-none transition-all duration-300 ease-in-out transform rounded"
           placeholder="Enter your email"
-          {...register("adminEmail", {
+          {...register("emailAddress", {
             required: "Admin email is required",
             minLength: {
               value: 5,
@@ -77,24 +83,24 @@ const AdminLogin = () => {
             validate: (value) => value.trim() !== "" || "Email cannot be empty",
           })}
         />
-        {errors.adminEmail && (
+        {errors.emailAddress && (
           <span className="text-red-500 text-sm mt-1">
-            {errors?.adminEmail?.message}
+            {errors?.emailAddress?.message}
           </span>
         )}
       </div>
 
       <div className="flex flex-col">
-        <label htmlFor="adminPass" className="text-lg">
+        <label htmlFor="password" className="text-lg">
           Password
         </label>
         <div className="relative flex items-center">
           <input
             type={showPassword ? "text" : "password"}
-            id="adminPass"
+            id="password"
             className="p-2 mt-1 w-full pr-10 focus:border border-b-2 border-gray-500 bg-transparent focus:outline-none transition-all duration-300 ease-in-out transform rounded"
             placeholder="Enter your password"
-            {...register("adminPass", {
+            {...register("password", {
               required: "Password is required",
               minLength: {
                 value: 8,
@@ -114,9 +120,9 @@ const AdminLogin = () => {
             {showPassword ? <VisibilityOff /> : <Visibility />}
           </IconButton>
         </div>
-        {errors.adminPass && (
+        {errors.password && (
           <span className="text-red-500 text-sm mt-1">
-            {errors?.adminPass?.message}
+            {errors?.password?.message}
           </span>
         )}
       </div>
