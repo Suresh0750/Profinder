@@ -29,7 +29,7 @@ import {
 
 // * types
 import {IMulterFile} from '../../../domain/entities/admin'
-import { Role, StatusCode } from "../../../domain/entities/commonTypes"
+import { AdminData, Role, StatusCode } from "../../../domain/entities/commonTypes"
 import {CookieTypes} from '../../../domain/entities/commonTypes'
 import { JwtService } from "../../../infrastructure/service/jwt"
 
@@ -98,7 +98,9 @@ export const workerDashboard = async(req:Request,res:Response,next:NextFunction)
 // * admin Dashboard side
 export const dashboardOverview = async(req:Request,res:Response,next:NextFunction)=>{
     try {
+        console.log('request reached dashboardOverview')
         const result = await adminOverviewUsecases()
+        console.log(result)
         return res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
     } catch (error) {
         console.log(`Error from dashboardOverview\n${error}`)  
@@ -201,15 +203,18 @@ export const isBlock = async(req:Request,res:Response,next:NextFunction)=>{
 export const addCategoryController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
         console.log(`req reached addCategory controller`) 
-
-        const ExistCategory = await CheckExistCategory(req?.body?.CategoryName)
-
-        if(ExistCategory){ return res.status(StatusCode.Conflict).json({success:false,message:'Producet already exist'})}
-
-        const file: IMulterFile |any = req.file
-        const imageUrl = await uploadImage(file)    // * call uploadImage usecases
-        req.body.categoryImage = imageUrl
-        await AddCategoryUseCases(req.body)  // * call usecases
+        console.log(req.body)
+        if(false){
+            const ExistCategory = await CheckExistCategory(req?.body?.CategoryName)
+    
+            if(ExistCategory){ return res.status(StatusCode.Conflict).json({success:false,message:'Producet already exist'})}
+    
+            const file: IMulterFile |any = req.file
+            // const imageUrl = await uploadImage(file)    // * call uploadImage usecases
+            const imageUrl = "https://profinder.s3.eu-north-1.amazonaws.com/uploads/1727020676246_Electrician.jpg"
+            req.body.categoryImage = imageUrl
+            await AddCategoryUseCases(req.body)  // * call usecases
+        }
         return res.status(StatusCode.Success).json({success:true,message:'Product has been added'})
           
     } catch (error) {
@@ -275,20 +280,20 @@ export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
     try{
        
         if(AdminVerifyUseCases(req.body)){
-            let email = req.body.adminEmail
+            let email = req.body?.emailAddress
           
-            const { refreshToken, accessToken } = JwtService(email,email,email,Role.Admin)  // * here create Jwt token
+            const { refreshToken, accessToken } = JwtService(AdminData.customerId,AdminData.customerName,email,Role.Admin)  // * here create Jwt token
  
-            res.cookie(CookieTypes.Admin,refreshToken,{
+            res.cookie(CookieTypes.AdminRefreshToken,refreshToken,{
                 httpOnly:true,
                 secure :true,
                 sameSite:'strict',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })    
-            res.cookie(CookieTypes.AccessToken,accessToken,{
+            res.cookie(CookieTypes.AdminAccessToken,accessToken,{
                 maxAge: 15 * 60 * 1000
             })    
-         return   res.status(StatusCode.Success).json({success:true,message:'login verify successful'})
+         return  res.status(StatusCode.Success).json({success:true,message:'login verify successful'})
         }    
       
         return res.status(StatusCode.Unauthorized).json({success:false,message:'Invalid credentials'})
@@ -302,9 +307,9 @@ export const AdminVerify = async (req:Request,res:Response,next:NextFunction)=>{
 export const adminLogoutController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
      
-        res.clearCookie(CookieTypes.AccessToken); // * Clear the accessToken
+        res.clearCookie(CookieTypes.AdminAccessToken); // * Clear the accessToken
          
-        res.clearCookie(CookieTypes.Admin, {  // * Clear the refresh token cookie
+        res.clearCookie(CookieTypes.AdminRefreshToken, {  // * Clear the refresh token cookie
             httpOnly: true,
             secure: true, 
             sameSite: 'strict'

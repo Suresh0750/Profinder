@@ -27,21 +27,21 @@ const userRouter = Router()
 
 // * authendication 
 userRouter.post('/userSignup',validateUserSignUp,userSignupController)
-userRouter.post('/loginverify',LoginUser)
+userRouter.post('/loginverify',isEmailValidate,LoginUser)
 userRouter.post('/checkEmailForgetPass',isEmailValidate,isCheckEmail)   // * check the email for forget Password page
 
 
 // * user dashboard
-userRouter.get('/profile/:id',verifyTokenAndRole('user'),profile)
-userRouter.put('/updateprofile',upload.single('newImageData'),verifyTokenAndRole('user'),editprofile)
-userRouter.get('/booking/:id',verifyTokenAndRole('user'),getBooking)
+userRouter.get('/profile/:id',verifyTokenAndRole(['user']),profile)
+userRouter.put('/updateprofile',upload.single('newImageData'),verifyTokenAndRole(['user']),editprofile)
+userRouter.get('/booking/:id',verifyTokenAndRole(['user']),getBooking)
 userRouter.get('/paymentId/:requestId',paymentId)
 
 
 // * chats
-userRouter.post('/conversation',verifyTokenAndRole('user'),conversation)
-userRouter.get('/conversation/:id',verifyTokenAndRole('user'),getConversation)
-userRouter.get('/message/:id',verifyTokenAndRole('user'),getMessage)
+userRouter.post('/conversation',verifyTokenAndRole(['user']),conversation)
+userRouter.get('/conversation/:id',verifyTokenAndRole(['user']),getConversation)
+userRouter.get('/message/:id',verifyTokenAndRole(['user']),getMessage)
 
 
 

@@ -97,6 +97,8 @@ export const editprofile = async(req:Request,res:Response,next:NextFunction)=>{
 }
 export const profile = async(req:Request,res:Response,next:NextFunction)=>{
     try {
+        console.log('profile')
+        
         const result = await ProfileUsecases(req.params.id)
         return res.status(StatusCode.Success).json({success:true,message:'data has been fetched',result})
     } catch (error) {
@@ -144,22 +146,23 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
         
             // * JWT referesh token setUp
             
-            res.cookie(CookieTypes.User,refreshToken,{
+            res.cookie(CookieTypes.UserRefreshToken,refreshToken,{
                 httpOnly:true,
                 secure :true,
                 sameSite:'none',
                 maxAge: 7 * 24 * 60 * 60 * 1000
             })
-            res.cookie(CookieTypes.AccessToken,accessToken,{
+            res.cookie(CookieTypes.UserAccessToken,accessToken,{
                 maxAge: 15 * 60 * 1000
             })
             const customerData = {
                 _id:loginUsecase._id,
                 customerName : loginUsecase.username,
-                customerEmail : loginUsecase.EmailAddress,
+                customerEmail : loginUsecase.emailAddress,
                 role : Role.User
             }
-         return   res.status(StatusCode.Success).json({success:true,message:'Login successful',customerData}) 
+            console.log(customerData)
+         return res.status(StatusCode.Success).json({success:true,message:'Login successful',customerData}) 
         }   
     }catch(error){
         console.log(`Error from Presntation->controllers ${error}`)
@@ -173,7 +176,7 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
 export const isCheckEmail = async(req:Request,res:Response,next:NextFunction)=>{
     try {
      
-        const userEmailValidation = await isCheckUserEmail(req.body.email)
+        const userEmailValidation = await isCheckUserEmail(req.body?.emailAddress)
         
         if(userEmailValidation){
          return   res.status(StatusCode.Success).json({success:true,message:'verified success',userEmailValidation})

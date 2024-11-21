@@ -25,22 +25,30 @@ export enum StatusCode {
 
 // * cookie
 
+
+
  export enum CookieTypes {
-    Admin = "adminToken",
-    Worker = "workerToken",
-    User = "userToken",
-    AccessToken = 'accessToken',
-    Token = 'token'
- }
+  AdminAccessToken = "adminAccessToken",
+  WorkerAccessToken = "workerAccessToken",
+  UserAccessToken = "userAccessToken",
+  AdminRefreshToken = "adminRefreshToken",
+  WorkerRefreshToken = "workerRefreshToken",
+  UserRefreshToken = "userRefreshToken",
+  Token = 'token' // * using for produte otp page
+}
+
 
  export enum Role{
   Admin ="admin",
-  Wokrer="worker",
+  Worker="worker",
   User = "user",
   Customer = "customer"
  }
 
-
+ export enum AdminData{
+  customerId = "01",
+  customerName = "Suresh"
+ }
 
 
  export type RoleType = 'user' | 'admin' | 'worker' | "customer";

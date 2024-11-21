@@ -82,7 +82,7 @@ export const getUserRepository = () : IgetUserRepository =>({
         try{
             return await UserModel.findById({_id},{isVerified:0,createdAt:0,updatedAt:0,__v:0,isBlock:0})
         }catch(error){
-            // console.log(`Error from infrastructure->mongoseUser->setNewPassWord\n`,error)
+            console.log(`Error from infrastructure->mongoseUser->setNewPassWord\n`,error)
             throw error
         }
     },

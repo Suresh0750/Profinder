@@ -26,7 +26,7 @@ export const validateUserSignUp = [
 // * forget password email validate
 
 export const isEmailValidate = [
-    body('email').isEmail().withMessage('Invalid email format'), 
+    body('emailAddress').isEmail().withMessage('Invalid email format'), 
     (req:Request,res:Response,next:NextFunction)=>{
         try {
             const errors = validationResult(req)

@@ -45,8 +45,8 @@ export interface AddCategory{
 // * Admin verify data
 
 export interface AdminCredentials {
-    adminEmail : string,
-    adminPass : string
+    emailAddress : string,
+    password : string
 }
 
 

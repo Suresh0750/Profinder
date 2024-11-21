@@ -4,8 +4,8 @@ import { WorkerInformation } from '../../../../domain/entities/worker';
 // Worker Schema
 const workerSchema = new Schema<WorkerInformation & Document>(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
+    firstName: { type: String, required: true,trim:true },
+    lastName: { type: String, required: true,trim:true },
     phoneNumber: { type: Number, required: true },
     emailAddress: { type: String, required: true, unique: true },
     password: { type: String, required: true },

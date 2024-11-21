@@ -197,15 +197,16 @@ export const getProjectDetails = async (req:Request,res:Response,next:NextFuncti
 export const PersonalInformationControll = async (req:Request,res:Response, next : NextFunction)=>{
     try{
         const checkWorker = await workerExist(req.body) // * check weather the worker exist or not
-        if(checkWorker && checkWorker.isVerified) throw new Error('Email already exist')
-        const file: IMulterFile |any = req.file
-        const imageUrl = await uploadImage(file)    // * call uploadImage usecases
-        req.body.Profile = imageUrl
-        const bcyptPass = await hashPassword(req.body.Password)   // * hash the password
-        const workerDetails = req.body
-        workerDetails.Password = bcyptPass    // * asign the bcrypt pass
+        const {profileImage,...data} = req.body // * for checking
+        // if(checkWorker && checkWorker.isVerified) throw new Error('Email already exist')
+        // const file: IMulterFile |any = req.file
+        // const imageUrl = await uploadImage(file)    // * call uploadImage usecases
+        // req.body.Profile = imageUrl
+        // const bcyptPass = await hashPassword(req.body.Password)   // * hash the password
+        // const workerDetails = req.body
+        // workerDetails.Password = bcyptPass    // * asign the bcrypt pass
        
-        return res.status(StatusCode.Success).json({success:true,workerDetails})
+        return res.status(StatusCode.Success).json({success:true,workerDetails:data})
     }catch(error){
         console.log(`Error from presentation layer-> http->PersonalInformation\n ${error}`)
         next(error)
@@ -259,22 +260,22 @@ export const getWorkerDataController = async (req:Request,res:Response,next:Next
 
 export const LoginWorkerController = async (req:Request,res:Response,next:NextFunction)=>{
     try{
-        const loginUsecase : WorkerInformation | boolean = await LoginVerify(req.body?.EmailAddress,req.body?.Password)
+        const loginUsecase : WorkerInformation | boolean = await LoginVerify(req.body?.emailAddress,req.body?.password)
        
         if(!loginUsecase) throw new Error('check email and password')
         else if(loginUsecase.isBlocked){
            return res.status(StatusCode.Forbidden).json({success:false,errorMessage: "This worker is blocked and cannot perform this action." }) 
         }
-        const  {refreshToken,accessToken} = JwtService((loginUsecase?._id||'').toString(),loginUsecase.firstName,loginUsecase.emailAddress,(req.body.role || Role.Wokrer))  
+        const  {refreshToken,accessToken} = JwtService((loginUsecase?._id||'').toString(),loginUsecase.firstName,loginUsecase.emailAddress,(req.body.role || Role.Worker))  
         
         // * JWT referesh token setUp
-        res.cookie(CookieTypes.Worker,refreshToken,{
+        res.cookie(CookieTypes.WorkerRefreshToken,refreshToken,{
             httpOnly:true,
             secure :true,
             sameSite:'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-        res.cookie(CookieTypes.AccessToken,accessToken,{
+        res.cookie(CookieTypes.WorkerAccessToken,accessToken,{
             maxAge: 15 * 60 * 1000
         })
         const customerData  = {

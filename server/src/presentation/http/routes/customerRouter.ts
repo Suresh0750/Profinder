@@ -26,7 +26,7 @@ const customerRouter = Router()
 
 // * Review of worker
 customerRouter.get("/review/:id",getReviewController)
-customerRouter.post("/review",verifyTokenAndRole('customer'),ReviewController)
+customerRouter.post("/review",verifyTokenAndRole(['user','worker']),ReviewController)
 // customerRouter.get("/getReview",getReviewUsecases)
 
 // * payment gatway
@@ -36,7 +36,7 @@ customerRouter.post("/savePaymentId",paymentIdController)
 customerRouter.get("/payment-details/:requestId", paymentDetails)
 
 // * router for Request 
-customerRouter.post('/userRequestWorker',verifyTokenAndRole('customer'),userRequestWorkerController)
+customerRouter.post('/userRequestWorker',verifyTokenAndRole(['user','worker']),userRequestWorkerController)
 
 
 customerRouter.post('/verifyOTP',CustomerOtpController)
@@ -45,7 +45,7 @@ customerRouter.post('/resentOTP',ResentOTP)
 customerRouter.post('/setForgotPassword',ForgetPassWordController)
 customerRouter.post('/CustomerGoogleLogin',upload.single('Identity'),GoogleLogin)
 
-customerRouter.post("/cutomerLogout",verifyTokenAndRole('customer'),CustomerLogoutController)
+customerRouter.post("/cutomerLogout",verifyTokenAndRole(['user','worker']),CustomerLogoutController)
 
 customerRouter.post("/customerGoogleVerification",WorkerGoogleLoginWithRegistrastion)   // * worker login with google
 
@@ -54,6 +54,6 @@ customerRouter.post("/customerGoogleVerification",WorkerGoogleLoginWithRegistras
 customerRouter.get('/getALLVerifiedWorker/:lat/:lon',getVerifiedWorkerController)
 
 customerRouter.get('/getCategoryName',getCategoryName)
-customerRouter.post('/getNearByWorkerDetails/:categoryName',verifyTokenAndRole('customer'),getNearByWorkerDetailsController)
+customerRouter.post('/getNearByWorkerDetails/:categoryName',verifyTokenAndRole(['user','worker']),getNearByWorkerDetailsController)
 
 export default customerRouter   

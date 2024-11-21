@@ -29,8 +29,8 @@ import { AddCategory } from '../../../../domain/entities/admin';
 // * Schema
 const categorySchema = new Schema({
     categoryName: { type: String, required: true, trim: true, maxlength: 100 },
-    categoryDescription: { type: String, trim: true },
-    categoryImage: { type: String },
+    categoryDescription: { type: String,required: true, trim: true },
+    categoryImage: { type: String,required: true,trim:true },
     isListed: {
         type: Boolean,
         default: true,

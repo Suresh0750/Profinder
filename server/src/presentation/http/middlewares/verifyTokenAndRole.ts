@@ -11,7 +11,7 @@ declare module 'express-session' {
         customerId: string;
     }
 }
-
+type RoleType = 'admin' | 'worker' | 'user';
 // *  Helper function to verify JWT token
 export function verifyToken(token: string, secretKey: string) {
     try {
@@ -23,7 +23,7 @@ export function verifyToken(token: string, secretKey: string) {
 }
 
 // * Function to generate a new access token
-export const generateAccessToken = (payload: Object) => {
+export const generateAccessToken = async (payload: Object) => {
     try {
         return jwt.sign(payload, String(process.env.ACCESS_TOKEN_SECRET), { expiresIn: '15m' });
     } catch (error) {
@@ -32,58 +32,119 @@ export const generateAccessToken = (payload: Object) => {
 };
 
 // * Middleware to verify access token and role
-export const verifyTokenAndRole = (role: string) => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        let payload: CustomerDetails | null = null;
+export const verifyTokenAndRole = (role: string[]) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            // console.log(role);
+            const url = req.originalUrl;
+            let payload: CustomerDetails | null = null;
+            let accessToken;
 
-        const accessToken = req.cookies[CookieTypes.AccessToken];
-        if (accessToken) {
-            payload = verifyToken(accessToken, String(process.env.ACCESS_TOKEN_SECRET));
-        }   
+            console.log('req in middleware');
+            if (selectRefreshToken(url, Role.Admin)) {
+                accessToken = req.cookies[CookieTypes.AdminAccessToken];
+            } else if (selectRefreshToken(url, Role.Worker)) {
+                accessToken = req.cookies[CookieTypes.WorkerAccessToken];
+            } else if (selectRefreshToken(url, Role.User)) {
+                accessToken = req.cookies[CookieTypes.UserAccessToken];
+                console.log('user');
+                console.log(accessToken);
+            } else {
+                accessToken = req.cookies[CookieTypes.UserAccessToken] || req.cookies[CookieTypes.WorkerAccessToken];
+            }
 
-        if (!payload || !accessToken) {
-            console.log('accessToken vanished',accessToken)
-            payload = verifyRefreshToken(req, res);
+            if (accessToken) {
+                payload = verifyToken(accessToken, String(process.env.ACCESS_TOKEN_SECRET));
+                console.log('accessToken');
+                console.log(payload);
+            }
+
+            if (!payload || !accessToken) {
+                console.log('accessToken vanished', accessToken);
+                payload = await verifyRefreshToken(req, res); // Await the async function here
+            }
+
+            if (!payload) {
+                console.log('no access token and no refreshtoken');
+                return res.status(StatusCode.Unauthorized).json({ success: false, message: 'Unauthorized, please log in' });
+            }
+
+            req.session.customerId = payload.customerId;
+            req.session.save();
+
+            if (!role.includes(payload.role)) {
+                console.log('role checking');
+                console.log(role, payload.role);
+                return res.status(StatusCode.Forbidden).json({ success: false, message: 'Access denied' });
+            }
+
+            next(); // Proceed to the next middleware/handler
+        } catch (error) {
+            console.log(error);
+            return res.status(StatusCode.InternalServerError).json({ success: false, message: 'An error occurred' });
         }
-
-        if (!payload) {
-            return res.status(StatusCode.Unauthorized).json({ success: false, message: 'Unauthorized, please log in' });
-        }
-
-       
-        req.session.customerId = payload.customerId;
-        req.session.save();
-
-        // * Check if user role matches the required role
-        if (role !== payload.role && role !== req.headers.role) {
-            return res.status(StatusCode.Forbidden).json({ success: false, message: 'Access denied' });
-        }
-
-        next();
     };
 };
 
-export const verifyRefreshToken = (req: Request, res: Response): CustomerDetails | null => {
-    try {
-        const refreshToken = req.cookies[CookieTypes.User] || req.cookies[CookieTypes.Worker];
-        const refreshPayload = verifyToken(refreshToken, String(process.env.REFRESH_TOKEN_SECRET));
 
+
+export const verifyRefreshToken =  (req: Request, res: Response): CustomerDetails | null => {
+    try {
+        const roleAccessToken = {
+            admin : CookieTypes.AdminAccessToken ,
+            worker : CookieTypes.WorkerAccessToken ,
+            user : CookieTypes.UserAccessToken
+        }
+        const roleRefreshToken = {
+            admin : CookieTypes.AdminRefreshToken,
+            worker : CookieTypes.WorkerRefreshToken,
+            user : CookieTypes.UserRefreshToken
+        }
+        // # need to check the url
+        let refreshToken = null
+        let tokenRole: string| null = null
+        if(selectRefreshToken(req.originalUrl,Role.Admin)){
+            refreshToken =  req.cookies[CookieTypes.AdminRefreshToken];
+            tokenRole =Role.Admin
+        }else if(selectRefreshToken(req.originalUrl,Role.Worker)){
+            refreshToken = req.cookies[CookieTypes.WorkerRefreshToken];
+            tokenRole = Role.Worker
+        }else if(selectRefreshToken(req.originalUrl,Role.User)){
+            refreshToken = req.cookies[CookieTypes.UserRefreshToken];
+            tokenRole = Role.User
+        }else{
+            refreshToken = req.cookies[CookieTypes.UserRefreshToken] || req.cookies[CookieTypes.WorkerRefreshToken];
+            tokenRole = req.cookies[CookieTypes.UserRefreshToken] ? Role.User : Role.Worker
+        }
+        if(!refreshToken){
+            return null
+        }
+        console.log('refreshToken',refreshToken)
+        const refreshPayload = verifyToken(refreshToken,String(process.env.REFRESH_TOKEN_SECRET));
+        console.log('refreshPayload',refreshPayload)
         if (refreshPayload) {
-            
             const { exp, ...newPayload } = refreshPayload;
             const newAccessToken = generateAccessToken(newPayload);
             if (newAccessToken) {
-                res.cookie(CookieTypes.AccessToken, newAccessToken, { maxAge: 15 * 60 * 1000 });
+                console.log('newAccessToken',newAccessToken)
+                if(tokenRole) res.cookie(roleAccessToken[tokenRole as RoleType],newAccessToken, { maxAge: 15 * 60 * 1000 });
                 return newPayload as CustomerDetails;
             }
         }
-        // * Clear invalid refresh token if present
-        res.clearCookie(CookieTypes.User);
-        res.clearCookie(CookieTypes.Worker);
-        res.clearCookie(CookieTypes.Admin)
-        res.clearCookie(CookieTypes.AccessToken)
+ 
+        if (tokenRole as RoleType) {
+            res.clearCookie(roleRefreshToken[tokenRole as RoleType]);
+            res.clearCookie(roleAccessToken[tokenRole as RoleType]);
+        }
     } catch (error) {
         console.log('Error from refreshToken', error);
     }
     return null;
 };
+
+
+function selectRefreshToken(url:string,role:string){
+    console.log('url',url)
+    console.log('role',role)
+    return url.includes(role)
+}

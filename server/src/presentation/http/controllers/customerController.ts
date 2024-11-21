@@ -149,14 +149,14 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
                 const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(userData?.username || ''),(userData?.emailAddress || ''),(req.body.role ||Role.User))   // * mongose Id converted as a string
                 res.clearCookie(CookieTypes.Token)
                 // * JWT referesh token setUp
-                res.cookie(CookieTypes.User,refreshToken,{
+                res.cookie(CookieTypes.UserRefreshToken,refreshToken,{
                     httpOnly:true,
                     secure :true,
                     sameSite:'strict',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 })
 
-                res.cookie(CookieTypes.AccessToken,accessToken,{
+                res.cookie(CookieTypes.UserAccessToken,accessToken,{
                     maxAge: 15 * 60 * 1000
                 })   
                 const customerData = {
@@ -172,16 +172,16 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
 
                 const workerData =  await  workerVerification(req.body.userId) 
 
-                const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(workerData?.firstName || ''),(workerData?.emailAddress || ''),(req.body.role || Role.Wokrer))   // * mongose Id converted as a string
+                const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(workerData?.firstName || ''),(workerData?.emailAddress || ''),(req.body.role || Role.Worker))   // * mongose Id converted as a string
                 // * JWT referesh token setUp
         
-                res.cookie(CookieTypes.Worker,refreshToken,{
+                res.cookie(CookieTypes.WorkerRefreshToken,refreshToken,{
                     httpOnly:true,
                     secure :true,
                     sameSite:'strict',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 })
-                res.cookie(CookieTypes.AccessToken,accessToken,{
+                res.cookie(CookieTypes.WorkerAccessToken,accessToken,{
                     maxAge: 15 * 60 * 1000
                 })
 
@@ -189,7 +189,7 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
                     _id : workerData?._id,
                     customerName : workerData?.firstName,
                     customerEmail : workerData?.emailAddress,
-                    role : Role.Wokrer
+                    role : Role.Worker
                 }
 
                 res.status(StatusCode.Success).json({success:true,message:'OTP valid and worker verified',customerData})
@@ -245,15 +245,15 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
         else if(result?.isBlocked){
         return res.status(StatusCode.Forbidden).json({success:false,errorMessage: "This worker is blocked and cannot perform this action." }) 
         }else{
-        const  {refreshToken,accessToken} = JwtService(((result._id)?.toString() || ''),result.firstName,result.emailAddress,Role.Wokrer)
+        const  {refreshToken,accessToken} = JwtService(((result._id)?.toString() || ''),result.firstName,result.emailAddress,Role.Worker)
         // * JWT referesh token setUp
-        res.cookie(CookieTypes.Worker,refreshToken,{
+        res.cookie(CookieTypes.WorkerRefreshToken,refreshToken,{
             httpOnly:true,
             secure :true,
             sameSite:'strict',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-        res.cookie(CookieTypes.AccessToken,accessToken,{
+        res.cookie(CookieTypes.WorkerAccessToken,accessToken,{
             maxAge: 15 * 60 * 1000
         })
     }
@@ -261,7 +261,7 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
         _id: result._id,
         customerName : result.firstName,
         customerEmail : result.emailAddress,
-        role : Role.Wokrer
+        role : Role.Worker
     }
         return res.status(StatusCode.Success).json({success:true,message:'Worker successfully login',customerData})
     } catch (error) {
@@ -284,13 +284,13 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                 }
                 const  {refreshToken,accessToken} = JwtService((userData?._id).toString(),userData.username,userData.EmailAddress,(req.body.role || "worker"))  
                 // * JWT referesh token setUp
-                res.cookie(CookieTypes.User,refreshToken,{
+                res.cookie(CookieTypes.UserRefreshToken,refreshToken,{
                     httpOnly:true,
                     secure :true,
                     sameSite:'strict',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 })
-                res.cookie(CookieTypes.AccessToken,accessToken,{
+                res.cookie(CookieTypes.UserAccessToken,accessToken,{
                     // maxAge: 15 * 60 * 1000
                     maxAge: 15 * 60 * 1000
                 })
@@ -302,7 +302,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                 }
             return res.status(StatusCode.Success).json({success:true,message:"successfully login",customerData})
             }
-        }else if(req.body.role ==Role.Wokrer){
+        }else if(req.body.role ==Role.Worker){
   
             const file: IMulterFile | any = req.file
           
@@ -314,15 +314,15 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
             if(!customerDetails)  return res.status(StatusCode.NotFound).json({success:false,message:'server error'})
 
             if(customerDetails?._id){
-                const  {refreshToken,accessToken} = JwtService((customerDetails?._id).toString(),customerDetails.firstName,customerDetails.emailAddress, Role.Wokrer)  
+                const  {refreshToken,accessToken} = JwtService((customerDetails?._id).toString(),customerDetails.firstName,customerDetails.emailAddress, Role.Worker)  
                 // * JWT referesh token setUp
-                res.cookie(CookieTypes.Worker,refreshToken,{
+                res.cookie(CookieTypes.WorkerRefreshToken,refreshToken,{
                     httpOnly:true,
                     secure :true,
                     sameSite:'strict',
                     maxAge: 7 * 24 * 60 * 60 * 1000
                 })
-                res.cookie(CookieTypes.AccessToken,accessToken,{
+                res.cookie(CookieTypes.WorkerAccessToken,accessToken,{
                     // maxAge: 15 * 60 * 1000
                     maxAge: 15 * 60 * 1000
                 })
@@ -330,7 +330,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                     _id: customerDetails._id,
                     customerName : customerDetails.firstName,
                     customerEmail : customerDetails.emailAddress,
-                    role : Role.Wokrer
+                    role : Role.Worker
                 }
 
              return   res.status(StatusCode.Success).json({success:true,message:"successfully login",customerData})
@@ -348,20 +348,22 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
 export const CustomerLogoutController = async (req:Request,res:Response,next:NextFunction)=>{
     try {
 
-        res.clearCookie(CookieTypes.Worker, {
+        res.clearCookie(CookieTypes.WorkerRefreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'strict',
             path : '/'
         });
-        res.clearCookie(CookieTypes.User, {
+        res.clearCookie(CookieTypes.UserRefreshToken, {
             httpOnly: true,
             secure: true,
             sameSite: 'strict',
             path : '/'
         });
+        res.clearCookie(CookieTypes.WorkerAccessToken);
+        res.clearCookie(CookieTypes.UserAccessToken);
       
-        return res.status(200).json({success:true, message: 'Logged out successfully' });
+        return res.status(StatusCode.Success).json({success:true, message: 'Logged out successfully' });
     } catch (error) {
         console.log(`Error from CustomerLogoutController\n${error}`)
         next(error)
