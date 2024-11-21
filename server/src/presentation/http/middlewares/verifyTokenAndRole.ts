@@ -23,7 +23,7 @@ export function verifyToken(token: string, secretKey: string) {
 }
 
 // * Function to generate a new access token
-export const generateAccessToken = async (payload: Object) => {
+export const generateAccessToken =  (payload: Object) => {
     try {
         return jwt.sign(payload, String(process.env.ACCESS_TOKEN_SECRET), { expiresIn: '15m' });
     } catch (error) {
@@ -54,6 +54,7 @@ export const verifyTokenAndRole = (role: string[]) => {
             }
 
             if (accessToken) {
+                console.log('accessToken',accessToken)
                 payload = verifyToken(accessToken, String(process.env.ACCESS_TOKEN_SECRET));
                 console.log('accessToken');
                 console.log(payload);
@@ -88,7 +89,7 @@ export const verifyTokenAndRole = (role: string[]) => {
 
 
 
-export const verifyRefreshToken =  (req: Request, res: Response): CustomerDetails | null => {
+export const verifyRefreshToken = (req: Request, res: Response): CustomerDetails | null => {
     try {
         const roleAccessToken = {
             admin : CookieTypes.AdminAccessToken ,
@@ -124,9 +125,9 @@ export const verifyRefreshToken =  (req: Request, res: Response): CustomerDetail
         console.log('refreshPayload',refreshPayload)
         if (refreshPayload) {
             const { exp, ...newPayload } = refreshPayload;
-            const newAccessToken = generateAccessToken(newPayload);
+            const newAccessToken =  generateAccessToken(newPayload);
             if (newAccessToken) {
-                console.log('newAccessToken',newAccessToken)
+                console.log('newAccessToken ,',newAccessToken)
                 if(tokenRole) res.cookie(roleAccessToken[tokenRole as RoleType],newAccessToken, { maxAge: 15 * 60 * 1000 });
                 return newPayload as CustomerDetails;
             }

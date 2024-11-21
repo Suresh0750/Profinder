@@ -38,7 +38,7 @@ export const AddCategoryUseCases = async(categoryDetails:AddCategory)=>{
         }
         const {AddCategoryQuery}  = AdminMongoose()  
  
-        return await AddCategoryQuery(categoryData)
+        return await AddCategoryQuery(categoryDetails)
         
     } catch (error) {
         console.log(`Error from useCases->admin->AddCategory\n`,error)

@@ -204,14 +204,18 @@ export const addCategoryController = async(req:Request,res:Response,next:NextFun
     try {
         console.log(`req reached addCategory controller`) 
         console.log(req.body)
-        if(false){
-            const ExistCategory = await CheckExistCategory(req?.body?.CategoryName)
+        if(true){
+            const ExistCategory = await CheckExistCategory(req?.body?.categoryName)
     
-            if(ExistCategory){ return res.status(StatusCode.Conflict).json({success:false,message:'Producet already exist'})}
+            if(ExistCategory){
+                const error = new Error('Product already exists');
+                    (error as any).statusCode = StatusCode.Conflict;
+             throw error;
+            }
     
             const file: IMulterFile |any = req.file
-            // const imageUrl = await uploadImage(file)    // * call uploadImage usecases
-            const imageUrl = "https://profinder.s3.eu-north-1.amazonaws.com/uploads/1727020676246_Electrician.jpg"
+            const imageUrl = await uploadImage(file)    // * call uploadImage usecases
+            // const imageUrl = "https://profinder.s3.eu-north-1.amazonaws.com/uploads/1727028314951_mechanic.jpg"
             req.body.categoryImage = imageUrl
             await AddCategoryUseCases(req.body)  // * call usecases
         }
@@ -235,13 +239,14 @@ export const getAllCategory =async (req:Request,res:Response,next:NextFunction)=
 
 export const editCategory = async (req:Request,res:Response,next:NextFunction)=>{
     try{
-        
-        if(req.body.newImage){
+        console.log('editCategory')
+        console.log(req.body)
+        if(req.body?.newImage){
             const file: IMulterFile |any = req.file
             const imageUrl = await uploadImage(file)  
             req.body.categoryImage = imageUrl
         }
-    
+
         await EditCategoryUseCases(req.body)
         return res.status(StatusCode.Success).json({success: true,message:'Product has been successfully edit'})
     }catch(error){

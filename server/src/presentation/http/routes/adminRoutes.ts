@@ -61,9 +61,9 @@ adminRoutes.patch("/worker/isBlock/:id",verifyTokenAndRole(['admin']),isBlock)
 
 
 // * admin catagory router
-adminRoutes.post("/addCategory",verifyTokenAndRole(['admin']),upload.single('CategoryImage'),addCategoryController)
+adminRoutes.post("/addCategory",verifyTokenAndRole(['admin']),upload.single('categoryImage'),addCategoryController)
 adminRoutes.get('/fetchCategoryData',verifyTokenAndRole(['admin']),getAllCategory)
-adminRoutes.post('/editCategory',verifyTokenAndRole(['admin']),upload.single('newImageData'),editCategory)
+adminRoutes.post('/editCategory',verifyTokenAndRole(['admin']),upload.single('categoryImage'),editCategory)
 adminRoutes.post('/isListVerify',verifyTokenAndRole(['admin']),verifyListController)
 adminRoutes.delete('/deleteProduct/:id',verifyTokenAndRole(['admin']),deleteProductController)
 
