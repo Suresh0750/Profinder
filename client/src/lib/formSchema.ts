@@ -54,27 +54,27 @@ export const FormSchema = z.object({
 // * Form validation schema using Zod
 
 export const professionalInfoFormSchema = z.object({
-  Category: z.string().min(1, { message: "Category is required." }),
-  Country: z.object({
+  category: z.string().min(1, { message: "Category is required." }),
+  country: z.object({
     value: z.string(),
     label: z.string()
   }).nullable(),
-  StreetAddress: z.string().min(1, { message: "Street address is required." }),
-  City: z.object({
+  streetAddress: z.string().min(1, { message: "Street address is required." }),
+  city: z.object({
     value: z.string(),
     label: z.string()
   }).nullable(),
-  Identity: z
+  identity: z
     .any()
     .refine((file) => file instanceof File, {
       message: "Identity document is required and must be a valid file.",
     }),
-  Apt: z.string().max(10, { message: "Apt/Suite should be less than 10 characters." }).optional(),
-  State: z.object({
+  apt: z.string().max(10, { message: "Apt/Suite should be less than 10 characters." }).optional(),
+  state: z.object({
     value: z.string(),
     label: z.string()
   }).nullable(),
-  PostalCode: z.string().min(5, { message: "Postal code is required." }),
+  postalCode: z.string().min(1, { message: "Postal code is required." }),
 })
 
 

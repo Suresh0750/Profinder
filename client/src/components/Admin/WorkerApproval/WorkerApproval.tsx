@@ -4,6 +4,7 @@ import {
   useGetAllUnApprovalWorkerlistQuery,
   useIsUserBlockMutation,
   useIsWorkerApprovalMutation,
+  fetchUnapprovedWorkers
 } from "@/lib/features/api/adminApiSlice";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -45,13 +46,41 @@ const UserTable = () => {
   const [showWorkerList, setShowWorkerList] = useState<any[]>([]);
   const [allWorkerList, setAllWorkerList] = useState<any[]>([]);
   const [workerList, setWorkerList] = useState<WorkerDatails[]>([]);
-
-
-  const { data, refetch } = useGetAllUnApprovalWorkerlistQuery({});
-
  
-  const router = useRouter();
 
+
+  // const { data, refetch } = useGetAllUnApprovalWorkerlistQuery({});
+
+
+  const router = useRouter();
+  useEffect(()=>{
+    async function fetchUnApprovalWorker(){
+      try{
+        const res = await fetchUnapprovedWorkers()
+        if(res?.success){
+          setAllWorkerList(res?.result);
+          setShowWorkerList(
+            res?.result.map((worker: any, i: number) =>
+              createData(
+                i + 1,
+                worker.Profile, 
+                worker.FirstName, 
+                worker.PhoneNumber,
+                worker.EmailAddress,
+                worker.isBlock,
+                worker.Identity,
+                worker._id
+              )
+            )
+          );
+        }
+        
+      }catch(error:any){
+        toast.error(error?.message)
+      }
+    }
+    fetchUnApprovalWorker()
+  },[])
 
 
   
@@ -100,25 +129,6 @@ const UserTable = () => {
     setPage(newPage);
   };
 
-  useEffect(() => {
-    if (data) {
-      setAllWorkerList(data?.result);
-      setShowWorkerList(
-        data?.result.map((worker: any, i: number) =>
-          createData(
-            i + 1,
-            worker.Profile, 
-            worker.FirstName, 
-            worker.PhoneNumber,
-            worker.EmailAddress,
-            worker.isBlock,
-            worker.Identity,
-            worker._id
-          )
-        )
-      );
-    }
-  },[data]);
 
   return (
     <>

@@ -26,6 +26,7 @@ import {
     upcomingWorksUsecases,
     markasCompleteUsecases
 } from "../../../app/useCases/worker/workerUsecases"
+import { generateOtpAccessToken } from "../../../app/services/token";
 
 // * dashboard
 
@@ -197,16 +198,18 @@ export const getProjectDetails = async (req:Request,res:Response,next:NextFuncti
 export const PersonalInformationControll = async (req:Request,res:Response, next : NextFunction)=>{
     try{
         const checkWorker = await workerExist(req.body) // * check weather the worker exist or not
+        console.log('check worker')
+        console.log(checkWorker)
         const {profileImage,...data} = req.body // * for checking
-        // if(checkWorker && checkWorker.isVerified) throw new Error('Email already exist')
-        // const file: IMulterFile |any = req.file
-        // const imageUrl = await uploadImage(file)    // * call uploadImage usecases
-        // req.body.Profile = imageUrl
-        // const bcyptPass = await hashPassword(req.body.Password)   // * hash the password
-        // const workerDetails = req.body
-        // workerDetails.Password = bcyptPass    // * asign the bcrypt pass
-       
-        return res.status(StatusCode.Success).json({success:true,workerDetails:data})
+        if(checkWorker && checkWorker.isVerified) throw new Error('Email already exist')
+
+        const file: IMulterFile |any = req.file
+        const imageUrl = await uploadImage(file)    // * call uploadImage usecases
+        req.body.profile = imageUrl
+        const bcyptPass = await hashPassword(req.body?.password)   // * hash the password
+        const workerDetails = req.body
+        workerDetails.password = bcyptPass    // * asign the bcrypt pass
+        return res.status(StatusCode.Success).json({success:true,workerDetails  })
     }catch(error){
         console.log(`Error from presentation layer-> http->PersonalInformation\n ${error}`)
         next(error)
@@ -218,9 +221,16 @@ export const ProfessionalInfoControll = async (req:Request,res:Response,next:Nex
      
         const file: IMulterFile |any = req.file
         const imageUrl = await uploadImage(file)    // * call uploadImage usecases
-        req.body.Identity = imageUrl
+        req.body.identity = imageUrl
         const workerId = await WorkerUsecase(req.body)
-      
+        // res.cookie(CookieTypes.Token,)
+        const token = await generateOtpAccessToken(workerId)
+        res.cookie(CookieTypes.Token,token,{
+            maxAge:15*60*1000,  
+            httpOnly: true,         
+            secure :true,
+            sameSite: 'strict'
+        })
         res.status(StatusCode.Success).json({success:true,message:'Worker Details has been register',worker : workerId})
     } catch (error) {
         console.log(`Error from presentation layer-> http->ProfessionalInfoControll\n ${error}`)

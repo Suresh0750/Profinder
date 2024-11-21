@@ -138,15 +138,17 @@ export const getCategoryName = async(req:Request,res:Response,next:Function)=>{
 export const CustomerOtpController = async(req:Request,res:Response,next:NextFunction)=>{
     try{
 
-        const {otpValue,userId}:GetVerifyOTP = req.body
-        const isVerifyOTP = await OtpVerifyUseCases(otpValue,userId)
+        const {otpValue,customerId}:GetVerifyOTP = req.body
+        const isVerifyOTP = await OtpVerifyUseCases(otpValue,customerId)
+        console.log('otp verify')
+        console.log(req.body)
         if(isVerifyOTP ){
             
             if(req.body.role == 'user'){
-                const userData =  await  userVerification(req.body.userId,(req.body.role || Role.User))   // * call to verify the customer or update the verify status in database
+                const userData =  await  userVerification(req.body.customerId,(req.body.role || Role.User))   // * call to verify the customer or update the verify status in database
               
 
-                const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(userData?.username || ''),(userData?.emailAddress || ''),(req.body.role ||Role.User))   // * mongose Id converted as a string
+                const  {refreshToken,accessToken} = JwtService((req.body.customerId).toString(),(userData?.username || ''),(userData?.emailAddress || ''),(req.body.role ||Role.User))   // * mongose Id converted as a string
                 res.clearCookie(CookieTypes.Token)
                 // * JWT referesh token setUp
                 res.cookie(CookieTypes.UserRefreshToken,refreshToken,{
@@ -170,9 +172,9 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
             
             }else{
 
-                const workerData =  await  workerVerification(req.body.userId) 
+                const workerData =  await  workerVerification(customerId) 
 
-                const  {refreshToken,accessToken} = JwtService((req.body.userId).toString(),(workerData?.firstName || ''),(workerData?.emailAddress || ''),(req.body.role || Role.Worker))   // * mongose Id converted as a string
+                const  {refreshToken,accessToken} = JwtService((req.body.customerId).toString(),(workerData?.firstName || ''),(workerData?.emailAddress || ''),(req.body.role || Role.Worker))   // * mongose Id converted as a string
                 // * JWT referesh token setUp
         
                 res.cookie(CookieTypes.WorkerRefreshToken,refreshToken,{
@@ -208,8 +210,8 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
 export const ResentOTP = async(req:Request,res:Response,next:NextFunction)=>{
     try {
         const resendOtp = await customerResentOTP(req.body)
-        if(resendOtp) res.status(200).json({user:req.body.customerID,success:true,message:'OTP resent successfully'})
-        else res.status(500).json({user:req.body.customerID,success:false,message:'Failed to resend OTP. Please try again.'})
+        if(resendOtp) res.status(200).json({user:req.body.customerId,success:true,message:'OTP resent successfully'})
+        else res.status(500).json({user:req.body.customerId,success:false,message:'Failed to resend OTP. Please try again.'})
     } catch (error) {
         console.log(`Error from Customer Resend OTP controller\n ${error}`)
         next(error)

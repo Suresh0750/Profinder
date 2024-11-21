@@ -5,7 +5,7 @@ const WorkerOTP = ({params}:{params:any})=>{
 
     return(
         <>
-            <SignUPOTP userId={params.workerId}/>
+            <SignUPOTP workerId={params.workerId}/>
         </>
 
     )

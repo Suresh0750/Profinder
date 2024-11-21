@@ -166,9 +166,7 @@ export const signUp = async (data:any)=>{
         const response = await axiosInstance.post(`/user/userSignup`,data)
         return response.data
     }catch(error:any){
-        console.log(error)
-        const errorMessage = error?.response?.data?.errorMessage || "Unexpected error occurred.";
-        throw new Error(errorMessage); 
+        throw handleAxiosError(error)
     }
 }
 

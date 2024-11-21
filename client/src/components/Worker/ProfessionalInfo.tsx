@@ -18,38 +18,17 @@ import { Button } from "@/components/ui/button"
 import { PulseLoader } from 'react-spinners'
 import { useSelector } from 'react-redux'
 import { useEffect, useState, useMemo } from 'react'
-import { useProfessionalInfoMutation } from '@/lib/features/api/workerApiSlice'
+import { useProfessionalInfoMutation,professionalInfo } from '@/lib/features/api/workerApiSlice'
 import { useGetCategoryNameQuery } from '@/lib/features/api/customerApiSlice'
 import Select, { SingleValue } from 'react-select'
 import countryList from 'react-select-country-list'
 import { City, State, Country } from 'country-state-city'
 import GoogleMapComponent from './GoogleMapComponent'
+import { professionalInfoFormSchema } from "@/lib/formSchema"
 
 // import { professionalInfoFormSchema } from '@/lib/formSchema'
 
-const professionalInfoFormSchema = z.object({
-  category: z.string().min(1, { message: "Category is required." }),
-  country: z.object({
-    value: z.string(),
-    label: z.string()
-  }).nullable(),
-  streetAddress: z.string().min(1, { message: "Street address is required." }),
-  city: z.object({
-    value: z.string(),
-    label: z.string()
-  }).nullable(),
-  identity: z
-    .any()
-    .refine((file) => file instanceof File, {
-      message: "Identity document is required and must be a valid file.",
-    }),
-  apt: z.string().max(10, { message: "Apt/Suite should be less than 10 characters." }).optional(),
-  state: z.object({
-    value: z.string(),
-    label: z.string()
-  }).nullable(),
-  postalCode: z.string().min(1, { message: "Postal code is required." }),
-})
+
 type SelectOption = {
   value: string
   label: string
@@ -68,9 +47,10 @@ export default function ProfessionalInfoForm() {
   const [getCoords, setGetCoords] = useState({ lat: 0, lon: 0 })
   const [getAddress, setGetAddress] = useState({})
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isLoading,setIsLoading] = useState<boolean>(false)
 
   const workersignupData = useSelector((state: any) => state.WorkerSignupData)
-  const [ProfessionalInfo, { isLoading }] = useProfessionalInfoMutation()
+
   const { data: categoryData } = useGetCategoryNameQuery('')
 
   const router = useRouter()
@@ -190,13 +170,16 @@ export default function ProfessionalInfoForm() {
     try {
       if (Object.values(getAddress).length <= 0) return toast.error('Please set your location')
 
+      if(isLoading) return // * handle multiple click
+      setIsLoading(true)
+
       const formData = new FormData()
 
       if (values.identity instanceof File) {
         formData.append('identity', values.identity)
       }
-      formData.append('lat', getCoords?.lat.toString());
-      formData.append('lon', getCoords?.lon.toString());      
+      formData.append('latitude', getCoords?.lat.toString());
+      formData.append('longitude', getCoords?.lon.toString());      
       formData.append('mapAddress', JSON.stringify(getAddress))
       
       for (const [key, value] of Object.entries(values)) {
@@ -215,17 +198,18 @@ export default function ProfessionalInfoForm() {
         formData.append(key, value)
       }
 
-      const res = await ProfessionalInfo(formData).unwrap()
+      const res = await professionalInfo(formData)
       
       if (res.success) {
         toast.success(res.message)
         setTimeout(() => {
           router.push(`/worker/workerOtp/${res.worker}`)
-        }, 4000)
+        }, 600)
       }
-    } catch (err) {
-      toast.error('Error: Registration failed. Please check your input and try again.')
-      console.error(err)
+    } catch (error:any) {
+    toast.error(error?.message)
+    }finally{
+      setIsLoading(false)
     }
   }
 

@@ -47,7 +47,9 @@ export const AdminMongoose = () : IAdminMongoose =>({
     },
     IsListedQuery: async(_id:string,isListed:Boolean)=>{
         try {
-            await CategoryModel.updateOne({_id},{$set:{isListed}})
+            console.log('query')
+            console.log(_id,isListed)
+            await CategoryModel.findByIdAndUpdate({_id:new ObjectId(_id)},{$set:{isListed:isListed}})
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->getAllCategoryQuery->\n`,error)
             throw error

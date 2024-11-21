@@ -258,6 +258,7 @@ export const editCategory = async (req:Request,res:Response,next:NextFunction)=>
 
 export const verifyListController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
+        console.log(req.body)
         await isListedProductUsecases(req.body._id,req.body.isListed)
         return res.status(StatusCode.Success).json({success:true,message:'List has been updated'})
         

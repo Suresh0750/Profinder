@@ -2,7 +2,7 @@
 import {NextRequest} from 'next/server'
 import { jwtVerify } from "jose";
 import { cookies } from 'next/headers';
-const changeToHomeRoutes = new Set(["/user/login","/user/userOtp/", "/user/signup","/worker/login","/worker/signup"]);
+const changeToHomeRoutes = new Set(["/user/login","/user/userOtp/", "/user/signup","/worker/login","/worker/signup",'/worker/professionalInfo']);
 
 
 

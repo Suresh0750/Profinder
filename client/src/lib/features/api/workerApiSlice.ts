@@ -203,6 +203,10 @@ const axiosInstance = axios.create({
     },
     withCredentials : true,
 })
+const axiosInstance1 = axios.create({
+    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    withCredentials : true,
+})
 
 // * Error handler
 export const handleAxiosError = (error:any)=>{
@@ -214,7 +218,7 @@ export const handleAxiosError = (error:any)=>{
 
 export const signUp = async(data:FormValues)=>{
     try{
-        const response = await axiosInstance.post(`/worker/personalinfo`,data)
+        const response = await axiosInstance1.post(`/worker/personalinfo`,data)
         return response.data
     }catch(error:any){
         throw handleAxiosError(error)
@@ -223,7 +227,7 @@ export const signUp = async(data:FormValues)=>{
 
 export const professionalInfo = async(data:any)=>{
     try{
-        const response = await axiosInstance.post(`/worker/ProfessionalInfo`,data)
+        const response = await axiosInstance1.post(`/worker/ProfessionalInfo`,data)
         return response.data
     }catch(error:any){
         throw handleAxiosError(error)

@@ -1,20 +1,21 @@
 "use client";
 import React, { useState, useEffect, useRef, FormEvent } from "react";
-import {useCustomerOtpMutation,useCustomerResendMutation} from '@/lib/features/api/customerApiSlice'
+import {customerOtp,customerResend} from '@/lib/features/api/customerApiSlice'
 import { Toaster, toast } from 'sonner' 
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 
-const SignupOTP  = ({userId}:{userId:string}) => {
+const SignupOTP  = ({workerId}:{workerId:string}) => {
   const [otp, setOtp] = useState<string[]>(["", "", "", ""]);
   const [timer, setTimer] = useState<number>(60);
   const [isTimerActive, setIsTimerActive] = useState<boolean>(true);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [CustomerOtp,{isLoading,isSuccess}] = useCustomerOtpMutation()
+  const [isLoading,setIsLoading] = useState<boolean>(false)
+  const [resendLoading,setResendLoading] = useState<boolean>(false)
 
-  const [CustomerResend,{isLoading:resendLoading}] = useCustomerResendMutation()
+
   const dispatch = useDispatch()
 
   const Router = useRouter() // * navigation Hook
@@ -40,24 +41,24 @@ const SignupOTP  = ({userId}:{userId:string}) => {
     e.preventDefault();
     try {
       if(isLoading) return // * prevent multiple click
-      
+      setIsLoading(true)
       const otpString = otp.join("");
       if (otpString.length < 4) {
         setErrorMessage("Please enter a valid OTP.");
         return;
       }
       // Simulate OTP verification
-      const result = await CustomerOtp({otpValue:otpString,role:'worker',userId}).unwrap() 
+      const result = await customerOtp({otpValue:otpString,role:'worker',customerId:workerId})
       console.log(result)
       if(result?.success){
         toast.success(result?.message)
         if(result?.customerData){
           localStorage.setItem("customerData",JSON.stringify(result?.customerData))
         }
-        ``
+        
         setSuccessMessage("OTP verified successfully!");
         setTimeout(()=>{
-          Router.push(`/homePage`)
+          Router.replace(`/homePage`)
         },500)
       }
       setErrorMessage("");
@@ -65,7 +66,9 @@ const SignupOTP  = ({userId}:{userId:string}) => {
       setOtp(["", "", "", ""]);
     } catch (error:any) {
       console.log(`Error from  OTP handleSubmit`,error)
-      error?.data?.errorMessage ? toast.warning(error?.data?.errorMessage) : toast.warning('something wrong try again!')
+      toast.error(error?.message)
+    } finally{
+      setIsLoading(false)
     }
    
   };
@@ -88,8 +91,8 @@ const SignupOTP  = ({userId}:{userId:string}) => {
     try {
       if(timer!=0 || resendLoading) return //* prevent multiple click
 
-      
-      const result = await CustomerResend({customerID:userId,role:'worker'}).unwrap()
+      setResendLoading(true)
+      const result = await customerResend({customerId:workerId,role:'worker'})
       console.log(result)
       if(result?.success){
         toast.success(result?.message)
@@ -101,6 +104,8 @@ const SignupOTP  = ({userId}:{userId:string}) => {
     } catch (error:any) {
       console.log(`Error from handleOTP`,error)
       toast.error(error?.message)
+    } finally{
+      setResendLoading(false)
     }
   };
 

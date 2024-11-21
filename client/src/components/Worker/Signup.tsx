@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { PulseLoader } from 'react-spinners';
 import { CgAdd } from 'react-icons/cg';
 import { useState } from 'react';
-import {useWorkerSignUpMutation,signUp} from '@/lib/features/api/workerApiSlice'
+import {signUp} from '@/lib/features/api/workerApiSlice'
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // * Eye icon from react-icons
 import {signUPformSchema} from '../../lib/formSchema' // * form Schema
 import { useDispatch } from "react-redux";
@@ -98,7 +98,7 @@ export default function WorkerSignUp() {
       toast.success('movie on')
       setTimeout(()=>{
         router.push(`/worker/professionalInfo`)
-      },1000)
+      },600)
     }else{
       toast.error('somethin wrong try again')
     }
@@ -106,10 +106,7 @@ export default function WorkerSignUp() {
     } catch (error : any) {
       console.log(error);
       toast.error(error?.message)
-      // {
-      //   err?.data?.errorMessage ? toast.error( err.data.errorMessage) : toast.error('Error: Registration failed. Please check your input and try again.');
-      // }
-     
+
     }finally{
       setIsloading(false)
     }

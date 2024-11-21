@@ -25,7 +25,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Edit, Trash2, Image as ImageIcon } from 'lucide-react'
-import { useFetchCategoryDataQuery, useEditCategoryAPIMutation, useListUnlistAPIMutation, useDeleteProductAPIMutation, fetchCategories, deleteProduct, toggleCategoryListing ,editCategorys} from "@/lib/features/api/adminApiSlice"
+import {  fetchCategories, deleteProduct, toggleCategoryListing ,editCategorys} from "@/lib/features/api/adminApiSlice"
 
 interface Category {
   _id: string
@@ -51,7 +51,6 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
 
   
   useEffect(() => {
-    alert('hello')
     const FetchCategoryAPI = async ()=>{
       try{
         setIsLoading(true)
@@ -141,8 +140,8 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
 
   const handleToggleList = async (category: Category) => {
     try {
-      const result = await toggleCategoryListing({ _id: category._id, isListed: !category.isListed })
-      if ('data' in result && result.data.success) {
+      const result = await toggleCategoryListing({ _id: category._id, isListed: category.isListed })
+      if (result?.success) {
         setCategories(categories.map(cat => 
           cat._id === category._id ? { ...cat, isListed: !cat.isListed } : cat
         ))
@@ -150,8 +149,8 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
       } else {
         toast.error('Failed to update category status')
       }
-    } catch (error) {
-      toast.error('An error occurred while updating the category status')
+    } catch (error:any) {
+      toast.error(error?.message)
     }
   }
 

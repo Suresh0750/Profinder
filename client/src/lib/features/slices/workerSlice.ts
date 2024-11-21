@@ -2,12 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
    signUpData: {
-    FirstName: '',
-    LastName: '',  
-    PhoneNumber: '',
-    EmailAddress: '',
-    Password: '',
-    Profile: ''  
+    firstName: '',
+    lastName: '',  
+    phoneNumber: '',
+    emailAddress: '',
+    password: '',
+    profile: ''  
    },
    getWorkerData : {}
 }

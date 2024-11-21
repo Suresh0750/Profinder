@@ -44,6 +44,8 @@ export async function middleware(req:NextRequest){
     return NextResponse.redirect(loginUrl)
   }
 
+  
+  // * product user otp page
   if(pathname.includes('/user/userOtp')){
     let isProduct = await productOtp(req)
     console.log('otp page')
@@ -54,6 +56,20 @@ export async function middleware(req:NextRequest){
     }
     return NextResponse.next() 
   }
+
+  // * product worker otp page
+  if(pathname.includes('/worker/workerOtp')){
+    let isProduct = await productOtp(req)
+    console.log('otp page')
+    console.log(isProduct)
+    if(!isProduct){
+      const loginUrl = new URL('/homePage',req.url)
+      return NextResponse.redirect(loginUrl)
+    }
+    return NextResponse.next() 
+  }
+
+
   
   if(pathname?.includes('/user') && !pathname?.includes('/user/userOtp') && !pathname?.includes('/customer/setforget_password') && !pathname?.includes("/customer/forgetpassword") && !isUserProtectedRoute(pathname)&&!userVerifyToken){
     console.log('homePage 1')
