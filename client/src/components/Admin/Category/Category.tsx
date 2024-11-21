@@ -50,8 +50,7 @@ export const Category = ()=>{
                 <button className='bg-[#519668] rounded p-2 mr-10' onClick={handleOpen}>Add Category</button>      
             </div>
             <div>
-                <Table searchValue={searchval || ''}/> 
-                
+                <Table searchValue={searchval || ''}/>   
                 <Modal
                     open={open}
                     onClose={handleClose}

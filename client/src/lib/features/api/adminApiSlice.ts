@@ -258,9 +258,9 @@ export const fetchCategories =  async() =>{
       throw handleAxiosError(error)
     }
 }
-export const editCategory =  async(data: EditCategoryType | any) =>{
+export const editCategorys =  async(data: EditCategoryType | any) =>{
     try{
-        const response = await axiosInstance.post(`/admin/editCategory`,data);
+        const response = await axiosInstance1.post(`/admin/editCategory`,data);
         return response.data
     }catch(error:any){
       throw handleAxiosError(error)

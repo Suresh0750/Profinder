@@ -25,13 +25,13 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 import { Edit, Trash2, Image as ImageIcon } from 'lucide-react'
-import { useFetchCategoryDataQuery, useEditCategoryAPIMutation, useListUnlistAPIMutation, useDeleteProductAPIMutation, fetchCategories } from "@/lib/features/api/adminApiSlice"
+import { useFetchCategoryDataQuery, useEditCategoryAPIMutation, useListUnlistAPIMutation, useDeleteProductAPIMutation, fetchCategories, deleteProduct, toggleCategoryListing ,editCategorys} from "@/lib/features/api/adminApiSlice"
 
 interface Category {
   _id: string
   categoryName: string
   categoryDescription: string
-  categoryImage: string
+  categoryImage: any
   isListed: boolean
 }
 
@@ -45,12 +45,11 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
   const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null)
   const [error,setError] =  useState<boolean>(false)
   const [isLoading,setIsLoading] = useState<boolean>(false)
+  const [newImage ,setNewImage] = useState<boolean>(false)
+  // const [useEditCategoryAPIMutation]
   const router = useRouter()
 
-  const [editCategoryAPI] = useEditCategoryAPIMutation()
-  const [listUnlistAPI] = useListUnlistAPIMutation()
-  const [deleteProductAPI] = useDeleteProductAPIMutation()
-
+  
   useEffect(() => {
     alert('hello')
     const FetchCategoryAPI = async ()=>{
@@ -87,24 +86,33 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
   const handleEditSave = async () => {
     if (editCategory) {
       try {
+        if((!(editCategory?.categoryName).trim())) return toast.error('category name is mantetory') 
+        if( ((editCategory?.categoryName).trim()).length<4) return toast.error('category name letters should be above 3') 
+        if((!(editCategory?.categoryDescription).trim())) return toast.error('category categoryDescription is mantetory') 
+        if( ((editCategory?.categoryDescription).trim()).length<4) return toast.error('category categoryDescription letters should be above 3') 
+        if(!editCategory.categoryImage) return toast.error('image mandatory')
+
+        console.log(editCategory)
         const formData = new FormData()
         formData.append('categoryName', editCategory.categoryName)
         formData.append('categoryDescription', editCategory.categoryDescription)
         formData.append('categoryImage', editCategory.categoryImage)
         formData.append('_id', editCategory._id)
+        if(newImage){
+          formData.append('newImage',"newImage")
+        }
+        
 
-        const result = await editCategoryAPI(formData)
-        if ('data' in result && result.data.success) {
+        const res = await editCategorys(formData)
+        if (res?.success) {
           setCategories(categories.map(cat => 
             cat._id === editCategory._id ? editCategory : cat
           ))
-          toast.success('Category updated successfully')
+          toast.success(res?.message)
           setIsEditDialogOpen(false)
-        } else {
-          toast.error('Failed to update category')
-        }
-      } catch (error) {
-        toast.error('An error occurred while updating the category')
+        } 
+      } catch (error:any) {
+        toast.error(error?.message)
       }
     }
   }
@@ -117,7 +125,7 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
   const handleDeleteConfirm = async () => {
     if (categoryToDelete) {
       try {
-        const result = await deleteProductAPI(categoryToDelete._id)
+        const result = await deleteProduct(categoryToDelete._id)
         if ('data' in result && result.data.success) {
           setCategories(categories.filter(cat => cat._id !== categoryToDelete._id))
           toast.success(`${categoryToDelete.categoryName} has been deleted`)
@@ -133,7 +141,7 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
 
   const handleToggleList = async (category: Category) => {
     try {
-      const result = await listUnlistAPI({ _id: category._id, isListed: !category.isListed })
+      const result = await toggleCategoryListing({ _id: category._id, isListed: !category.isListed })
       if ('data' in result && result.data.success) {
         setCategories(categories.map(cat => 
           cat._id === category._id ? { ...cat, isListed: !cat.isListed } : cat
@@ -263,14 +271,16 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
                   type="file"
                   onChange={(e) => {
                     const file = e.target.files?.[0]
-                    if (file) {
-                      const reader = new FileReader()
-                      reader.onloadend = () => {
-                        setEditCategory(prev => ({ ...prev!, categoryImage: reader.result as string }))
-                      }
-                      reader.readAsDataURL(file)
-                    }
+                    setEditCategory(prev=>({ ...prev!, categoryImage: file}))
+                    // if (file) {
+                    //   const reader = new FileReader()
+                    //   reader.onloadend = () => {
+                    //     setEditCategory(prev => ({ ...prev!, categoryImage: reader.result as string}))
+                    //   }
+                    //   reader.readAsDataURL(file)
+                    // }
                   }}
+                  onClick={()=>setNewImage(true)}
                 />
                 {editCategory?.categoryImage && (
                   <Image

@@ -25,6 +25,7 @@ const AddCategoryForm = () => {
   const router = useRouter();
 
   const [isLoading,setIsLoading] = useState<boolean>(false)
+
   // * Admin RTK api
   // const [AddCategoryForm, { isError, isLoading }] = useAddCategoryFormMutation();
   const [page,setPage]= useState(1)
@@ -35,6 +36,7 @@ const AddCategoryForm = () => {
       CategoryName: "",
       Description: "",
       CategoryImage: undefined,
+      
     },
   });
 
@@ -54,18 +56,13 @@ const AddCategoryForm = () => {
       
       if (res?.success) {
         toast.success(res?.message); 
-        router.push("/admin/category");
         window.location.reload()
-      } else {
-        console.log(res)
-        toast.error(`Something went wrong, try again`);
+      }else{
+        alert('token expired')
       }
     } catch (error:any) {
       console.log(`Error from add category form \n`, error);
-      {
-        error?.data?.message ? toast.error(error?.data?.message) : toast.error("Server error");
-      }
-      
+      toast.error(error?.message)
     } finally{
       setIsLoading(false)
     }
