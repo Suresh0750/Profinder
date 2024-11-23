@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useGetAllRequestDataQuery, useAcceptWorkAPIMutation,fetchAllRequest, useRejectWorkAPIMutation ,rejectWork} from '@/lib/features/api/workerApiSlice'
+import { fetchAllRequest ,rejectWork, acceptWork} from '@/lib/features/api/workerApiSlice'
 import { toast, Toaster } from 'sonner'
 import { ChevronDown, ChevronUp, Check, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -20,8 +20,7 @@ export default function ServiceRequestPage() {
 
 
   const [customerData, setCustomerData] = useState<any>({});
-  // const { data, refetch } = useGetAllRequestDataQuery(customerData?._id,{skip:customerData?._id ? false:true})
-  const [acceptWorkAPI] = useAcceptWorkAPIMutation()
+ 
  
 
 // * handle get all Request 
@@ -68,6 +67,8 @@ useEffect(()=>{
       const res = await rejectWork(_id)
       if (res?.success) {
         toast.success(res?.message)
+        handleFetchAllRequest()
+        // fetchAllRequest
       }
     } catch (error:any) {
       console.log(error)
@@ -84,13 +85,13 @@ useEffect(()=>{
       if (!payment || payment < 500) {
         return toast.error('Minimum payment amount is 500')
       }
-      const res = await acceptWorkAPI({ _id, isPayment: payment,userId}).unwrap()
+      const res = await acceptWork({ _id, isPayment: payment,userId})
       if (res?.success) {
         toast.success(res.message)
-       
+        handleFetchAllRequest()
       }
-    } catch (error) {
-      toast.error('Failed to accept request')
+    } catch (error:any) {
+      toast.error(error?.message)
     }
   }
 
@@ -114,7 +115,7 @@ useEffect(()=>{
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <Label>Service Location</Label>
-                          <div className="font-medium">{data?.servicelocation}</div>
+                          <div className="font-medium">{data?.serviceLocation}</div>
                         </div>
                         <div>
                           <Label>Service Date</Label>
@@ -127,7 +128,7 @@ useEffect(()=>{
                       </div>
                       <div>
                         <Label>About Work</Label>
-                        <div className="mt-1 p-2 bg-muted rounded-md">{data?.AdditionalNotes}</div>
+                        <div className="mt-1 p-2 bg-muted rounded-md">{data?.additionalNotes}</div>
                       </div>
                       <div>
                         <Label htmlFor={`payment-${data._id}`}>Enter Payment (Minimum 500)</Label>
