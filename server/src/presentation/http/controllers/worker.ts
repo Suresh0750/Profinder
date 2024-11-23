@@ -143,6 +143,8 @@ export const isAcceptWorkController = async(req:Request,res:Response,next:NextFu
 
 export const isRejectWorkController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
+        console.log(req.params)
+        const result = await isRejectUsecases(req.params.id)
         return res.status(StatusCode.Success).json({success:true,message:"Project has been cancelled"})
     } catch (error) {
         console.log(`Error from presentation layer-> http->isRejectWorkController\n ${error}`)
