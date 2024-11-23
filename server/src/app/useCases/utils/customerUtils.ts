@@ -78,11 +78,12 @@ export const userRequestUsecases = async (userRequestDetails:ServiceRequest)=>{
             error.statusCode = 409
             throw error
         }
+        console.log(userRequestDetails)
 
-        const additionalNotes = userRequestDetails.additionalNotes // * change the name convention
-        delete userRequestDetails.additionalNotes 
+        // const additionalNotes = userRequestDetails.additionalNotes // * change the name convention
+        // delete userRequestDetails.additionalNotes 
         // console.log(userRequestDetails)
-        return await CustomerQueryRepository().userRequestQuery({...userRequestDetails,additionalNotes})
+        return await CustomerQueryRepository().userRequestQuery(userRequestDetails)
 
     } catch (error) {
         console.log(`Error from useCases->utils-> userRequestUsecases \n${error}`)

@@ -27,7 +27,7 @@ const customerRouter = Router()
 // * Review of worker
 customerRouter.get("/review/:id",getReviewController)
 customerRouter.post("/review",verifyTokenAndRole(['user','worker']),ReviewController)
-// customerRouter.get("/getReview",getReviewUsecases)
+
 
 // * payment gatway
 

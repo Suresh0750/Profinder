@@ -219,11 +219,11 @@ export const PersonalInformationControll = async (req:Request,res:Response, next
 export const ProfessionalInfoControll = async (req:Request,res:Response,next:NextFunction)=>{
     try {
      
-        const file: IMulterFile |any = req.file
-        const imageUrl = await uploadImage(file)    // * call uploadImage usecases
-        req.body.identity = imageUrl
+        // const file: IMulterFile |any = req.file
+        // const imageUrl = await uploadImage(file)    // * call uploadImage usecases
+        // req.body.identity = imageUrl
         const workerId = await WorkerUsecase(req.body)
-        // res.cookie(CookieTypes.Token,)
+        
         const token = await generateOtpAccessToken(workerId)
         res.cookie(CookieTypes.Token,token,{
             maxAge:15*60*1000,  
@@ -258,9 +258,11 @@ export const isCheckEmail = async (req:Request,res:Response,next:NextFunction)=>
 
 export const getWorkerDataController = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        const {workerToken} = req.cookies
-        if(!workerToken) res.status(StatusCode.Forbidden).json({ message: "Unauthenticated" });
-        const workerData = await getWorkerData(workerToken)
+        console.log('req reached worker controller')
+        const {workerRefreshToken} = req.cookies
+        console.log(workerRefreshToken)
+        if(!workerRefreshToken) return res.status(StatusCode.Forbidden).json({ message: "Unauthenticated" });
+        const workerData = await getWorkerData(workerRefreshToken)
         return res.status(StatusCode.Success).json({success:true,message:'success',workerData})
     } catch (error) {
         console.log(`Error from presentation layer-> http->getWorkerDataController\n ${error}`)

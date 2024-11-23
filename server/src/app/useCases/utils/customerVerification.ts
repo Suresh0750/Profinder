@@ -141,7 +141,7 @@ export const GoogleLoginUseCases = async (customerData:GoogleLoginTypes )=>{
             const UserData : User = {
                 username : customerData.username,
                 phoneNumber : 0,
-                emailAddress : customerData.emailAddress,
+                emailAddress : customerData?.emailAddress,
                 password : '',
                 isVerified : true,
                 address : ''

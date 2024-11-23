@@ -299,7 +299,7 @@ export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
                 const customerData  = {
                     _id: userData._id,
                     customerName : userData.username,
-                    customerEmail : userData.EmailAddress,
+                    customerEmail : userData.emailAddress,
                     role : Role.User
                 }
             return res.status(StatusCode.Success).json({success:true,message:"successfully login",customerData})

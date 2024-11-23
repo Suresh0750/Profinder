@@ -23,7 +23,7 @@ const RequestSchema = new Schema(
         },
         isAccept: {
             type: String,
-            enum: ['Pending', 'Accepted', 'Rejected'], 
+            enum: ['Pending', 'Accepted', 'Cancelled','Completed'], 
             default: 'Pending',
         },
         payment: {

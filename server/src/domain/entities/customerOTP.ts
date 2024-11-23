@@ -16,7 +16,7 @@ export interface CustomerOTP {
   export interface GetVerifyOTP {
     otpValue: number;
     customerId: string;
-    // workerId : string
+    role? : string;
   }
   
   

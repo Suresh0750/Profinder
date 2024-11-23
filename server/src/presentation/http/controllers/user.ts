@@ -85,7 +85,9 @@ export const editprofile = async(req:Request,res:Response,next:NextFunction)=>{
         const file: IMulterFile |any  = req.file
         if(JSON.parse(req.body.isImage)){
             const image = await uploadImage(file)
+            console.log(image)
             req.body.profile = image
+            console.log(req.body.profile)
         }
         await EditprofileUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true,message:'data successfully updated'})

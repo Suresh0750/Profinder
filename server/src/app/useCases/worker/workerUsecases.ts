@@ -234,6 +234,8 @@ export const getWorkerData = async(token:string)=>{
     try {
    
         const customer :any = verifyRefreshToken(token) 
+        console.log('customer')
+        console.log(customer)
         const {getWorkerData} = getWorkerRepository()
         return getWorkerData(customer?.customerId)
         // getWorkerData

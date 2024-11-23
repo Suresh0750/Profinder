@@ -11,6 +11,7 @@ export interface ServiceRequest {
     userId: string;
     workerId: string;
     isAccept?: string; 
+    user : string;
 }
 
 export interface Review {

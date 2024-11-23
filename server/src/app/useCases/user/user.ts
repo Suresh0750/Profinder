@@ -1,6 +1,6 @@
 
 import { StatusCode } from "../../../domain/entities/commonTypes";
-import { User ,ProfileTypes,ConversationTypes} from "../../../domain/entities/user";
+import { User ,ProfileTypes,ConversationTypes, EditProfileTypes} from "../../../domain/entities/user";
 import { IgetUserRepository } from "../../../domain/repositories/user";
 import { getUserRepository } from "../../../infrastructure/database/mongoose/user";
 import { hashPassword } from "../../../shared/utils/encrptionUtils";
@@ -88,12 +88,16 @@ export const conversationUsecases = async(data:ConversationTypes)=>{
 export const EditprofileUsecases = async(data:ProfileTypes)=>{
   try{
       const {username,emailAddress,phoneNumber,profile} = data
-      const userData = {
+      const userData:EditProfileTypes = {
         username,
         phoneNumber,
-        emailAddress,
-        profile
+        emailAddress
       }
+      if(profile){
+        userData.profile = profile
+      }
+      console.log('userData')
+      console.log(userData)
       return getUserRepository().updateprofile(userData)
   }catch(error){
     console.log(`error from usecase in editprofileUsecases`, error);

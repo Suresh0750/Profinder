@@ -21,7 +21,7 @@ const {ObjectId} = Types
 export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
     UserGoogleLogin : async (user:User) =>{
         try {
-            const userDoc  = await UserModel.updateOne({EmailAddress:user.emailAddress},{$set:{user}},{upsert:true});
+            const userDoc  = await UserModel.updateOne({emailAddress:user.emailAddress},{$set:{user}},{upsert:true});
             return userDoc
         } catch (error) {
             // console.log(`Error from infrastructure->mongoseUser->createUser\n`,error)
