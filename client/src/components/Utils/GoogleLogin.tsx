@@ -1,30 +1,37 @@
 'use client'
 // pages/login.tsx
 
-import React from 'react';
+import React,{useState} from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { useCustomerGoogleLoginMutation } from "@/lib/features/api/customerApiSlice"
+import { useCustomerGoogleLoginMutation ,customerGoogleLogin} from "@/lib/features/api/customerApiSlice"
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from "sonner"
 
 const GoogleSignIn = ({ role }: { role: string }) => {
-  const [CustomerGoogleLogin,{isError,isLoading}] = useCustomerGoogleLoginMutation();
+  // const [CustomerGoogleLogin,{isError,isLoading}] = useCustomerGoogleLoginMutation();
+  const [isLoading,setIsLoading] = useState<boolean>(false)
+
   const router = useRouter();
 
   const handleLoginSuccess = async (credentialResponse: any) => {
 
     if(isLoading) return // * for handling the multiple request
+
+    
     console.log('Login Success:', credentialResponse);
     const { email, given_name } = credentialResponse;
     const data = {
       username: given_name,
-      EmailAddress: email,
+      emailAddress: email,
       role
     };
   
     try{
-      const result = await CustomerGoogleLogin(data).unwrap()
+      
+      setIsLoading(true)
+      
+      const result = await customerGoogleLogin(data)
 
       if (result?.success) {
         toast.success(result?.message);
@@ -32,17 +39,15 @@ const GoogleSignIn = ({ role }: { role: string }) => {
         setTimeout(() => {
           router.push('/homePage');
         }, 2000);
-      }else{
-        toast.warning(result?.data?.errorMessage)
-        // console.log(result?.data?.errorMessage)
       }
       
     }catch(error:any){
       console.log(error)
-      toast(error?.data?.errorMessage)
+      toast(error?.message)
+    }finally{
+      setIsLoading(false)
     }
     
-    // Here, you can send the token or response to your backend to authenticate the user
   };
 
   const handleLoginFailure = (error: any) => {

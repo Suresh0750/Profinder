@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast, Toaster } from "sonner"
-import { useUpdateprofileMutation, useProfileQuery } from "@/lib/features/api/userApiSlice"
+import { useUpdateprofileMutation, useProfileQuery, profile,updateprofile } from "@/lib/features/api/userApiSlice"
 
 interface UserProfile {
   name: string
@@ -37,6 +37,7 @@ export default function UserProfilePage() {
   const [isNewImage, setIsNewImage] = useState(false)
   const [newImageData, setNewImageData] = useState<File | null>(null)
   const [customerData, setCustomerData] = useState<any>({});
+  const [isProfileLoading,setIsProfileLoading] = useState<boolean>(false)
   const [userProfile, dispatch] = useReducer(userProfileReducer, {
     name: '',
     email: '',
@@ -44,6 +45,33 @@ export default function UserProfilePage() {
     avatarUrl: '/placeholder.svg?height=100&width=100'
   })
 
+  // * fetch the User Profile data
+  async function fetchProfile(){
+    try{
+      if(isProfileLoading || !customerData?._id) return
+
+      setIsProfileLoading(true)
+      const res = await profile(customerData?._id)
+      if(res?.success){
+        dispatch({
+          type: 'SET_PROFILE',
+          payload: {
+            name: res?.result?.username,
+            email: res?.result?.emailAddress,
+            phone: res?.result?.phoneNumber,
+            avatarUrl: res?.result?.profile || '/placeholder.svg?height=100&width=100',
+          },
+        })
+      }
+
+    }catch(error:any){
+      console.log(error)
+      toast.error(error?.message)
+    }finally{
+      setIsProfileLoading(false)
+    }
+    
+  }
   useEffect(() => {
     // Only access localStorage in the browser
     if (typeof window !== "undefined") {
@@ -58,22 +86,12 @@ export default function UserProfilePage() {
       }
     }
   }, []);
-  const { data, refetch, isLoading: isProfileLoading } = useProfileQuery(customerData?._id)
+  // const { data, refetch, isLoading: isProfileLoading } = useProfileQuery(customerData?._id)
   const [updateProfile, { isLoading: isUpdating }] = useUpdateprofileMutation()
-
+  // 
   useEffect(() => {
-    if (data?.result) {
-      dispatch({
-        type: 'SET_PROFILE',
-        payload: {
-          name: data?.result?.username,
-          email: data?.result?.EmailAddress,
-          phone: data?.result?.PhoneNumber,
-          avatarUrl: data?.result?.profile || '/placeholder.svg?height=100&width=100',
-        },
-      })
-    }
-  }, [data])
+    fetchProfile()
+  }, [customerData])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const image = e.target.files?.[0]
@@ -98,8 +116,8 @@ export default function UserProfilePage() {
     try {
       const formData = new FormData()
       formData.append("username", userProfile.name)
-      formData.append("email", userProfile.email)
-      formData.append("phone", String(userProfile.phone))
+      formData.append("emailAddress", userProfile.email)
+      formData.append("phoneNumber", String(userProfile.phone))
 
       if (isNewImage && newImageData) {
         formData.append("newImageData", newImageData)
@@ -108,17 +126,19 @@ export default function UserProfilePage() {
         formData.append("isImage", "false")
       }
 
-      const result = await updateProfile(formData).unwrap()
+      // const result = await updateProfile(formData).unwrap()
+      const result = await updateprofile(formData)
+
       if (result.success) {
         toast.success("Your profile has been updated successfully")
         setIsEditing(false)
-        refetch()
+        fetchProfile()
       } else {
         toast.error("Failed to update profile. Please try again.")
       }
-    } catch (error) {
+    } catch (error:any) {
       console.error(error)
-      toast.error("An error occurred while updating your profile")
+      toast.error(error?.message)
     }
   }
 

@@ -63,12 +63,12 @@ const UserTable = () => {
             res?.result.map((worker: any, i: number) =>
               createData(
                 i + 1,
-                worker.Profile, 
-                worker.FirstName, 
-                worker.PhoneNumber,
-                worker.EmailAddress,
+                worker.profile, 
+                worker.firstName, 
+                worker.phoneNumber,
+                worker.emailAddress,
                 worker.isBlock,
-                worker.Identity,
+                worker.identity,
                 worker._id
               )
             )
@@ -89,17 +89,17 @@ const UserTable = () => {
     if(value){
 
       let filterData =allWorkerList
-      filterData = filterData?.filter((prev:any)=>((prev?.FirstName).toLowerCase())?.includes((value)?.toLowerCase()))
+      filterData = filterData?.filter((prev:any)=>((prev?.firstName).toLowerCase())?.includes((value)?.toLowerCase()))
       setShowWorkerList(
         filterData?.map((worker: any, i: number) =>
           createData(
             i + 1,
-            worker.Profile,
-            worker.FirstName,
-            worker.PhoneNumber,
-            worker.EmailAddress,
+            worker.profile,
+            worker.firstName,
+            worker.phoneNumber,
+            worker.emailAddress,
             worker.isBlock,
-            worker.Identity,
+            worker.identity,
             worker._id
           )
         ))
@@ -109,12 +109,12 @@ const UserTable = () => {
         allWorkerList?.map((worker: any, i: number) =>
           createData(
             i + 1,
-            worker.Profile,
-            worker.FirstName,
-            worker.PhoneNumber,
-            worker.EmailAddress,
+            worker.profile,
+            worker.firstName,
+            worker.phoneNumber,
+            worker.emailAddress,
             worker.isBlock,
-            worker.Identity,
+            worker.identity,
             worker._id
           )
         )

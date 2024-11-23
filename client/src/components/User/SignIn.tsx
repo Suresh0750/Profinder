@@ -52,12 +52,12 @@ export function LoginForm() {
 
       if (res.success) {
      
-        localStorage.setItem("customerData",JSON.stringify(res.customerData))
+        localStorage.setItem("customerData",JSON.stringify(res?.customerData))
 
         toast.success(res.message)
         setTimeout(() => {
           Router.replace("/homePage")
-        }, 3000)
+        }, 500)
       }
     } catch (error: any) { 
       console.log(error)

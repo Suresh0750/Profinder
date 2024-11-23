@@ -6,20 +6,20 @@ import { getWorkerData } from '@/lib/features/slices/workerSlice'
 import { useForm, Controller } from 'react-hook-form';
 import { Modal, Box, Button, Typography, TextField, MenuItem } from '@mui/material';
 import Image from "next/image";
-import {useAddtionalProffessionalInfoMutation} from '@/lib/features/api/workerApiSlice'
+import {addtionalProffessionalInfo} from '@/lib/features/api/workerApiSlice'
 import {toast,Toaster} from 'sonner'
 import {useRouter} from 'next/navigation'
 
 // Types for TypeScript validation
 interface WorkerData {
-    Category?: string;
-    Country?: string;
-    State?: string;
-    PostalCode?: string;
-    City?: string;
-    StreetAddress?: string;
-    Apt?: string;
-    Identity?: string;
+    category?: string;
+    country?: string;
+    state?: string;
+    postalCode?: string;
+    city?: string;
+    streetAddress?: string;
+    apt?: string;
+    identity?: string;
     experience?: string;
     rate?: number;
     availability?: string;
@@ -70,16 +70,15 @@ const DashboardProfessionalInfo = () => {
 
     const dispatch = useDispatch();
     const workerData: WorkerData = useSelector((state: any) => state?.WorkerSignupData?.getWorkerData);
-    const [addtionalProffessionalInfo,{isLoading}] = useAddtionalProffessionalInfoMutation()
 
     const [open, setOpen] = useState(false);
     const [editMode, setEditMode] = useState(false);
     
     const { control, handleSubmit, formState: { errors } } = useForm<WorkerData>({
         defaultValues: {
-            experience: workerData.experience || '',
-            rate: workerData.rate || 0,
-            availability: workerData.availability || '',
+            experience: workerData?.experience || '',
+            rate: workerData?.rate || 0,
+            availability: workerData?.availability || '',
         }
     });
 
@@ -108,18 +107,17 @@ const DashboardProfessionalInfo = () => {
            }
   
            try{
-               const res = await addtionalProffessionalInfo(workDetails).unwrap()
-               if(res.success){
+            //    const res = await addtionalProffessionalInfo(workDetails).unwrap()
+            const res:any = await addtionalProffessionalInfo(workDetails)
+               if(res?.success){
                    
-                   toast.success(res.message)
+                   toast.success(res?.message)
                    dispatch(getWorkerData({...workerData,experience:data?.experience,availability:data?.availability,rate : Number(data?.rate)}))
-                //    setTimeout(()=>{
-                //     router.push('/worker/dashboard/workerdashboard')
-                //    },500)
 
                }
            }catch(error : any){
-                error?.data?.errorMessage ? toast.warning(error?.data?.errorMessage) : toast.warning('somthing wrong try again')
+                // error?.data?.errorMessage ? toast.warning(error?.data?.errorMessage) : toast.warning('somthing wrong try again')
+                toast.error(error?.message)
            }
         }
         setEditMode(false);
@@ -130,17 +128,17 @@ const DashboardProfessionalInfo = () => {
     return (
         <div className="text-white w-full space-y-4 p-4 rounded-md">
             {[
-                { label: "Work", value: workerData.Category || 'N/A' },
-                { label: "Country", value: workerData.Country || 'N/A' },
-                { label: "State / Province", value: workerData.State || 'N/A' },
-                { label: "ZIP / Postal Code", value: workerData.PostalCode || 'N/A' },
-                { label: "City", value: workerData.City || 'N/A' },
-                { label: "Street Address", value: workerData.StreetAddress || 'N/A' },
-                { label: "Apt Suite", value: workerData.Apt || 'N/A' },
+                { label: "Work", value: workerData?.category || 'N/A' },
+                { label: "Country", value: workerData?.country || 'N/A' },
+                { label: "State / Province", value: workerData?.state || 'N/A' },
+                { label: "ZIP / Postal Code", value: workerData?.postalCode || 'N/A' },
+                { label: "City", value: workerData?.city || 'N/A' },
+                { label: "Street Address", value: workerData?.streetAddress || 'N/A' },
+                { label: "Apt Suite", value: workerData?.apt || 'N/A' },
             ].map((field, index) => (
                 <div key={index} className="flex justify-between items-center border-b border-slate-400 pb-2">
-                    <Typography variant="body1" className="font-semibold">{field.label}</Typography>
-                    <Typography variant="body1">{field.value}</Typography>
+                    <Typography variant="body1" className="font-semibold">{field?.label}</Typography>
+                    <Typography variant="body1">{field?.value}</Typography>
                 </div>
             ))}
             <div className="flex justify-between items-center border-b border-slate-400 pb-2">
@@ -154,13 +152,13 @@ const DashboardProfessionalInfo = () => {
                    ( <>
                     {
                          [
-                            { label: "experience", value: workerData.experience || 'N/A' },
-                            { label: "availability", value: workerData.availability || 'N/A' },
-                            { label: "rate", value: workerData.rate || 'N/A' },
+                            { label: "experience", value: workerData?.experience || 'N/A' },
+                            { label: "availability", value: workerData?.availability || 'N/A' },
+                            { label: "rate", value: workerData?.rate || 'N/A' },
                         ].map((field, index) => (
                             <div key={index} className="flex justify-between items-center border-b border-slate-400 pb-2">
-                                <Typography variant="body1" className="font-semibold">{field.label}</Typography>
-                                <Typography variant="body1">{field.value}</Typography>
+                                <Typography variant="body1" className="font-semibold">{field?.label}</Typography>
+                                <Typography variant="body1">{field?.value}</Typography>
                             </div>
                         ))
                     }
@@ -185,8 +183,8 @@ const DashboardProfessionalInfo = () => {
                                         {...field}
                                         variant="outlined"
                                         size="small"
-                                        error={!!errors.experience}
-                                        helperText={errors.experience ? errors.experience.message : ''}
+                                        error={!!errors?.experience}
+                                        helperText={errors?.experience ? errors?.experience?.message : ''}
                                         className="bg-white rounded"
                                     />
                                 )}
@@ -208,8 +206,8 @@ const DashboardProfessionalInfo = () => {
                                         type="number"
                                         variant="outlined"
                                         size="small"
-                                        error={!!errors.rate}
-                                        helperText={errors.rate ? errors.rate.message : ''}
+                                        error={!!errors?.rate}
+                                        helperText={errors?.rate ? errors?.rate?.message : ''}
                                         className="bg-white rounded"
                                     />
                                 )}
@@ -228,8 +226,8 @@ const DashboardProfessionalInfo = () => {
                                         select
                                         variant="outlined"
                                         size="small"
-                                        error={!!errors.availability}
-                                        helperText={errors.availability ? errors.availability.message : ''}
+                                        error={!!errors?.availability}
+                                        helperText={errors?.availability ? errors?.availability?.message : ''}
                                         className="bg-white rounded"
                                     >
                                         {["Full-time", "Part-time", "On-call"].map((option) => (
@@ -263,11 +261,8 @@ const DashboardProfessionalInfo = () => {
                 )
             }
 
-           
-          
-
             {/* Identity Modal */}
-            <ViewIdentity open={open} handleClose={handleClose} Identity={workerData.Identity || ""} />
+            <ViewIdentity open={open} handleClose={handleClose} Identity={workerData?.identity || ""} />
         </div>
     );
 }

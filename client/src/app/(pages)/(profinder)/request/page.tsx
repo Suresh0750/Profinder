@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { useRequestToWorkerMutation } from '@/lib/features/api/customerApiSlice'
+import { useRequestToWorkerMutation ,requestToWorker} from '@/lib/features/api/customerApiSlice'
 import { toast, Toaster } from 'sonner'
 import { useLoadScript, Autocomplete, GoogleMap, Marker } from "@react-google-maps/api"
 import { Button } from "@/components/ui/button"
@@ -24,14 +24,14 @@ interface FormData {
   user: string
   preferredDate: string
   preferredTime: string
-  servicelocation: string
+  serviceLocation: string
   additionalNotes: string
 }
 
 interface ValidationErrors {
   preferredDate?: string
   preferredTime?: string
-  servicelocation?: string
+  serviceLocation?: string
   additionalNotes?: string
 }
 
@@ -40,21 +40,22 @@ const libraries: ("places")[] = ['places']
 export default function WorkerRequestPage() {
   const router = useRouter()
   const [workerDetails,setWorkerDetails] = useState<any>({})
+  const [isLoading,seIsLoading] = useState<boolean>(false)
   const [customerData,setCustomerData] = useState<any>({_id:null, customerName:""})
   const [formData, setFormData] = useState<FormData>({
     workerId: workerDetails?._id || '',
-    service: workerDetails?.Category || '',
-    worker: workerDetails?.FirstName || '',
+    service: workerDetails?.category || '',
+    worker: workerDetails?.firstName || '',
     user: '',
     preferredDate: '',
     preferredTime: '',
-    servicelocation: '',
+    serviceLocation: '',
     additionalNotes: '',
   })
 
 
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>({})
-  const [requestToWorker, { isLoading }] = useRequestToWorkerMutation()
+  // const [requestToWorker, { isLoading }] = useRequestToWorkerMutation()
   const [mapCenter, setMapCenter] = useState({ lat: 0, lng: 0 })
   const [markerPosition, setMarkerPosition] = useState<google.maps.LatLngLiteral | null>(null)
 
@@ -68,13 +69,13 @@ export default function WorkerRequestPage() {
   useEffect(() => {
     // Only access localStorage in the browser
     if (typeof window !== "undefined") {
-      const storedData :{_id:string,Category:string,FirstName:string} | null = JSON.parse(localStorage.getItem("workerDetails") || "{}");
+      const storedData :{_id:string,category:string,firstName:string} | null = JSON.parse(localStorage.getItem("workerDetails") || "{}");
       const storeCustomerData = localStorage.getItem('customerData')
       if (storedData) {
         try {
           setWorkerDetails(storedData);
-          if(storedData?._id&&storedData?.Category&&storedData?.FirstName){
-            setFormData((prev:any)=>({...prev,workerId:storedData?._id,  service: storedData?.Category,worker: storedData?.FirstName}))
+          if(storedData?._id&&storedData?.category&&storedData?.firstName){
+            setFormData((prev:any)=>({...prev,workerId:storedData?._id,  service: storedData?.category,worker: storedData?.firstName}))
           }
         } catch (error) {
           console.error("Error parsing customerData from localStorage:", error);
@@ -137,8 +138,8 @@ export default function WorkerRequestPage() {
       }
     }
     
-    if (!formData.servicelocation) {
-      errors.servicelocation = "Service location is required."
+    if (!formData.serviceLocation) {
+      errors.serviceLocation = "Service location is required."
     }
     if (!(formData.additionalNotes).trim()) {
       errors.additionalNotes = "Additional notes are required."
@@ -150,7 +151,8 @@ export default function WorkerRequestPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (isLoading) return
-
+    
+    seIsLoading(true)
     if (!customerData?._id) {
       toast.warning(`Please login`)
       setTimeout(() => {
@@ -172,10 +174,10 @@ export default function WorkerRequestPage() {
         ...formData,
         user: customerData.customerName,
         userId: customerData._id,
-        service: workerDetails?.Category,
-        worker: workerDetails?.FirstName,
+        service: workerDetails?.category,
+        worker: workerDetails?.firstName,
         workerId: workerDetails?._id
-      }).unwrap()
+      })
 
       if (result?.success) {
         toast.success(result?.message)
@@ -187,6 +189,8 @@ export default function WorkerRequestPage() {
     } catch (err: any) {
 
       toast.error(err?.data?.errorMessage || 'An error occurred while submitting the request.')
+    } finally{
+      seIsLoading(false)
     }
   }
 
@@ -282,14 +286,14 @@ export default function WorkerRequestPage() {
               >
                 <Input
                   id="servicelocation"
-                  name="servicelocation"
-                  value={formData.servicelocation}
+                  name="serviceLocation"
+                  value={formData.serviceLocation}
                   onChange={handleChange}
                   required
                 />
               </Autocomplete>
-              {validationErrors.servicelocation && (
-                <p className="text-sm text-red-500">{validationErrors.servicelocation}</p>
+              {validationErrors.serviceLocation && (
+                <p className="text-sm text-red-500">{validationErrors.serviceLocation}</p>
               )}
             </div>
             <div className="space-y-2">

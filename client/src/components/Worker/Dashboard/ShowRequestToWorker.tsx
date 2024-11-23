@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useGetAllRequestDataQuery, useAcceptWorkAPIMutation, useRejectWorkAPIMutation } from '@/lib/features/api/workerApiSlice'
+import { useGetAllRequestDataQuery, useAcceptWorkAPIMutation,fetchAllRequest, useRejectWorkAPIMutation ,rejectWork} from '@/lib/features/api/workerApiSlice'
 import { toast, Toaster } from 'sonner'
 import { ChevronDown, ChevronUp, Check, X } from 'lucide-react'
 import { Button } from "@/components/ui/button"
@@ -10,16 +10,41 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../ui/accordion"
-
+//fetchAllRequest
 export default function ServiceRequestPage() {
   const [requestData, setRequestData] = useState([])
   const [isPayment, setIsPayment] = useState<{ [key: string]: number }>({})
+  const [isloadingRejectWork,setIsloadingRejectWork] = useState<boolean>(false)
+
   const router = useRouter()
 
+
   const [customerData, setCustomerData] = useState<any>({});
-  const { data, refetch } = useGetAllRequestDataQuery(customerData?._id,{skip:customerData?._id ? false:true})
+  // const { data, refetch } = useGetAllRequestDataQuery(customerData?._id,{skip:customerData?._id ? false:true})
   const [acceptWorkAPI] = useAcceptWorkAPIMutation()
-  const [rejectWorkAPI, { isLoading: preventRejectRequest }] = useRejectWorkAPIMutation()
+ 
+
+// * handle get all Request 
+
+const handleFetchAllRequest = async ()=>{
+  try{
+    const res = await fetchAllRequest(customerData?._id)
+    if(res?.success){
+      setRequestData(res?.result)
+    }
+
+  }catch(error:any){
+    console.log(error)
+    toast.error(error?.message)
+  }
+}
+
+useEffect(()=>{
+  if(customerData?._id){
+    handleFetchAllRequest()
+  }
+},[customerData?._id])
+  
   useEffect(() => {
     // Only access localStorage in the browser
     if (typeof window !== "undefined") {
@@ -34,22 +59,21 @@ export default function ServiceRequestPage() {
       }
     }
   }, []);
-  useEffect(() => {
-    if (data?.result) {
-      setRequestData(data.result)
-    }
-  }, [data])
+ 
 
   const handleCancel = async (_id: string) => {
     try {
-      if (preventRejectRequest) return
-      const res = await rejectWorkAPI(_id).unwrap()
+      if (isloadingRejectWork) return
+      setIsloadingRejectWork(true)
+      const res = await rejectWork(_id)
       if (res?.success) {
-        toast.success(res.message)
-        refetch()
+        toast.success(res?.message)
       }
-    } catch (error) {
-      toast.error('Failed to cancel request')
+    } catch (error:any) {
+      console.log(error)
+      toast.error(error?.message)
+    } finally{
+      setIsloadingRejectWork(false)
     }
   }
 
@@ -63,7 +87,7 @@ export default function ServiceRequestPage() {
       const res = await acceptWorkAPI({ _id, isPayment: payment,userId}).unwrap()
       if (res?.success) {
         toast.success(res.message)
-        refetch()
+       
       }
     } catch (error) {
       toast.error('Failed to accept request')

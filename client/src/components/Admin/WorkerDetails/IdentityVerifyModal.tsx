@@ -1,14 +1,13 @@
 "use client"
 import { useState, useEffect } from 'react';
 import './Identity.module.css'
-import { useIsWorkerApprovalMutation } from '@/lib/features/api/adminApiSlice';
+import {approveWorker } from '@/lib/features/api/adminApiSlice';
 import {toast, Toaster} from 'sonner'
 import {useRouter} from 'next/navigation'
 import Image from "next/image"
 
 const IdentityModal = ({ isOpen, onClose, image, workerId}: { isOpen: boolean, onClose: any, image: string, workerId: string}) => {
     const [imageUrl, setImageUrl] = useState('');
-    const [isWorkerApproval] =  useIsWorkerApprovalMutation();
     const Router = useRouter()
   
 
@@ -18,20 +17,19 @@ const IdentityModal = ({ isOpen, onClose, image, workerId}: { isOpen: boolean, o
 
     const handleApiCall = async (id:string) => {
         try {
-            const result =await isWorkerApproval(id).unwrap()
-            console.log(result)
+            const result =await approveWorker(id)
+
             if(result?.success){
-                toast.success(result.message)
                 onClose() 
-                window.location.reload()
+                toast.success(result.message)
                 setTimeout(()=>{
-                    Router.push(`/admin/dashboard`)
+                    Router.replace(`/admin/workerApproval`)
                 },600)
                 // refetch()
             }
         } catch (error:any) {
             console.error('Error fetching data:', error);
-            toast.error(error.message)
+            toast.error(error?.message)
         }
     };
 

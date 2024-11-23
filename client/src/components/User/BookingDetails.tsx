@@ -20,6 +20,9 @@ import {
 {/**/}
 
 import {
+  
+  booking,
+  fetchPaymentId,
   useBookingQuery,
   usePaymentIdQuery,
 } from "@/lib/features/api/userApiSlice";
@@ -75,7 +78,7 @@ export default function BookingPage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [reviewID,setReviewID] = useState<string[]>([])
-
+  const [bookingDetails,setBookingDetails] = useState([])
   // * API call
   const [submitReview] = useSubmitReviewMutation()
 
@@ -107,19 +110,60 @@ export default function BookingPage() {
     }
   }
 
+  // * fetch booking details
+
+  async function fetchBooking(){
+    try{
+      alert('afads')
+      const res = await booking(customerData?._id)
+      console.log(res)
+      if(res?.success){
+        console.log(res)
+        setReviewID(res?.reviewDetails)
+        setBookingDetails(res?.result)
+      }
+
+    }catch(error:any){
+      console.log(error?.message)
+    }
+  }
+  useEffect(() => {
+    alert('useEffect')
+    if(customerData?._id){
+      alert('calling')
+      fetchBooking()
+    }
+  },[customerData?._id]);
+
   const router = useRouter()
 
-  const {
-    data: requestData,
-    isLoading,
-    error,
-    refetch,
-  } = useBookingQuery(customerData?._id, {
-    skip: skip,
-  });
-  const { data: paymentIdData } = usePaymentIdQuery(selectedWork?._id || '', {
-    skip: skipPaymentAPI,
-  });
+  // fetch payment id
+
+  async function fetchPaymentIdData(requestId:string){
+    try{
+      const res = await fetchPaymentId(requestId)
+      if(res?.success){
+          setPaymentId(res?.result?.paymentId);
+          setSkipPaymentAPI(false);
+      }
+
+    }catch(error:any){
+      console.log(error?.message)
+    }
+  }
+  useEffect(() => {
+    console.log('dsds')
+    if(selectedWork?._id){
+      fetchPaymentIdData(selectedWork?._id)
+    }
+      
+  }, [selectedWork?._id]);
+
+
+
+  // const { data: paymentIdData } = usePaymentIdQuery(selectedWork?._id || '', {
+  //   skip: skipPaymentAPI,
+  // });
 
   const [conversation] = useConversationMutation()
 
@@ -149,26 +193,13 @@ export default function BookingPage() {
     }
   }, [selectedWork]);
   
-  useEffect(() => {
-    if (paymentIdData?.result) {
-      setPaymentId(paymentIdData?.result?.paymentId);
-    } else {
-      setPaymentId("");
-    }
-    setSkipPaymentAPI(false);
-  }, [paymentIdData]);
+  
 
   useEffect(() => {
     setSkip(false);
   }, []);
 
-  useEffect(() => {
-    if (requestData?.result && requestData.result.length > 0) {
-      
-      // setSelectedWork(requestData.result);
-      setReviewID(requestData?.reviewDetails)
-    }
-  }, [requestData]);
+
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -186,8 +217,11 @@ export default function BookingPage() {
   };
 
   const filteredWorks =
-    requestData?.result?.filter(
-      (work: Work) => work.isAccept.toLowerCase() === filter.toLowerCase()
+    bookingDetails?.filter((work: Work) =>{
+        console.log('in filter')
+        console.log(work)
+        return work.isAccept.toLowerCase() === filter.toLowerCase()
+      }
     ) || [];
 
 

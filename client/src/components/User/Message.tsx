@@ -4,8 +4,12 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { Search, Send } from 'lucide-react'
 import {
   useConversationMutation,
-  useGetAllconversationQuery,
-  useGetAllMessageQuery,
+  // conversation,
+  // useGetAllconversationQuery,
+  // useGetAllMessageQuery,
+  fetchAllMessage,
+  fetchAllConversation,
+  conversation,
 } from '@/lib/features/api/userApiSlice'
 import { conversationData } from '@/types/userTypes'
 import { readMsgType, newMessage } from '@/types/utilsTypes'
@@ -17,7 +21,6 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 
 export default function Chats() {
   const [inputMessage, setInputMessage] = useState("")
-  const [conversation] = useConversationMutation()
   const [conversationsData, setConversations] = useState<conversationData[]>([])
   const [conversationID, setConversationID] = useState('')
   const [stopFetch, setStopFetch] = useState(true)
@@ -42,10 +45,48 @@ export default function Chats() {
       }
     }
   }, []);
- 
 
-  const { data: conversationsQueryData } = useGetAllconversationQuery(customerData?._id)
-  const { data: allMessageData } = useGetAllMessageQuery(conversationID, { skip: stopFetch, refetchOnMountOrArgChange: true})
+  // * fetch connected worker contect
+  async function fetchAllConversationData(){
+    try{
+      const res = await fetchAllConversation(customerData?._id)
+      if(res?.success){
+        console.log(res?.message)
+        setConversations(res?.result)
+      }
+    }catch(error:any){
+      console.log(error?.message)
+    }
+  }
+
+  // * get Particular worker message
+  async function fetchConversationMsg(){
+    try{
+      const res = await fetchAllMessage(conversationID)
+      if(res?.success){
+        setMessages(res?.result)
+        fetchConversationMsg()
+      }
+    }catch(error:any){
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    if(conversationID){
+      fetchConversationMsg()
+    }
+  }, [conversationID])
+
+  // * call fetch conversation data
+  useEffect(() => {
+   if(customerData?._id){
+    fetchAllConversationData()
+   }
+  }, [customerData?._id])
+ 
+  // fetchAllConversation
+  // const { data: allMessageData } = useGetAllMessageQuery(conversationID, { skip: stopFetch, refetchOnMountOrArgChange: true})
 
   useEffect(() => {
     const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URI)
@@ -97,24 +138,15 @@ export default function Chats() {
     }
   }, [socket])
 
-  useEffect(() => {
-    if(conversationID){
-      setStopFetch(false)
-    }
-  }, [conversationID])
+  // useEffect(() => {
+  //   if(conversationID){
+  //     setStopFetch(false)
+  //   }
+  // }, [conversationID])
 
-  useEffect(() => {
-    if (allMessageData?.result) {
-      setMessages(allMessageData.result)
-      setStopFetch(true)
-    }
-  }, [allMessageData])
+  
 
-  useEffect(() => {
-    if (conversationsQueryData?.result) {
-      setConversations(conversationsQueryData.result)
-    }
-  }, [conversationsQueryData])
+ 
 
   const handleShowMsg = useCallback((data: conversationData) => {
     console.log('data')
@@ -150,7 +182,7 @@ export default function Chats() {
         conversationId: conversationID
       })
     }
-  }, [inputMessage, messageBox,customerData?._id, conversationID, conversation])
+  }, [inputMessage, messageBox,customerData?._id, conversationID])
 
   return (
     <div className="flex h-[82vh] mt-2 ml-3 gap-2 bg-gray-100">

@@ -404,7 +404,7 @@ export const downloadSalesReport = async (data:any)=>{
     }
 }
 
-export const workerData = async (data:any)=>{
+export const fetchWorkerData = async (data:any)=>{
     try{
         const response = await axiosInstance.get(`/admin/worker-details/${data}`)
         return response.data

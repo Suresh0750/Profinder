@@ -16,19 +16,19 @@ const DashboardProfessionalInfo = ()=>{
             <div className="text-white w-full space-y-4">
               <div className="flex justify-between items-center border-b border-slate-400 pb-2">
                 <h2 className="text-lg font-semibold">First Name</h2>
-                <h2 className="text-lg">{workerData.FirstName || 'N/A'}</h2>
+                <h2 className="text-lg">{workerData.firstName || 'N/A'}</h2>
               </div>
               <div className="flex justify-between items-center border-b border-slate-400 pb-2">
                 <h2 className="text-lg font-semibold">Last Name</h2>
-                <h2 className="text-lg">{workerData.LastName || 'N/A'}</h2>
+                <h2 className="text-lg">{workerData.lastName || 'N/A'}</h2>
               </div>
               <div className="flex justify-between items-center border-b border-slate-400 pb-2">
                 <h2 className="text-lg font-semibold">Phone Number</h2>
-                <h2 className="text-lg">{workerData.PhoneNumber || 'N/A'}</h2>
+                <h2 className="text-lg">{workerData.phoneNumber || 'N/A'}</h2>
               </div>
               <div className="flex justify-between items-center border-b border-slate-400 pb-2">
                 <h2 className="text-lg font-semibold">Email Id</h2>
-                <h2 className="text-lg">{workerData.EmailAddress || 'N/A'}</h2>
+                <h2 className="text-lg">{workerData.emailAddress || 'N/A'}</h2>
               </div>
             </div>
           )}

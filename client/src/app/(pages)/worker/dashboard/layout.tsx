@@ -1,12 +1,13 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { useGetWorkerDetailsQuery } from '@/lib/features/api/workerApiSlice'
+import { useGetWorkerDetailsQuery,fetchWorkerDetails } from '@/lib/features/api/workerApiSlice'
 import Link from 'next/link'
 import { useDispatch } from 'react-redux'
 import { getWorkerData } from '@/lib/features/slices/workerSlice'
 import { usePathname } from 'next/navigation'
 import { Home, User, Briefcase, FileText, MessageSquare, Menu, X } from 'lucide-react'
+import {toast} from 'sonner'
 
 const navItems = [
   { href: '/worker/dashboard/workerdashboard', label: 'Dashboard', icon: Home },
@@ -24,11 +25,24 @@ export default function WorkerDashboardLayout({ children }: { children: React.Re
   const { data, error, isLoading } = useGetWorkerDetailsQuery('')
   const dispatch = useDispatch()
 
+
+
   useEffect(() => {
-    if (data) {
-      setCustomerData(data?.workerData || {})
-      dispatch(getWorkerData(data?.workerData))
+
+    async function fetchWorkerData(){
+      try{
+        const res = await fetchWorkerDetails()
+        if(res?.success){
+          setCustomerData(data?.workerData || {})
+        dispatch(getWorkerData(data?.workerData))
+        }
+      }catch(error:any){
+        console.log(error?.message)
+        toast.error(error?.message)
+      }
+
     }
+    fetchWorkerData()
   }, [data, dispatch])
 
   return (

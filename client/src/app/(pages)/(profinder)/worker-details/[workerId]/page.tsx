@@ -110,14 +110,14 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
             <Avatar className="w-32 h-32">
-              <AvatarImage src={workerDetails?.Profile || defaultImage} alt={workerDetails?.FirstName} />
-              <AvatarFallback>{workerDetails?.FirstName?.[0]}</AvatarFallback>
+              <AvatarImage src={workerDetails?.profile || defaultImage} alt={workerDetails?.firstName} />
+              <AvatarFallback>{workerDetails?.firstName?.[0]}</AvatarFallback>
             </Avatar>
             <div className="flex-1 text-center sm:text-left">
-              <h1 className="text-3xl font-bold mb-2">{workerDetails?.FirstName}</h1>
+              <h1 className="text-3xl font-bold mb-2">{workerDetails?.firstName}</h1>
               <div className="flex items-center justify-center sm:justify-start gap-2 mb-2">
                 <MapPinIcon className="w-4 h-4 text-gray-500" />
-                <span className="text-gray-600">{workerDetails?.City}</span>
+                <span className="text-gray-600">{workerDetails?.city}</span>
               </div>
               <div className="flex items-center justify-center sm:justify-start gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
@@ -153,7 +153,7 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
                     <BriefcaseIcon className="w-5 h-5 text-primary" />
                     <div>
                       <p className="font-semibold">Services:</p>
-                      <p>{workerDetails.Category}</p>
+                      <p>{workerDetails.category}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -206,8 +206,8 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
         <TabsContent value="work">
           <Card>
             <CardContent className="p-6">
-              {workerDetails?.WorkerImage && workerDetails?.WorkerImage.length > 0 && (
-                <MaterialCarousel images={workerDetails.WorkerImage} />
+              {workerDetails?.WorkerImage && workerDetails?.workerImage.length > 0 && (
+                <MaterialCarousel images={workerDetails.workerImage} />
               )}
             </CardContent>
           </Card>

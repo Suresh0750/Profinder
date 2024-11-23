@@ -21,7 +21,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
-import { useDashboardQuery } from "@/lib/features/api/workerApiSlice"
+import { useDashboardQuery,dashboard } from "@/lib/features/api/workerApiSlice"
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { graphData } from '@/lib/service/worker/recentActivity-Graph'
@@ -29,7 +29,7 @@ import { graphData } from '@/lib/service/worker/recentActivity-Graph'
 const Dashboard = () => {
   const [dashboardDetails, setDashboardDetails] = useState<any>([])
   const [customerData, setCustomerData] = useState<any>({});
-  const { data, refetch } = useDashboardQuery(customerData?._id)
+
   const [graphDetails, setGraphDetails] = useState<any[]>([])
   const [rating, setRating] = useState([
     {
@@ -53,13 +53,22 @@ const Dashboard = () => {
     }
   }, []);
   useEffect(() => {
-    setDashboardDetails(data?.result)
-    setRating(data?.result?.rating)
+    async function fetchDashBoardData(){
+      if(customerData?._id){
+        const res = await dashboard(customerData?._id)
+        if(res?.success){
+          setDashboardDetails(res?.result)
+          setRating(res?.result?.rating)
+          getGraphData(res?.result?.getRecentActivity)
+        }
+      }
+    }
+    
     const getGraphData = async function(activityData:any) {
       await setGraphDetails(graphData(activityData))
     }
-    getGraphData(data?.result?.getRecentActivity)
-  }, [data])
+    fetchDashBoardData()
+  }, [customerData])
 
   return (
     <>
@@ -185,11 +194,11 @@ const Dashboard = () => {
             <div className="space-y-4">
               <div className="flex items-center">
                 <TrendingUp className="h-5 w-5 text-green-500 mr-2" />
-                <span className="text-sm font-medium">Your acceptance rate is higher than {(Number(data?.result?.getRecentActivity?.length) / Number(data?.result?.totalOffer)) || 0}% of workers in your area.</span>
+                <span className="text-sm font-medium">Your acceptance rate is higher than {(Number(dashboardDetails?.getRecentActivity?.length) / Number(dashboardDetails?.totalOffer)) || 0}% of workers in your area.</span>
               </div>
               <div className="flex items-center">
                 <AlertCircle className="h-5 w-5 text-red-500 mr-2" />
-                <span className="text-sm font-medium">You have {data?.result?.resentActivity?.length && (data?.result?.resentActivity[0]?.countIsCompleteTrue - (data?.result?.rating?.length ? data?.result?.rating[0]?.count : 0)) || 0} pending reviews. Responding quickly can improve your rating.</span>
+                <span className="text-sm font-medium">You have {dashboardDetails?.resentActivity?.length && (dashboardDetails?.resentActivity[0]?.countIsCompleteTrue - (dashboardDetails?.rating?.length ? dashboardDetails?.rating[0]?.count : 0)) || 0} pending reviews. Responding quickly can improve your rating.</span>
               </div>
             </div>
           </CardContent>

@@ -181,7 +181,7 @@ export const logIn = async (data: any) => {
 
 export const checkEmailForgetPass = async(data:any)=>{
     try{
-        const response = await axiosInstance.post("/user/checkEmailForgetPass",{data})
+        const response = await axiosInstance.post("/user/checkEmailForgetPass",data)
         return response.data
     }catch(error:any){
         throw handleAxiosError(error)
@@ -195,9 +195,9 @@ export const profile = async(data:string)=>{
         throw handleAxiosError(error)
     }
 }
-export const updateprofile = async(data:string)=>{
+export const updateprofile = async(data:any)=>{
     try{
-        const response = await axiosInstance1.put(`/user/updateprofile`,{data})
+        const response = await axiosInstance1.put(`/user/updateprofile`,data)
         return response.data
     }catch(error:any){
         console.log(error.errMessage)
@@ -207,7 +207,7 @@ export const updateprofile = async(data:string)=>{
 
 export const conversation  = async(data:any)=>{
     try{
-        const response = await axiosInstance.post(`/user/conversation`,{data})
+        const response = await axiosInstance.post(`/user/conversation`,data)
         return response.data
     }catch(error:any){
         console.log(error.errMessage)
@@ -245,7 +245,7 @@ export const booking = async(userId:string)=>{
     }
 }
 
-export const paymentId = async (requestId:string)=>{
+export const fetchPaymentId = async (requestId:string)=>{
     try{
         const response = await axiosInstance.get(`/user/paymentId/${requestId}`)
         return response.data

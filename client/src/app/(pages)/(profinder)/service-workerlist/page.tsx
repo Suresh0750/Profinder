@@ -11,23 +11,31 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
-import {WorkerDatails} from '@/types/workerTypes'
-import {  
-  useGetCategoryNameQuery,
-  useListWorkerDataAPIQuery,
+import { toast } from 'sonner'
+import { WorkerDatails } from '@/types/workerTypes'
+import {
+  listWorkerData,
+  fetchCategoryName,
 } from "@/lib/features/api/customerApiSlice"
-import Image from "next/image" // Import the Image component
+import Image from "next/image"
 
 const ITEMS_PER_PAGE = 6
 const libraries: ("places")[] = ["places"]
 
-const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => resolve(position.coords),
-      (error) => reject(error)
-    )
-  })
+const getCurrentLocation = async (): Promise<GeolocationCoordinates | null> => {
+  try {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve(position.coords),
+        (error) => {
+          console.error("Error fetching location:", error)
+          reject(null)
+        }
+      )
+    })
+  } catch {
+    return null
+  }
 }
 
 export default function ServiceWorkerListPage() {
@@ -36,49 +44,86 @@ export default function ServiceWorkerListPage() {
   const [locationSearchTerm, setLocationSearchTerm] = useState("")
   const [filterCategory, setFilterCategory] = useState("All")
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null)
-  const [location, setLocation] = useState<{latitude: number, longitude: number}>({latitude: 0, longitude: 0})
-  const [skip, setSkip] = useState<boolean>(true)
-  const [selectedPlace, setSelectedPlace] = useState<{lat: number, lng: number} | null>(null)
-  const [markerPosition, setMarkerPosition] = useState<{lat: number, lng: number} | null>(null)
+  const [location, setLocation] = useState<{ latitude: number, longitude: number } | null>(null)
+  const [selectedPlace, setSelectedPlace] = useState<{ lat: number, lng: number } | null>(null)
+  const [markerPosition, setMarkerPosition] = useState<{ lat: number, lng: number } | null>(null)
+  const [categoryData, setCategoryData] = useState<string[]>([])
+  const [workerData, setWorkerData] = useState<WorkerDatails[]>([])
+  const [filteredWorkers, setFilteredWorkers] = useState<WorkerDatails[]>([])
 
   const router = useRouter()
-  const { data: workerData } = useListWorkerDataAPIQuery(location, {
-    skip: skip
-  })
-  const { data: categoryData } = useGetCategoryNameQuery("")
+
+  // Fetch Worker Data
+  useEffect(() => {
+    async function fetchWorkerData() {
+      try {
+        if (!location) return
+        const res = await listWorkerData(location)
+        if (res?.success) {
+          setWorkerData(res?.result)
+          setFilteredWorkers(res?.result)
+        }
+      } catch (error: any) {
+        console.error(error?.message)
+        toast.error("Error fetching workers")
+      }
+    }
+    fetchWorkerData()
+  }, [location])
+
+  // Fetch Categories
+  useEffect(() => {
+    async function fetchCategory() {
+      try {
+        const res = await fetchCategoryName()
+        if (res?.success) {
+          setCategoryData(res?.result)
+        }
+      } catch (error: any) {
+        console.error(error?.message)
+        toast.error("Error fetching categories")
+      }
+    }
+    fetchCategory()
+  }, [])
+
+  // Get Current Location
+  useEffect(() => {
+    getCurrentLocation().then((coords) => {
+      if (coords) {
+        setLocation({ latitude: coords.latitude, longitude: coords.longitude })
+        setMarkerPosition({ lat: coords.latitude, lng: coords.longitude })
+      }
+    })
+  }, [])
+
+  // Filter Workers by Category and Search Term
+  useEffect(() => {
+    setFilteredWorkers(() => {
+      return workerData.filter((worker) =>
+        (filterCategory === "All" || worker.category === filterCategory) &&
+        worker.firstName.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    })
+  }, [filterCategory, searchTerm, workerData])
 
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACE_API as string,
     libraries,
   })
 
-  useEffect(() => {
-    getCurrentLocation().then(
-      (coords) => {
-        setLocation({latitude: coords.latitude, longitude: coords.longitude})
-        setMarkerPosition({lat: coords.latitude, lng: coords.longitude})
-        setSkip(false)
-      },
-      (error) => console.error('Error getting location:', error)
-    )
-  }, [])
-
-  const filteredWorkers = React.useMemo(() => {
-    if (!workerData?.result) return []
-    return workerData.result.filter((worker: any) => 
-      (filterCategory === "All" || worker.Category === filterCategory) &&
-      worker.FirstName.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  }, [workerData, filterCategory, searchTerm])
-
   const handleFilterCategory = useCallback((categoryName: string) => {
     setFilterCategory(categoryName)
     setPage(1)
   }, [])
 
-  const handleRedirectWorkerPage = useCallback((_id: string,worker:WorkerDatails) => {
-    if (typeof window !== "undefined" && worker){
-     localStorage.setItem("workerDetails",JSON.stringify({_id:worker?._id,Category:worker?.Category,FirstName:worker?.FirstName}))
+  const handleRedirectWorkerPage = useCallback((_id: string, worker: WorkerDatails) => {
+    if (typeof window !== "undefined" && worker) {
+      localStorage.setItem("workerDetails", JSON.stringify({
+        _id: worker._id,
+        category: worker.category,
+        firstName: worker.firstName,
+      }))
     }
     router.push(`/worker-details/${_id}`)
   }, [router])
@@ -97,29 +142,26 @@ export default function ServiceWorkerListPage() {
   }, [])
 
   const onLoad = (autocomplete: google.maps.places.Autocomplete) => {
-    console.log('Autocomplete loaded:', autocomplete)
     setAutocomplete(autocomplete)
   }
 
   const onPlaceChanged = () => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace()
-      // console.log('Selected place:', place)
-      setLocationSearchTerm(place.formatted_address || "")
       if (place.geometry && place.geometry.location) {
         const lat = place.geometry.location.lat()
         const lng = place.geometry.location.lng()
+        setLocationSearchTerm(place.formatted_address || "")
         setSelectedPlace({ lat, lng })
         setMarkerPosition({ lat, lng })
         setLocation({ latitude: lat, longitude: lng })
-  
-        setSkip(false)
       }
     }
   }
 
   if (loadError) return <div>Error loading maps</div>
   if (!isLoaded) return <div>Loading maps...</div>
+
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -131,7 +173,7 @@ export default function ServiceWorkerListPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {["All", ...(categoryData?.result || [])].map((category) => (
+                {["All", ...(categoryData || [])].map((category) => (
                   <div key={category} className="flex items-center space-x-2">
                     <Checkbox
                       id={category}
@@ -184,35 +226,35 @@ export default function ServiceWorkerListPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredWorkers.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE).map((worker: any) => (
-              <Card key={worker._id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleRedirectWorkerPage(worker._id,worker)}>
+            {filteredWorkers?.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE).map((worker: any) => (
+              <Card key={worker._id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleRedirectWorkerPage(worker?._id,worker)}>
                 <CardContent className="p-0">
                   <Image
-                    src={worker.Profile || "/placeholder.svg?height=256&width=500"}
+                    src={worker?.profile || "/placeholder.svg?height=256&width=500"}
                     width={500}
                     height={256}
-                    alt={worker.FirstName || "Worker"}
+                    alt={worker?.firstName || "Worker"}
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-4">
-                    <h2 className="text-xl font-semibold text-gray-900">{worker.FirstName}</h2>
+                    <h2 className="text-xl font-semibold text-gray-900">{worker?.firstName}</h2>
                     <p className="text-sm text-gray-600">Reviews</p>
                     <div className="flex items-center text-gray-500 mt-2">
                       <AiTwotoneEnvironment className="mr-1" />
-                      <span>{worker.StreetAddress}</span>
+                      <span>{worker?.streetAddress}</span>
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter className="flex justify-between p-4">
-                  <Button variant="secondary">{worker.Category}</Button>
-                  <Button onClick={() => handleRedirectWorkerPage(worker._id,worker)}>Read More</Button>
+                  <Button variant="secondary">{worker?.category}</Button>
+                  <Button onClick={() => handleRedirectWorkerPage(worker?._id,worker)}>Read More</Button>
                 </CardFooter>
               </Card>
             ))}
           </div>
           <div className="flex justify-center mt-8">
             <Pagination
-              count={Math.ceil(filteredWorkers.length / ITEMS_PER_PAGE)}
+              count={Math.ceil(filteredWorkers?.length / ITEMS_PER_PAGE)}
               page={page}
               onChange={handleChangePage}
               variant="outlined"
