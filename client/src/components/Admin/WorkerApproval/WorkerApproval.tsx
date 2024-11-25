@@ -49,32 +49,33 @@ const UserTable = () => {
   
 
   const router = useRouter();
-  async function fetchUnApprovalWorker(){
-    try{
-      const res = await fetchUnapprovedWorkers()
-      if(res?.success){
-        setAllWorkerList(res?.result);
-        setShowWorkerList(
-          res?.result.map((worker: any, i: number) =>
-            createData(
-              i + 1,
-              worker.profile, 
-              worker.firstName, 
-              worker.phoneNumber,
-              worker.emailAddress,
-              worker.isBlock,
-              worker.identity,
-              worker._id
-            )
-          )
-        );
-      }
-      
-    }catch(error:any){
-      toast.error(error?.message)
-    }
-  }
+
   useEffect(()=>{
+    async function fetchUnApprovalWorker(){
+      try{
+        const res = await fetchUnapprovedWorkers()
+        if(res?.success){
+          setAllWorkerList(res?.result);
+          setShowWorkerList(
+            res?.result.map((worker: any, i: number) =>
+              createData(
+                i + 1,
+                worker.profile, 
+                worker.firstName, 
+                worker.phoneNumber,
+                worker.emailAddress,
+                worker.isBlock,
+                worker.identity,
+                worker._id
+              )
+            )
+          );
+        }
+        
+      }catch(error:any){
+        toast.error(error?.message)
+      }
+    }
     fetchUnApprovalWorker()
   },[])
 

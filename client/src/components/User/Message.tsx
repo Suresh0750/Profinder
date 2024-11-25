@@ -41,8 +41,31 @@ export default function Chats() {
     }
   }, []);
 
-  // * fetch connected worker contect
-  async function fetchAllConversationData(){
+
+
+  useEffect(() => {
+    if(conversationID){
+       // * get Particular worker message
+    const fetchConversation = async()=>{
+      try{
+        const res = await fetchAllMessage(conversationID)
+        if(res?.success){
+          setMessages(res?.result)
+        
+        }
+      }catch(error:any){
+        console.log(error)
+      }
+    }
+      fetchConversation()
+    }
+  }, [conversationID])
+
+  // * call fetch conversation data
+  useEffect(() => {
+   if(customerData?._id){
+      // * fetch connected worker contect
+    const fetchAllConversationData = async ()=>{
     try{
       const res = await fetchAllConversation(customerData?._id)
       if(res?.success){
@@ -55,28 +78,6 @@ export default function Chats() {
     }
   }
 
-  // * get Particular worker message
-  async function fetchConversation(){
-    try{
-      const res = await fetchAllMessage(conversationID)
-      if(res?.success){
-        setMessages(res?.result)
-       
-      }
-    }catch(error:any){
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    if(conversationID){
-      fetchConversation()
-    }
-  }, [conversationID])
-
-  // * call fetch conversation data
-  useEffect(() => {
-   if(customerData?._id){
     fetchAllConversationData()
    }
   }, [customerData?._id])

@@ -65,6 +65,7 @@ export default function ProfessionalInfoForm() {
         console.log(error)
       }
     }
+    fetchCategory()
   }, [])
 
   const router = useRouter()

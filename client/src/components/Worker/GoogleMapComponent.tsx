@@ -107,7 +107,7 @@ export default function GoogleMapComponent({
     if (currentPosition.latitude !== 0 && currentPosition.longitude !== 0) {
       getAddressFromCoordinates(currentPosition.latitude, currentPosition.longitude)
     }
-  }, [currentPosition, getAddressFromCoordinates]) // Include getAddressFromCoordinates
+  }, [currentPosition]) // Include getAddressFromCoordinates
 
   const handlePositionChange = (latitude: number, longitude: number) => {
     setCurrentPosition({ latitude, longitude })

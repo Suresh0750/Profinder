@@ -17,24 +17,25 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [coords, setCoords] = useState<{ latitude: number; longitude: number }>({ latitude: 0, longitude: 0 });
   const [categoryWorkerData, setCategoryWorkerData] = useState<workerDetailsWithlatlon[]>([]);
 
-  // fetch category name 
-
-  const fetchAllCategoryName = async ()=>{
-    try{
-      const res = await fetchCategoryName()
-      if(res?.success){
-        setCategory(res?.result?.[0]);
-        setAllCategory(res?.result)
-        
-      }
-
-    }catch(error:any){
-      console.log(error)
-    }
-  }
+  
 
   // * Set the default category when the data is loaded
   useEffect(() => {
+    // fetch category name 
+
+    const fetchAllCategoryName = async ()=>{
+      try{
+        const res = await fetchCategoryName()
+        if(res?.success){
+          setCategory(res?.result?.[0]);
+          setAllCategory(res?.result)
+          
+        }
+
+      }catch(error:any){
+        console.log(error)
+      }
+    }
     fetchAllCategoryName()
   }, []);
 

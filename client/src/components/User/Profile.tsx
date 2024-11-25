@@ -92,7 +92,7 @@ export default function UserProfilePage() {
   // 
   useEffect(() => {
     fetchProfile()
-  }, [customerData,fetchProfile])
+  }, [customerData])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const image = e.target.files?.[0]

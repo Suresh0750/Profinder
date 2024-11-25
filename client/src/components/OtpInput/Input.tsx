@@ -106,7 +106,7 @@ export default function InputOtp({ userId }: { userId: string }) {
       }
     } catch (error: any) {
       console.log("OTP Page \n", error);
-      toast.error(error?.Message);
+      toast.error(error?.message);
     } finally {
       setLoading(false);
     }

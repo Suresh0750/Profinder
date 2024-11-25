@@ -21,18 +21,19 @@ export default function ReviewsPage() {
   const [recentReviews,setRecentReviews] = useState<reviewDashboardTypes[]>([])
 
 
-  const fetchDashboardOverview = async ()=>{
-    try{
-      const res = await fetchReviewDashboardData()
-      if(res?.success){
-        setRecentReviews(res?.result)
-      }
-    }catch(error:any){
-      console.log(error)
-    }
-  }
+ 
 
   useEffect(()=>{
+    const fetchDashboardOverview = async ()=>{
+      try{
+        const res = await fetchReviewDashboardData()
+        if(res?.success){
+          setRecentReviews(res?.result)
+        }
+      }catch(error:any){
+        console.log(error)
+      }
+    }
     fetchDashboardOverview()
   },[])
 

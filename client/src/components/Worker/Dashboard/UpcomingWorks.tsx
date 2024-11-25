@@ -54,7 +54,7 @@ export default function UpcomingWorksPage() {
     if(customerData?._id){
       handleFethcUpcomingData()
     }
-  },[customerData?._id, handleFethcUpcomingData])
+  },[customerData?._id])
 
   const handleFilter = (isUpdate:boolean)=>{
     setFilter(isUpdate)

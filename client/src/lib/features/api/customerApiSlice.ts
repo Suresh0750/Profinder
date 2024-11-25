@@ -327,7 +327,7 @@ export const requestToWorker = async(data:any)=>{
 
 export const payUHash = async(data:any)=>{
     try{
-        const response = await axiosInstance.post("/customer/paymetAPI",data)
+        const response = await axiosInstance.post("/customer/paymentAPI",data)
         return response.data
     }catch(error:any){
        throw handleAxiosError(error)

@@ -29,22 +29,6 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
   const [isReviewLoading,setIsReviewLoading] = useState<boolean>(false)
 
 
-  // fetch reviw data
-
-  const fetchReviewDetails = async ()=>{
-    try{
-      setIsReviewLoading(true)
-      const res = await fetchReview(params.workerId)
-      if(res?.success){
-        setReviewDetails(res.result)
-      }
-    }catch(error:any){
-      console.log(error)
-    }finally{
-      setIsReviewLoading(false)
-    }
-  }
-
 
 
   // fetchReview
@@ -84,9 +68,23 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
   }, [customerData?._id,customerData])
 
   useEffect(() => {
-    if (params.workerId) {
-      fetchReviewDetails()
+     // fetch reviw data
+
+  const fetchReviewDetails = async ()=>{
+    try{
+      setIsReviewLoading(true)
+      const res = await fetchReview(params.workerId)
+      if(res?.success){
+        setReviewDetails(res.result)
+      }
+    }catch(error:any){
+      console.log(error)
+    }finally{
+      setIsReviewLoading(false)
     }
+  }
+  fetchReviewDetails()
+
   }, [params.workerId])
 
   useEffect(() => {

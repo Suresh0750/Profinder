@@ -46,42 +46,44 @@ interface newMessage {
 
 
 
-// fetch user list
-const fetchConnectedPeople = async ()=>{
-  try{
-    const res = await connectedUsers(customerData?._id)
-    if(res?.success){
-      setCustomerDetails(res?.result)
-      setAllCustomer(res?.result)
-    }
-  }catch(error:any){
-    console.log(error)
-  }
-}
 
-// fetch conversation message
-
-const fetchAllMsg = async ()=>{
-  try{
-    const res = await fetchMessage(conversationID)
-    if(res?.success){
-      setMessages(res?.result)
-    }
-  }catch(error:any){
-    console.log(error)
-  }
-}
 
 
 
 useEffect(()=>{
   if(customerData?._id){
+    
+  // fetch user list
+  const fetchConnectedPeople = async ()=>{
+    try{
+      const res = await connectedUsers(customerData?._id)
+      if(res?.success){
+        setCustomerDetails(res?.result)
+        setAllCustomer(res?.result)
+      }
+    }catch(error:any){
+      console.log(error)
+    }
+  }
     fetchConnectedPeople()
   }
 },[customerData?._id])
 
 useEffect(()=>{
   if(conversationID){
+    // fetch conversation message
+
+  const fetchAllMsg = async ()=>{
+    try{
+      const res = await fetchMessage(conversationID)
+      if(res?.success){
+        setMessages(res?.result)
+      }
+    }catch(error:any){
+      console.log(error)
+    }
+  }
+
     fetchAllMsg()
   }
 },[conversationID])

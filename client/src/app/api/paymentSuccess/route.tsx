@@ -16,8 +16,8 @@ export async function POST(req: any, res: NextApiResponse) {
     data[key] = value;
   });
   
-  // const PAYMENT_URL :string = process.env.NEXT_PUBLIC_PAYMENTID_URL || ''
-  const PAYMENT_URL :string = 'http://localhost:3001/v1/api/customer/savePaymentId'
+  const PAYMENT_URL :string = process.env.NEXT_PUBLIC_PAYMENTID_URL || ''
+  // const PAYMENT_URL :string = 'http://localhost:3001/v1/api/customer/savePaymentId'
  
   try {
     if(PAYMENT_URL){

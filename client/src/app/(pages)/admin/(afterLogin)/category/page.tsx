@@ -11,7 +11,6 @@ export default function Category() {
                 <div className='flex flex-col w-[90%] ml-[113px] mt-[31px] h-[40%]'>
                     <ShowCategoryDetails />
                 </div>
-                
             </section>
         </>
     );

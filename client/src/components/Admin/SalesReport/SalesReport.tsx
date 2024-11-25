@@ -50,8 +50,11 @@ export default function SalesReport() {
 
 
 
-  // fetch category list
+ 
 
+  
+  // fetch category list
+  useEffect(() => {
   const handleFetchCategoryList = async ()=>{
     try{
       const res = await fetchCategoryList()
@@ -63,10 +66,6 @@ export default function SalesReport() {
       console.log(error)
     }
   }
-
-  
-  useEffect(() => {
-    
     handleFetchCategoryList()
     
   }, [])

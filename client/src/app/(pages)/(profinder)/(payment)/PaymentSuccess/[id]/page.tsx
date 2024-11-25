@@ -14,7 +14,7 @@ interface PaymentData {
   preferredDate?: string;
   preferredTime?: string;
   payment?: number;
-  servicelocation?: string;
+  serviceLocation?: string;
 }
 
 export default function EnhancedPaymentSuccessPage({ params }: { params: { id: string } }) {
@@ -22,7 +22,7 @@ export default function EnhancedPaymentSuccessPage({ params }: { params: { id: s
   const [paymentData, setPaymentData] = useState<PaymentData>({});
 
   useEffect(() => {
-    async function handlePaymentData() {
+    const handlePaymentData = async ()=>{
       try {
         const res = await paymentDetails(params.id);
         if (res?.success) {
@@ -37,7 +37,7 @@ export default function EnhancedPaymentSuccessPage({ params }: { params: { id: s
       }
     }
     handlePaymentData()
-  }, [params.id]);
+  }, [params?.id]);
   
 
 
@@ -96,7 +96,7 @@ export default function EnhancedPaymentSuccessPage({ params }: { params: { id: s
                     <MapPin className="mr-3 h-5 w-5" />
                     <div>
                       <p className="font-medium">Location</p>
-                      <p className="text-sm">{paymentData?.servicelocation || ""}</p>
+                      <p className="text-sm">{paymentData?.serviceLocation || ""}</p>
                     </div>
                   </div>
                 </div>

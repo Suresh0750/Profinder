@@ -21,6 +21,8 @@ export default function WorkersPage() {
   const [worker,setWorker] = useState<topWorkerTypes[]>([])
 
 
+  useEffect(()=>{
+    
   // fetch worker dashboard 
   const fetchDashboardOverview = async ()=>{
     try{
@@ -33,7 +35,6 @@ export default function WorkersPage() {
     }
   }
 
-  useEffect(()=>{
     fetchDashboardOverview()
   },[])
 
