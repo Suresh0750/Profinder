@@ -59,8 +59,7 @@ export const getConversationUsecases = async(id:string)=>{
 
 export const conversationUsecases = async(data:ConversationTypes)=>{
   try {
-    console.log('conversation Usecases')
-    console.log(data)
+  
     const checkExist :ConversationTypes|null = await getUserRepository().checkConversation(String(data?.userId),String(data?.workerId))
     // console.log('Checkexist')
     // console.log(JSON.stringify(checkExist)) 

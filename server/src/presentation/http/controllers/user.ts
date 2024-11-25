@@ -25,7 +25,7 @@ export const paymentId = async(req:Request,res:Response,next:NextFunction)=>{
     try {
 
         const result = await paymentIdUsecases(req.params.requestId)
-        return res.status(StatusCode.Success).json({sucess:true,message:'successfully fetched data',result})
+        return res.status(StatusCode.Success).json({success:true,message:'successfully fetched data',result})
     } catch (error) {
         console.log(`Error from Presntation->controllers->paymentId \n${error}`)
         next(error)  
@@ -67,7 +67,6 @@ export const getConversation = async (req:Request,res:Response,next:NextFunction
 }
 export const conversation = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-     
         const result = await conversationUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true,message:'successfully updated'})
     } catch (error) {

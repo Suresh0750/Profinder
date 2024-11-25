@@ -173,7 +173,7 @@ export const AdminMongoose = () : IAdminMongoose =>({
     workerDistribution : async()=>{
         try {
             return await WorkerModel.aggregate([
-                {$group:{_id:"$Category",count:{$sum:1}}}
+                {$group:{_id:"$category",count:{$sum:1}}}
               ])
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->workerDistribution->\n`,error)
@@ -216,8 +216,8 @@ export const AdminMongoose = () : IAdminMongoose =>({
                     _id: 1, 
                     count: 1,
                     earning: 1,
-                    "workerDetails.FirstName": 1, 
-                    "workerDetails.Category": 1, 
+                    "workerDetails.firstName": 1, 
+                    "workerDetails.category": 1, 
                   }
                 }
               ]);
@@ -252,7 +252,7 @@ export const AdminMongoose = () : IAdminMongoose =>({
     },
     getRecentReview : async()=>{
         try {
-            return await ReviewModel.find({}).populate('userId','username').populate('workerId','FirstName Profile').sort({createAt:-1}).limit(6)
+            return await ReviewModel.find({}).populate('userId','username').populate('workerId','firstName profile').sort({createAt:-1}).limit(6)
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->getRecentReview->\n`,error)
             throw error

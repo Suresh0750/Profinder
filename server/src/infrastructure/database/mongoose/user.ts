@@ -26,9 +26,9 @@ export const getUserRepository = () : IgetUserRepository =>({
             throw error  
         }
     },
-    findUserByEmail : async (EmailAddress :string) =>{
+    findUserByEmail : async (emailAddress :string) =>{
         try{
-            const userData =  await UserModel.findOne({EmailAddress})
+            const userData =  await UserModel.findOne({emailAddress})
             return userData
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->findUserByEmail\n`,error)
@@ -37,7 +37,7 @@ export const getUserRepository = () : IgetUserRepository =>({
     },
     insertUserDetails : async(user:User)=>{
         try{
-            await UserModel.updateOne({EmailAddress:user.emailAddress},{$set:user},{upsert:true})
+            await UserModel.updateOne({emailAddress:user.emailAddress},{$set:user},{upsert:true})
             return 
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->insertUserDetails\n`,error)
@@ -55,7 +55,7 @@ export const getUserRepository = () : IgetUserRepository =>({
     },
     ischeckEmail : async(userEmail : string)=>{
         try {
-            const isCheckEmail = await UserModel.findOne({EmailAddress:userEmail})
+            const isCheckEmail = await UserModel.findOne({emailAddress:userEmail})
             return isCheckEmail  ? isCheckEmail._id : undefined;
         } catch (error) {
             // console.log(`Error from infrastructure->mongoseUser->ischeckEmail\n`,error)
@@ -64,7 +64,7 @@ export const getUserRepository = () : IgetUserRepository =>({
     },
     setNewPassWord : async(customerId:string , newPass : string)=>{
         try{
-            await UserModel.findByIdAndUpdate({_id:customerId},{$set:{Password:newPass}})
+            await UserModel.findByIdAndUpdate({_id:customerId},{$set:{password:newPass}})
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->setNewPassWord\n`,error)
             throw error
@@ -109,7 +109,7 @@ export const getUserRepository = () : IgetUserRepository =>({
     fetchConversation: async(userId:string)=>{
         try {
             const res = await ConversationModel.find({ userId }, { __v: 0 })
-            .populate('workerId', 'FirstName Profile PhoneNumber') 
+            .populate('workerId', 'firstName profile phoneNumber') 
             .lean();  // * Convert Mongoose documents to plain JavaScript objects
           
             return res
@@ -129,10 +129,11 @@ export const getUserRepository = () : IgetUserRepository =>({
     },
     updateConversation:async(data:ConversationTypes)=>{
         try{
-            await ConversationModel.updateOne({userId:new ObjectId(data.userId)},{$set:{lastMessage:data?.lastMessage},$inc:{workerUnread:1}})
+            await ConversationModel.updateOne({userId:new ObjectId(data.userId)},{$set:{lastMessage:data?.lastMessage,userUnread:0},$inc:{workerUnread:1}})
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->updateConversation\n`,error)
             throw error
+            
         }
     },
     findconversationId:async(userId:string,workerId:string)=>{

@@ -174,7 +174,7 @@ export const addProjectDetails = async(req:Request,res:Response,next:NextFunctio
         // console.log(req.file)
         const file: IMulterFile |any = req.file
         const imageUrl = await uploadImage(file) 
-        req.body.ProjectImage = imageUrl
+        req.body.projectImage = imageUrl
         const result = await workerProjectUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true,message:'Project details has been successfully update'})
     } catch (error) {
@@ -185,7 +185,7 @@ export const addProjectDetails = async(req:Request,res:Response,next:NextFunctio
 export const getProjectDetails = async (req:Request,res:Response,next:NextFunction)=>{
     try {
         // console.log('params id')
-        // console.log(req.params.id)
+        console.log(req.params.id)
         if(req.params.id){
             const result = await getWorkerProjectData(req.params.id)
             return res.status(StatusCode.Success).json({success:true,message:'Worker Project Data has been Fetched',result})
@@ -243,7 +243,7 @@ export const ProfessionalInfoControll = async (req:Request,res:Response,next:Nex
 
 export const isCheckEmail = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        const userEmailValidation = await isCheckWorkerEmail(req.body.email)
+        const userEmailValidation = await isCheckWorkerEmail(req.body.emailAddress)
         if(userEmailValidation){
         return res.status(StatusCode.Success).json({success:true,message:'verified success',userEmailValidation})
         }else {

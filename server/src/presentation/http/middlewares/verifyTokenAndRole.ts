@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import { Role, StatusCode } from '../../../domain/entities/commonTypes';
 import { CookieTypes, CustomerDetails } from '../../../domain/entities/commonTypes';
 import { Cookie } from 'express-session';
+import {checkBlocked} from '../../../app/services/checkBlocked'
 
 declare module 'express-session' {
     interface SessionData {
@@ -60,6 +61,8 @@ export const verifyTokenAndRole = (role: string[]) => {
                 console.log(payload);
             }
 
+           
+
             if (!payload || !accessToken) {
                 console.log('accessToken vanished', accessToken);
                 payload = await verifyRefreshToken(req, res); // Await the async function here
@@ -69,6 +72,19 @@ export const verifyTokenAndRole = (role: string[]) => {
                 console.log('no access token and no refreshtoken');
                 return res.status(StatusCode.Unauthorized).json({ success: false, message: 'Unauthorized, please log in' });
             }
+
+            
+            if (payload && (payload?.role == Role.User || payload?.role == Role.Worker)) {
+                const isBlock = await checkBlocked(payload?.role, payload?.customerId);
+                console.log("isBlock",isBlock)
+                if (isBlock) {
+                    await clearToken(payload.role,res)
+                    return res
+                        .status(StatusCode.Forbidden)
+                        .json({ success: false, message: 'account is blocked', isBlock: true });
+                }
+            }
+            
 
             req.session.customerId = payload.customerId;
             req.session.save();
@@ -148,4 +164,33 @@ function selectRefreshToken(url:string,role:string){
     console.log('url',url)
     console.log('role',role)
     return url.includes(role)
+}
+
+function clearToken(role: string, res: Response) {
+    try {
+        switch (role) {
+            case Role.User:
+                res.clearCookie(CookieTypes.UserRefreshToken, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'strict',
+                    path: '/',
+                });
+                res.clearCookie(CookieTypes.UserAccessToken);
+                break; 
+            case Role.Worker:
+                res.clearCookie(CookieTypes.WorkerRefreshToken, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'strict',
+                    path: '/',
+                });
+                res.clearCookie(CookieTypes.WorkerAccessToken);
+                break; 
+            default:
+                console.log('Role not handled:', role);
+        }
+    } catch (error: any) {
+        console.error('Error clearing tokens:', error);
+    }
 }

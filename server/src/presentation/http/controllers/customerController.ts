@@ -42,7 +42,9 @@ export const ReviewController = async (req:Request,res:Response,next:NextFunctio
 export const paymetnAPIController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
 
+        console.log(req.body)
         const {hash}  = await payment(req.body)
+
     
         return res.status(StatusCode.Success).json({success:true,hash})
 
@@ -140,8 +142,6 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
 
         const {otpValue,customerId}:GetVerifyOTP = req.body
         const isVerifyOTP = await OtpVerifyUseCases(otpValue,customerId)
-        console.log('otp verify')
-        console.log(req.body)
         if(isVerifyOTP ){
             
             if(req.body.role == 'user'){
@@ -274,6 +274,7 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
 
 export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
     try {
+        console.log(req.body)
      
         if(req?.body?.role == Role.User){
         

@@ -42,7 +42,6 @@ workerRouter.get('/fetchmessage/:Id',verifyTokenAndRole(['worker']),fetchMessage
 
 
 // * request details or woker
-
 workerRouter.get("/getRequestData/:workerId",verifyTokenAndRole(['worker']),getAllRequestController)
 workerRouter.put("/isAcceptWork/:update",verifyTokenAndRole(['worker']),isAcceptWorkController)
 workerRouter.put("/rejectWork/:id",verifyTokenAndRole(['worker']),isRejectWorkController)

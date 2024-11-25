@@ -33,7 +33,7 @@ export const OTPRepository = (): IOTPRepository => ({
       // * varifyOTP 
 
       const CustomerOtpData = await OtpModel.findOne({customerId});
-
+      
       if(CustomerOtpData?.OtpPIN==otpValue) return true
       else throw new Error('OTP mismatch. Please try again.')
 

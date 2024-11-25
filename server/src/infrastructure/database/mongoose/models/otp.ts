@@ -11,12 +11,12 @@ const OTPModel = new Schema({
     createdAt : {
         type : Date,
         default : Date.now,
-        // index : {expires:'1m'}
+        index : {expires:'1m'}
     }
 },{ timestamps: true } );
 
 // // Create a TTL index on the otpExpiration field
-OTPModel.index({ otpExpiration: 1 }, { expireAfterSeconds: 60 });
+// OTPModel.index({ otpExpiration: 1 }, { expireAfterSeconds: 60 });
 
 const OtpModel = model('Otp', OTPModel,"otps");
 

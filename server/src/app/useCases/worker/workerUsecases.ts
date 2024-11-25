@@ -146,6 +146,7 @@ export const getSingleWorkerDetailsUsecases= async (_id:string)=>{
 
 // * worker upload project details usecses
 export const workerProjectUsecases = async (workerProjectDetails:ProjectDetails)=>{
+    console.log(workerProjectDetails)
     try {
         const {_id,projectName,projectDescription,projectImage} = workerProjectDetails
         const ProjectDetails = {

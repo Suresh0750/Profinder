@@ -21,6 +21,7 @@ const {ObjectId} = Types
 export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
     UserGoogleLogin : async (user:User) =>{
         try {
+            console.log(user)
             const userDoc  = await UserModel.updateOne({emailAddress:user.emailAddress},{$set:{user}},{upsert:true});
             return userDoc
         } catch (error) {
@@ -30,15 +31,15 @@ export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
     },
     UserWorkerLogin : async(workerData:WorkerInformation)=>{
         try{
-            return await WorkerModel.updateOne({EmailAddress:workerData.emailAddress},{$set:{workerData}},{upsert:true})
+            return await WorkerModel.updateOne({emailAddress:workerData.emailAddress},{$set:{workerData}},{upsert:true})
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->UserWorkerLogin\n`,error)
             throw error
         }
     },
-    WorkerGoogleLoginVerification : async(EmailAddress:string)=>{
+    WorkerGoogleLoginVerification : async(emailAddress:string)=>{
         try{
-            return await WorkerModel.findOne({EmailAddress})
+            return await WorkerModel.findOne({emailAddress})
         }catch(error){
             // console.log(`Error from infrastructure->mongoseUser->UserWorkerLogin\n`,error)
             throw error
@@ -62,7 +63,7 @@ export const CustomerQueryRepository = ():ICustomerQueryRepository=>({
     },
     getNearByWorkerListQuery : async(categoryName:string)=>{
         try {
-            return await WorkerModel.find({Category:categoryName})
+            return await WorkerModel.find({category:categoryName})
         } catch (error) {
             // console.log(`Error from infrastructure->mongoseUser->getNearByWorkerListQuery\n`,error)
             throw error  

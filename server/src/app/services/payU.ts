@@ -12,6 +12,8 @@ var jsSHA = require("jssha");
 export const payment = (paymentData:any)=>{
     try {
         const { txnid, amount, productinfo, firstname, customerEmail } = paymentData;
+
+        console.log({txnid, amount, productinfo, firstname, customerEmail,PAYU_SALT})
   
         if (!txnid || !amount || !productinfo || !firstname || !customerEmail) {
           // res.status(400).send();
