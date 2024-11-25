@@ -56,7 +56,7 @@ export const paymetnAPIController = async(req:Request,res:Response,next:NextFunc
 
 export const paymentIdController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-     
+     console.log('save payment id')
         const result = await IsActivityUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true})
     } catch (error) {

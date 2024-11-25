@@ -188,10 +188,10 @@ export const workerExist = async (workerData:PersonalInformation) =>{
 
 export const WorkerUsecase= async(workerData:ProfessionalInfoData)=>{
     try {
-        
+        console.log(workerData)
         let {firstName,lastName,phoneNumber,emailAddress,postalCode,password,latitude,longitude,profile,identity,category,country,state,city,streetAddress,apt,coord,mapAddress} = workerData
 
-   
+   console.log('step1')
     
         let data = {
             firstName,
@@ -211,14 +211,17 @@ export const WorkerUsecase= async(workerData:ProfessionalInfoData)=>{
             latitude : Number(latitude),
             longitude : Number(longitude)
         }
-
+        console.log(mapAddress)
+        console.log('step2')
         mapAddress = JSON.parse(mapAddress)
-        
-        if(mapAddress?.Country) data.country = mapAddress?.Country
+        console.log('step3')
+        if(mapAddress?.country) data.country = mapAddress?.country
         if(mapAddress?.postcode) data.postalCode = mapAddress?.postcode
         if(mapAddress?.state) data.state = mapAddress?.state
-
+        console.log('step4')
         const {createWorker} = getWorkerRepository()
+        console.log('step5')
+        console.log(data)
       
         const workerDetails = await createWorker(data)
 

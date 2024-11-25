@@ -31,8 +31,8 @@ customerRouter.post("/review",verifyTokenAndRole(['user','worker']),ReviewContro
 
 // * payment gatway
 
-customerRouter.post("/paymetAPI",verifyTokenAndRole(['user','worker']),paymetnAPIController)
-customerRouter.post("/savePaymentId",verifyTokenAndRole(['user','worker']),paymentIdController)
+customerRouter.post("/paymentAPI",verifyTokenAndRole(['user','worker']),paymetnAPIController)
+customerRouter.post("/savePaymentId",paymentIdController)
 customerRouter.get("/payment-details/:requestId",verifyTokenAndRole(['user','worker']), paymentDetails)
 
 // * router for Request 

@@ -54,8 +54,7 @@ workerRouter.post("/uploadWorkerProject",upload.single('image'),addProjectDetail
 workerRouter.get('/getWorkerProject/:id',verifyTokenAndRole(['worker']),getProjectDetails)
 
 workerRouter.post("/personalinfo",upload.single('profileImage'),PersonalInformationControll)
-// workerRouter.post("/ProfessionalInfo",upload.single('identity'),ProfessionalInfoControll)
-workerRouter.post("/ProfessionalInfo",ProfessionalInfoControll)
+workerRouter.post("/ProfessionalInfo",upload.single('identity'),ProfessionalInfoControll)
 workerRouter.post("/checkEmailForgetPass",isCheckEmail)
 workerRouter.get("/getWorkerData",verifyTokenAndRole(['worker']),getWorkerDataController)
 workerRouter.post('/loginverify',isEmailValidate,LoginWorkerController)

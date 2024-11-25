@@ -221,9 +221,9 @@ export const PersonalInformationControll = async (req:Request,res:Response, next
 export const ProfessionalInfoControll = async (req:Request,res:Response,next:NextFunction)=>{
     try {
      
-        // const file: IMulterFile |any = req.file
-        // const imageUrl = await uploadImage(file)    // * call uploadImage usecases
-        // req.body.identity = imageUrl
+        const file: IMulterFile |any = req.file
+        const imageUrl = await uploadImage(file)    // * call uploadImage usecases
+        req.body.identity = imageUrl
         const workerId = await WorkerUsecase(req.body)
         
         const token = await generateOtpAccessToken(workerId)
@@ -247,10 +247,10 @@ export const isCheckEmail = async (req:Request,res:Response,next:NextFunction)=>
         if(userEmailValidation){
         return res.status(StatusCode.Success).json({success:true,message:'verified success',userEmailValidation})
         }else {
-        return res.status(StatusCode.NotFound).json({
-                success: false,
-                message: 'This email is not registered. Please check your email address.',
-              });}
+            const error = new Error('This email is not registered. Please check your email address.');
+            (error as any).statusCode = StatusCode.NotFound;
+            throw error;
+        }
     } catch (error) {
         console.log(`Error from presentation layer-> http->isCheckEmail\n ${error}`)
         next(error) 
