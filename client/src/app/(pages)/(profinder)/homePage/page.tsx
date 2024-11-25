@@ -12,13 +12,12 @@ import IndustrySociety from '../../../../../public/images/IndustrySociety.jpg'
 import AboutIndustry from '../../../../../public/images/aboutIndustry.jpg'
 import IndustryValue from '../../../../../public/images/IndustryValue.jpg'
 import { AiTwotoneEnvironment } from "react-icons/ai"
-import Head from 'next/head'
 import {  
-  useListWorkerDataAPIQuery,
+  listWorkerData,
 } from "@/lib/features/api/customerApiSlice"
 
 
-
+//listWorkerData
 const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
   return new Promise((resolve, reject) => {
     navigator.geolocation.getCurrentPosition(
@@ -49,9 +48,12 @@ const Home = () => {
     },
   ];
 
+ 
   const [worker,setWorker] = useState<any>([])
   const [mechanic,setMechannic] = useState<any>([])
-  const {data} = useListWorkerDataAPIQuery(location)
+  
+
+  
   useEffect(()=>{
     getCurrentLocation().then(
       (coords) => {
@@ -62,11 +64,17 @@ const Home = () => {
   },[])
 
   useEffect(()=>{
-    console.log(data)
-    const mechanic = (data?.result)?.filter((data:any)=>data?.Category=="mechanical")
-    console.log(mechanic)
-    setMechannic(mechanic)
-  },[data])
+    const fetchWorkerData = async ()=>{
+      try{
+        const res = await listWorkerData(location)
+        const mechanic = (res?.result)?.filter((data:any)=>data?.category=="Mechanical")
+        setMechannic(res?.result)
+      }catch(error:any){
+        console.log(error)
+      }
+    }
+    fetchWorkerData()
+  },[location])
   
   return (
     <>
@@ -106,31 +114,31 @@ const Home = () => {
               <>
               <div className="bg-white p-6 rounded shadow">
                 <Link href={`/worker-details/${mechanic?.[0]?._id}`}>
-                  <Image src={mechanic?.[0]?.Profile} alt="Service 1" width={400} height={300} />
-                  <h3 className="text-xl font-bold mt-4">{mechanic?.[0]?.FirstName}</h3>
+                  <Image src={mechanic?.[0]?.profile} alt="Service 1" width={400} height={300} />
+                  <h3 className="text-xl font-bold mt-4">{mechanic?.[0]?.firstName}</h3>
                   <div className="flex items-center text-gray-500 mt-2">
                         <AiTwotoneEnvironment className="mr-1" />
-                        <span>{mechanic?.[0]?.StreetAddress}</span>
+                        <span>{mechanic?.[0]?.streetAddress}</span>
                   </div>
                 </Link>
               </div>
               <div className="bg-white p-6 rounded shadow">
                 <Link href={`/worker-details/${mechanic?.[1]?._id}`}>
-                  <Image src={mechanic?.[1]?.Profile} alt="Service 2" width={400} height={300} />
-                  <h3 className="text-xl font-bold mt-4">{mechanic?.[1]?.FirstName}</h3>
+                  <Image src={mechanic?.[1]?.profile} alt="Service 2" width={400} height={300} />
+                  <h3 className="text-xl font-bold mt-4">{mechanic?.[1]?.firstName}</h3>
                   <div className="flex items-center text-gray-500 mt-2">
                         <AiTwotoneEnvironment className="mr-1" />
-                        <span>{mechanic?.[1]?.StreetAddress}</span>
+                        <span>{mechanic?.[1]?.streetAddress}</span>
                   </div>
                 </Link>
               </div>
               <div className="bg-white p-6 rounded shadow">
                 <Link href={`/worker-details/${mechanic?.[2]?._id}`}>
-                  <Image src={mechanic?.[2]?.Profile} alt="Service 3" width={400} height={300} />
-                  <h3 className="text-xl font-bold mt-4">{mechanic?.[2]?.FirstName}</h3>
+                  <Image src={mechanic?.[2]?.profile} alt="Service 3" width={400} height={300} />
+                  <h3 className="text-xl font-bold mt-4">{mechanic?.[2]?.firstName}</h3>
                   <div className="flex items-center text-gray-500 mt-2">
                         <AiTwotoneEnvironment className="mr-1" />
-                        <span>{mechanic?.[2]?.StreetAddress}</span>
+                        <span>{mechanic?.[2]?.streetAddress}</span>
                   </div>
                 </Link>
               </div>

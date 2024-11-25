@@ -4,7 +4,7 @@
 import { BaseQueryFn } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery,FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
 import {OTPData} from '../../../types/otpTypes/otpTypes'
-
+import Router from 'next/router'; 
 
 const baseQuery = fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
@@ -170,21 +170,21 @@ export const customerApi  = createApi({
 
 
 export const {
-    useCustomerOtpMutation,
-    useCustomerResendMutation,
-    useForgetPasswordMutation,
-    useCustomerGoogleLoginMutation,
-    useCustomerLogoutMutation,
-    useCustomerGoogleVerificationMutation,
-    useGetCategoryNameQuery,
-    useListWorkerDataAPIQuery,
-    useGetNearByworkerListMutation,
-    useRequestToWorkerMutation,
-    usePayU_APIMutation,
-    useSavePaymentIdMutation,
-    useSubmitReviewMutation,
-    useGetReviewQuery,
-    usePaymentDetailsQuery
+    // useCustomerOtpMutation,
+    // useCustomerResendMutation,
+    // useForgetPasswordMutation,
+    // useCustomerGoogleLoginMutation,
+    // useCustomerLogoutMutation,
+    // useCustomerGoogleVerificationMutation,
+    // useGetCategoryNameQuery,
+    // useListWorkerDataAPIQuery,
+    // useGetNearByworkerListMutation,
+    // useRequestToWorkerMutation,
+    // usePayU_APIMutation,
+    // useSavePaymentIdMutation,
+    // useSubmitReviewMutation,
+    // useGetReviewQuery,
+    // usePaymentDetailsQuery
 } = customerApi
 
 import axios from 'axios'
@@ -196,6 +196,27 @@ const axiosInstance = axios.create({
     },
     withCredentials : true,
 })
+
+// * Axios interceptor
+
+axiosInstance.interceptors.response.use(
+    (response) => {
+        console.log('accout is block')
+        if (response.data?.isBlock) {
+            console.log('User is blocked. Redirecting to login...');
+            Router.replace('/homePage'); 
+            localStorage.setItem('customerData','')
+            localStorage.setItem('workerDetails','')
+            localStorage.setItem('conversationId','')
+            return Promise.reject(new Error('Account is blocked'));
+        }
+        return response; 
+    },
+    (error) => {
+        console.error('API Error:', error);
+        return Promise.reject(error);
+    }
+);
 
 // * Error handler
 export const handleAxiosError = (error: any) => {
@@ -304,7 +325,7 @@ export const requestToWorker = async(data:any)=>{
     }
 }
 
-export const payU = async(data:any)=>{
+export const payUHash = async(data:any)=>{
     try{
         const response = await axiosInstance.post("/customer/paymetAPI",data)
         return response.data

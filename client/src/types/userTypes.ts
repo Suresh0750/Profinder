@@ -45,9 +45,9 @@ export interface conversationData {
   userId : string,
   workerId : {
     _id : string,
-    FirstName : string,
-    PhoneNumber : number,
-    Profile : string,
+    firstName : string,
+    phoneNumber : number,
+    profile : string,
     lastMessage : string,
     createdAt : Date | string,
     updatedAt : Date | string,

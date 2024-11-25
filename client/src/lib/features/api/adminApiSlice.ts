@@ -2,6 +2,7 @@ import { BaseQueryFn } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery,FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
 import { addCategoryType, AdminCredentials, EditCategoryType } from '../../../types/adminTypes';
 
+
 // * baseQuery
 const baseQuery = fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
@@ -183,27 +184,27 @@ export const adminApi = createApi({
 
 // * Export hooks for usage in functional components
 export const {
-    useIsWorkerBlockMutation,
-    useGetWorkerDataQuery,
-    useDownloadSalesQuery,
-    useAddCategoryFormMutation,
-    useAdminVeriyAPIMutation,
-    useFetchCategoryDataQuery,
-    useEditCategoryAPIMutation,
-    useListUnlistAPIMutation,
-    useDeleteProductAPIMutation,
-    useAdminLogoutAPIMutation,
-    useGetWorkerListQuery,
-    useGetUserListQuery,
-    useIsUserBlockMutation,
-    useGetAllUnApprovalWorkerlistQuery,
-    useIsWorkerApprovalMutation,
-    useDashboardOverviewQuery,
-    useDashboardQuery,
-    useDashboardWorkerQuery,
-    useDashboardReviewQuery,
-    useSalesReportQuery,
-    useCategoryListQuery,
+    // useIsWorkerBlockMutation,
+    // useGetWorkerDataQuery,
+    // useDownloadSalesQuery,
+    // useAddCategoryFormMutation,
+    // useAdminVeriyAPIMutation,
+    // useFetchCategoryDataQuery,
+    // useEditCategoryAPIMutation,
+    // useListUnlistAPIMutation,
+    // useDeleteProductAPIMutation,
+    // useAdminLogoutAPIMutation,
+    // useGetWorkerListQuery,
+    // useGetUserListQuery,
+    // useIsUserBlockMutation,
+    // useGetAllUnApprovalWorkerlistQuery,
+    // useIsWorkerApprovalMutation,
+    // useDashboardOverviewQuery,
+    // useDashboardQuery,
+    // useDashboardWorkerQuery,
+    // useDashboardReviewQuery,
+    // useSalesReportQuery,
+    // useCategoryListQuery,
 } = adminApi;
 
 
@@ -385,7 +386,7 @@ export const fetchSalesReport = async (data:any)=>{
     }
 }
 
-export const categoryList = async()=>{
+export const fetchCategoryList = async()=>{
     try{
         const response = await axiosInstance.get(`/admin/categoryList`);
         return response.data

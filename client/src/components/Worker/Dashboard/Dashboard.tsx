@@ -21,7 +21,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts'
-import { useDashboardQuery,dashboard } from "@/lib/features/api/workerApiSlice"
+import { dashboard } from "@/lib/features/api/workerApiSlice"
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { graphData } from '@/lib/service/worker/recentActivity-Graph'

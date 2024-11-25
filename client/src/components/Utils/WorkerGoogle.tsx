@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { useCustomerGoogleLoginMutation, useCustomerGoogleVerificationMutation } from '@/lib/features/api/customerApiSlice';
+import {customerGoogleLogin,customerGoogleVerification } from '@/lib/features/api/customerApiSlice';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'sonner';
@@ -10,58 +10,37 @@ import Modal from 'react-modal';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import {WorkerGoogleVerificationschema} from '@/lib/formSchema'
 
-// * Validation schema using Yup
-const schema = yup.object({
-  PhoneNumber: yup.string().required('Phone number is required'),
- Password: yup.string()
-  .required('Password is required')
-  .min(6, 'Password must be at least 6 characters long')
-  .matches(/[A-Za-z]/, 'Password must contain at least one letter')
-  .matches(/\d/, 'Password must contain at least one number')
-  .matches(/[@$!%*?&]/, 'Password must contain at least one special character'),
 
-  Category: yup.string().required('Category is required'),
-  Country: yup.string().required('Country is required'),
-  StreetAddress: yup.string().required('Street Address is required'),
-  State: yup.string().required('State is required'),
-  City: yup.string().required('City is required'),
-  Apt: yup.string(),
-  Identity: yup.mixed().required('Identity (image) is required'),
-  PostalCode: yup.number().required('Postal Code is required').positive().integer(),
-}).required();
 
 interface GoogleWorkerCredentials {
-  FirstName ? : any,
-  LastName?: any,
-  Profile ?: any,
-  EmailAddress ?: any,
-  PhoneNumber: string;
-  Password: string;
-  Category: string;
-  Country: string;
-  StreetAddress: string;
-  State: string;
-  City: string;
-  Apt?: string;
-  Identity: File;
-  PostalCode: number;
+  firstName ? : any,
+  lastName?: any,
+  profile ?: any,
+  emailAddress ?: any,
+  phoneNumber: string;
+  password: string;
+  category: string;
+  country: string;
+  streetAddress: string;
+  state: string;
+  city: string;
+  apt?: string;
+  identity: File;
+  postalCode: number;
 }
 
 const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
 
   const [identity,setIdentity] = useState<File | null>(null)
 
-
-
-  const [CustomerGoogleLogin] = useCustomerGoogleLoginMutation();
-  const [customerGoogleVerification] = useCustomerGoogleVerificationMutation();
   const [workerData, setWorkerData] = useState<any | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
 
   const { register, handleSubmit, formState: { errors } } = useForm<GoogleWorkerCredentials>({
-    resolver: yupResolver(schema as yup.ObjectSchema<GoogleWorkerCredentials>)
+    resolver: yupResolver(WorkerGoogleVerificationschema as yup.ObjectSchema<GoogleWorkerCredentials>)
   });
 
 
@@ -94,7 +73,7 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
         EmailAddress: email,
       });
       // alert(email)
-      const result  = await customerGoogleVerification({email:email}).unwrap();
+      const result  = await customerGoogleVerification({email:email})
       if (result?.success) {
         toast.success(result?.message);
 
@@ -110,7 +89,7 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
         toast.error('worker has been blocked')
       }
       console.log(error);
-      if (error?.data?.modal) {
+      if (error?.modal) {
         setIsModalOpen(true);
       }
     }
@@ -140,7 +119,7 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
         formData.append('Identity', identity);
   
        
-        const result = await CustomerGoogleLogin(formData).unwrap();
+        const result = await customerGoogleLogin(formData);
       
   
         if (result?.success) {
@@ -150,8 +129,9 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
           router.push('/homePage');
         }
       }
-    } catch (error) {
+    } catch (error:any) {
       console.log('Error submitting form:', error);
+      toast.error(error?.message)
     }
   };
   
@@ -188,10 +168,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                   type="text"
                   id="phoneNumber"
                   placeholder="Phone Number"
-                  {...register('PhoneNumber')}
-                  className={`border ${errors.PhoneNumber ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  {...register('phoneNumber')}
+                  className={`border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 />
-                <p className="text-sm text-red-500">{errors.PhoneNumber?.message}</p>
+                <p className="text-sm text-red-500">{errors.phoneNumber?.message}</p>
               </div>
 
               {/* Other form fields... */}
@@ -202,10 +182,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                 type="password"
                 id="password"
                 placeholder="Password"
-                {...register('Password')}
-                className={`border ${errors.Password ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register('password')}
+                className={`border ${errors.password ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <p className="text-sm text-red-500">{errors.Password?.message}</p>
+              <p className="text-sm text-red-500">{errors.password?.message}</p>
             </div>
 
             {/* Category */}
@@ -215,10 +195,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                 type="text"
                 id="category"
                 placeholder="Category"
-                {...register('Category')}
-                className={`border ${errors.Category ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register('category')}
+                className={`border ${errors.category ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <p className="text-sm text-red-500">{errors.Category?.message}</p>
+              <p className="text-sm text-red-500">{errors.category?.message}</p>
             </div>
 
             {/* Country */}
@@ -228,10 +208,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                 type="text"
                 id="country"
                 placeholder="Country"
-                {...register('Country')}
-                className={`border ${errors.Country ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register('country')}
+                className={`border ${errors.country ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <p className="text-sm text-red-500">{errors.Country?.message}</p>
+              <p className="text-sm text-red-500">{errors.country?.message}</p>
             </div>
 
             {/* Street Address */}
@@ -241,10 +221,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                 type="text"
                 id="streetAddress"
                 placeholder="Street Address"
-                {...register('StreetAddress')}
-                className={`border ${errors.StreetAddress ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register('streetAddress')}
+                className={`border ${errors.streetAddress ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <p className="text-sm text-red-500">{errors.StreetAddress?.message}</p>
+              <p className="text-sm text-red-500">{errors.streetAddress?.message}</p>
             </div>
 
             {/* State */}
@@ -254,10 +234,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                 type="text"
                 id="state"
                 placeholder="State"
-                {...register('State')}
-                className={`border ${errors.State ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register('state')}
+                className={`border ${errors.state ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <p className="text-sm text-red-500">{errors.State?.message}</p>
+              <p className="text-sm text-red-500">{errors.state?.message}</p>
             </div>
 
             {/* City */}
@@ -267,10 +247,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                 type="text"
                 id="city"
                 placeholder="City"
-                {...register('City')}
-                className={`border ${errors.City ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register('city')}
+                className={`border ${errors.city ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <p className="text-sm text-red-500">{errors.City?.message}</p>
+              <p className="text-sm text-red-500">{errors.city?.message}</p>
             </div>
 
             {/* Apt */}
@@ -280,10 +260,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                 type="text"
                 id="apt"
                 placeholder="Apt"
-                {...register('Apt')}
+                {...register('apt')}
                 className="border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
-              <p className="text-sm text-red-500">{errors.Apt?.message}</p>
+              <p className="text-sm text-red-500">{errors.apt?.message}</p>
             </div>
 
             {/* Identity */}
@@ -292,11 +272,11 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
               <input
                 type="file"
                 id="identity"
-                {...register('Identity')}
+                {...register('identity')}
                 onChange={handleImage}
-                className={`border ${errors.Identity ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                className={`border ${errors.identity ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <p className="text-sm text-red-500">{errors.Identity?.message}</p>
+              <p className="text-sm text-red-500">{errors.identity?.message}</p>
             </div>
 
             {/* Postal Code */}
@@ -306,10 +286,10 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
                 type="number"
                 id="postalCode"
                 placeholder="Postal Code"
-                {...register('PostalCode')}
-                className={`border ${errors.PostalCode ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register('postalCode')}
+                className={`border ${errors.postalCode ? 'border-red-500' : 'border-gray-300'} rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
-              <p className="text-sm text-red-500">{errors.PostalCode?.message}</p>
+              <p className="text-sm text-red-500">{errors.postalCode?.message}</p>
             </div>
               
               {/* Submit Button */}

@@ -20,11 +20,9 @@ import {
 {/**/}
 
 import {
-  
   booking,
+  conversation,
   fetchPaymentId,
-  useBookingQuery,
-  usePaymentIdQuery,
 } from "@/lib/features/api/userApiSlice";
 import { Button } from "@/components/ui/button";
 import {
@@ -45,8 +43,7 @@ import ReviewModal from '@/components/ReviewModal'
 
 // * API cal
 
-import {useConversationMutation} from '@/lib/features/api/userApiSlice'
-import { useSubmitReviewMutation } from "@/lib/features/api/customerApiSlice";
+import { submitReview } from "@/lib/features/api/customerApiSlice";
 
 interface Work {
   _id: string;
@@ -55,8 +52,8 @@ interface Work {
   user: string;
   preferredDate: string;
   preferredTime: string;
-  servicelocation: string;
-  AdditionalNotes: string;
+  serviceLocation: string;
+  additionalNotes: string;
   userId: string;
   workerId: string;
   isAccept: string;
@@ -71,16 +68,13 @@ export default function BookingPage() {
   
   const [customerData,setCustomerData] = useState<any>({})
   const [selectedWork, setSelectedWork] = useState<Work | null>(null);
-  const [skip, setSkip] = useState<boolean>(true);
   const [filter, setFilter] = useState<string>("Pending");
-  const [skipPaymentAPI, setSkipPaymentAPI] = useState<boolean>(true);
   const [paymentId, setPaymentId] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState(false)
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [reviewID,setReviewID] = useState<string[]>([])
   const [bookingDetails,setBookingDetails] = useState([])
-  // * API call
-  const [submitReview] = useSubmitReviewMutation()
+
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -109,16 +103,21 @@ export default function BookingPage() {
       console.error('Error submitting review:', error)
     }
   }
+  useEffect(()=>{
+    console.log(customerData)
+    console.log(selectedWork?.payment)
+    console.log(selectedWork?._id )
+
+  },[customerData,selectedWork?.payment,selectedWork?._id])
 
   // * fetch booking details
 
   async function fetchBooking(){
     try{
-      alert('afads')
+
       const res = await booking(customerData?._id)
-      console.log(res)
+
       if(res?.success){
-        console.log(res)
         setReviewID(res?.reviewDetails)
         setBookingDetails(res?.result)
       }
@@ -128,9 +127,9 @@ export default function BookingPage() {
     }
   }
   useEffect(() => {
-    alert('useEffect')
+
     if(customerData?._id){
-      alert('calling')
+ 
       fetchBooking()
     }
   },[customerData?._id]);
@@ -144,7 +143,6 @@ export default function BookingPage() {
       const res = await fetchPaymentId(requestId)
       if(res?.success){
           setPaymentId(res?.result?.paymentId);
-          setSkipPaymentAPI(false);
       }
 
     }catch(error:any){
@@ -152,7 +150,7 @@ export default function BookingPage() {
     }
   }
   useEffect(() => {
-    console.log('dsds')
+    // console.log('dsds')
     if(selectedWork?._id){
       fetchPaymentIdData(selectedWork?._id)
     }
@@ -160,12 +158,7 @@ export default function BookingPage() {
   }, [selectedWork?._id]);
 
 
-
-  // const { data: paymentIdData } = usePaymentIdQuery(selectedWork?._id || '', {
-  //   skip: skipPaymentAPI,
-  // });
-
-  const [conversation] = useConversationMutation()
+  // const [conversation] = useConversationMutation()
 
   const data = {
     userId:customerData?._id,
@@ -173,11 +166,15 @@ export default function BookingPage() {
     lastMessage:''
   }
   const handleConversation =async ()=>{
-
-    const result =await conversation(data).unwrap()
-    if(result?.success){
-      router.push('/user/message')
+    try{
+      const result =await conversation(data)
+      if(result?.success){
+        router.push('/user/message')
+      }
+    }catch(error:any){
+      console.log(error?.message)
     }
+
   }
 
   const handleFilter = (status: string) => {
@@ -185,19 +182,13 @@ export default function BookingPage() {
   };
 
   const handleWorkSelect = (work: Work | null) => {
+    console.log('handleWorkSelect')
+    console.log(work)
     setSelectedWork(work);
   };
-  useEffect(() => {
-    if (selectedWork?._id) {
-      setSkipPaymentAPI(false);
-    }
-  }, [selectedWork]);
-  
-  
 
-  useEffect(() => {
-    setSkip(false);
-  }, []);
+  
+  
 
 
 
@@ -218,8 +209,6 @@ export default function BookingPage() {
 
   const filteredWorks =
     bookingDetails?.filter((work: Work) =>{
-        console.log('in filter')
-        console.log(work)
         return work.isAccept.toLowerCase() === filter.toLowerCase()
       }
     ) || [];
@@ -261,7 +250,7 @@ const downloadInvoice = async () => {
       doc.text(`Date: ${selectedWork.preferredDate}`, 15, 77)
       doc.text(`Service: ${selectedWork.service}`, 15, 84)
       doc.text(`Time: ${selectedWork.preferredTime}`, 15, 91)
-      doc.text(`Location: ${selectedWork.servicelocation}`, 15, 98)
+      doc.text(`Location: ${selectedWork.serviceLocation}`, 15, 98)
       
     
     // Work Description
@@ -271,7 +260,7 @@ const downloadInvoice = async () => {
 
     doc.setFontSize(10)
     doc.setTextColor(0, 0, 0)
-    const splitNotes = doc.splitTextToSize(selectedWork.AdditionalNotes, 180)
+    const splitNotes = doc.splitTextToSize(selectedWork.additionalNotes, 180)
     doc.text(splitNotes, 15, 125)
 
     // Transaction Details
@@ -412,7 +401,7 @@ const downloadInvoice = async () => {
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-5 h-5 text-gray-500" />
                   <span className="font-semibold">Date:</span>&nbsp;
-                  {selectedWork?.preferredDate}
+                  {format(new Date(selectedWork?.preferredDate),'yyy-MM-dd')}
                 </div>
                 <div className="flex items-center space-x-2">
                   <Clock className="w-5 h-5 text-gray-500" />
@@ -422,14 +411,14 @@ const downloadInvoice = async () => {
                 <div className="flex items-center space-x-2">
                   <MapPin className="w-5 h-5 text-gray-500" />
                   <span className="font-semibold">Location:</span>&nbsp;
-                  {selectedWork?.servicelocation}
+                  {selectedWork?.serviceLocation}
                 </div>
                 <div className="flex items-center justify-between space-x-2">
                   <div className="flex gap-1">
                   <Clipboard className="w-5 h-5 text-gray-500 mt-1" />
                     <span className="font-semibold mt-1">Additional Notes:</span>&nbsp;
                     <p className="mt-1 text-gray-600">
-                      {selectedWork?.AdditionalNotes}
+                      {selectedWork?.additionalNotes}
                     </p>
                   </div>
                     <div>
@@ -467,7 +456,7 @@ const downloadInvoice = async () => {
                   </div>
                   {(selectedWork?.isAccept=="Pending") ?
                     ""
-                   :  (!paymentId && customerData && selectedWork?._id)? 
+                   :  (!paymentId && customerData && selectedWork?._id) ? 
                     <>
                       <PayUComponent
                         currUserData={customerData}

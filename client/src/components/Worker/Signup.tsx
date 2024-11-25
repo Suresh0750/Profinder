@@ -4,7 +4,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { string, z } from "zod";
-import { useSignUpMutation } from '@/lib/features/api/userApiSlice';
 import { Button } from "@/components/ui/button";
 import { Toaster, toast } from 'sonner'; 
 import Image from 'next/image';

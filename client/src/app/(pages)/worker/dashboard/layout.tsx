@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { useGetWorkerDetailsQuery,fetchWorkerDetails } from '@/lib/features/api/workerApiSlice'
+import {fetchWorkerDetails } from '@/lib/features/api/workerApiSlice'
 import Link from 'next/link'
 import { useDispatch } from 'react-redux'
 import { getWorkerData } from '@/lib/features/slices/workerSlice'
@@ -20,30 +20,29 @@ const navItems = [
 export default function WorkerDashboardLayout({ children }: { children: React.ReactNode }) {
   const [customerData, setCustomerData] = useState<any>({})
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isLoading,setIsLoading] = useState<boolean>(false)
   const pathname = usePathname()
-
-  const { data, error, isLoading } = useGetWorkerDetailsQuery('')
   const dispatch = useDispatch()
 
-
+  
 
   useEffect(() => {
-
     async function fetchWorkerData(){
       try{
+      
+        setIsLoading(true)
         const res = await fetchWorkerDetails()
         if(res?.success){
-          setCustomerData(data?.workerData || {})
-        dispatch(getWorkerData(data?.workerData))
+          setCustomerData(res?.workerData || {})
+        dispatch(getWorkerData(res?.workerData))
         }
       }catch(error:any){
         console.log(error?.message)
         toast.error(error?.message)
       }
-
+  
     }
-    fetchWorkerData()
-  }, [data, dispatch])
+  }, [dispatch])
 
   return (
     <div className="flex  h-[93.5vh] mt-2 bg-gray-100">

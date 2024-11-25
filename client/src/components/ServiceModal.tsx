@@ -1,13 +1,13 @@
 'use client';
 
-import { useRequestToWorkerMutation } from '@/lib/features/api/customerApiSlice';
+import {requestToWorker} from '@/lib/features/api/customerApiSlice';
 import React, { useState ,useEffect} from 'react';
 import { toast, Toaster } from 'sonner';
 
 interface WorkerDetails {
     _id: string;
-    Category: string;
-    FirstName: string;
+    category: string;
+    firstName: string;
 }
 
 interface ServiceRequestModalProps {
@@ -20,20 +20,21 @@ interface ServiceRequestModalProps {
 const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({ workerDetails, isOpen, onClose, refetch }) => {
     const [formData, setFormData] = useState({
         workerId: workerDetails?._id,
-        service: workerDetails?.Category,
-        worker: workerDetails?.FirstName,
+        service: workerDetails?.category,
+        worker: workerDetails?.firstName,
         user: '',
         preferredDate: '',
         preferredTime: '',
         servicelocation: '',
         additionalNotes: '',
     });
+    const [isLoading,setIsLoading] = useState<boolean>(false)
     const [customerData,setCustomerData] = useState<any>({_id:null})
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-    const [requestToWorker, { isLoading }] = useRequestToWorkerMutation();
-
+   
+    //requestToWorker
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
@@ -83,6 +84,8 @@ const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({ workerDetails
         setError(null);
 
         if (isLoading) return;
+        
+        setIsLoading(true)
 
         const errors = validateForm();
 
@@ -99,10 +102,10 @@ const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({ workerDetails
                 ...formData,
                 user: customerData.customerName,
                 userId: customerData._id,
-                service: workerDetails?.Category,
-                worker: workerDetails?.FirstName,
+                service: workerDetails?.category,
+                worker: workerDetails?.firstName,
                 workerId: workerDetails?._id,
-            }).unwrap();
+            })
 
             if (result?.success) {
                 toast.success(result?.message);
@@ -118,6 +121,7 @@ const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({ workerDetails
             }, 1000);
         } finally {
             setLoading(false);
+            setIsLoading(false)
         }
     };
 
@@ -134,7 +138,7 @@ const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({ workerDetails
                         <input
                             type="text"
                             name="service"
-                            value={workerDetails?.Category}
+                            value={workerDetails?.category}
                             onChange={handleChange}
                             required
                             className="w-full border rounded p-2"
@@ -146,7 +150,7 @@ const ServiceRequestModal: React.FC<ServiceRequestModalProps> = ({ workerDetails
                         <input
                             type="text"
                             name="worker"
-                            value={workerDetails?.FirstName}
+                            value={workerDetails?.firstName}
                             onChange={handleChange}
                             required
                             className="w-full border rounded p-2"

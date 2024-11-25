@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
-import { useCustomerLogoutMutation } from '@/lib/features/api/customerApiSlice'
+import { customerLogout } from '@/lib/features/api/customerApiSlice'
 import Modal from '@/components/Emergency'
 import { Menu, X, ChevronDown, Home, User, Briefcase, FileText, MessageSquare } from 'lucide-react'
 import {toast,Toaster} from 'sonner'
@@ -17,7 +17,8 @@ export default function Navbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [customerData, setCustomerData] = useState<any>({});
-  const [CustomerLogout,{isLoading}] = useCustomerLogoutMutation()
+  const [isLoading,setIsLoading] = useState<boolean>(false)
+
 
   const router = useRouter()
 
@@ -46,7 +47,8 @@ export default function Navbar() {
     try {
 
       if(isLoading) return // * handle multiple click
-      const result = await CustomerLogout({}).unwrap()
+      setIsLoading(true)
+      const result = await customerLogout()
       if (result?.success) {
         toast.success(result?.message)
         localStorage.setItem("customerData", '')
@@ -58,6 +60,8 @@ export default function Navbar() {
       }
     } catch (error) {
       console.error(error)
+    }finally{
+      setIsLoading(false)
     }
   }
 

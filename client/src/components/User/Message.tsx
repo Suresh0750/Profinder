@@ -3,10 +3,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Search, Send } from 'lucide-react'
 import {
-  useConversationMutation,
-  // conversation,
-  // useGetAllconversationQuery,
-  // useGetAllMessageQuery,
   fetchAllMessage,
   fetchAllConversation,
   conversation,
@@ -23,7 +19,6 @@ export default function Chats() {
   const [inputMessage, setInputMessage] = useState("")
   const [conversationsData, setConversations] = useState<conversationData[]>([])
   const [conversationID, setConversationID] = useState('')
-  const [stopFetch, setStopFetch] = useState(true)
   const [messages, setMessages] = useState<readMsgType[]>([])
   const [messageBox, setMessageBox] = useState<conversationData | null>(null)
   const [socket, setSocket] = useState<Socket | null>(null)
@@ -52,6 +47,7 @@ export default function Chats() {
       const res = await fetchAllConversation(customerData?._id)
       if(res?.success){
         console.log(res?.message)
+        console.log(res)
         setConversations(res?.result)
       }
     }catch(error:any){
@@ -60,12 +56,12 @@ export default function Chats() {
   }
 
   // * get Particular worker message
-  async function fetchConversationMsg(){
+  async function fetchConversation(){
     try{
       const res = await fetchAllMessage(conversationID)
       if(res?.success){
         setMessages(res?.result)
-        fetchConversationMsg()
+       
       }
     }catch(error:any){
       console.log(error)
@@ -74,7 +70,7 @@ export default function Chats() {
 
   useEffect(() => {
     if(conversationID){
-      fetchConversationMsg()
+      fetchConversation()
     }
   }, [conversationID])
 
@@ -138,13 +134,7 @@ export default function Chats() {
     }
   }, [socket])
 
-  // useEffect(() => {
-  //   if(conversationID){
-  //     setStopFetch(false)
-  //   }
-  // }, [conversationID])
 
-  
 
  
 
@@ -212,12 +202,12 @@ export default function Chats() {
               className="flex items-center p-4 hover:bg-gray-100 cursor-pointer"
             >
               <Avatar>
-                <AvatarImage src={conv.workerId?.Profile} alt={conv.workerId?.FirstName} />
-                <AvatarFallback>{conv.workerId?.FirstName[0]}</AvatarFallback>
+                <AvatarImage src={conv.workerId?.profile} alt={conv.workerId?.firstName} />
+                <AvatarFallback>{conv.workerId?.firstName[0]}</AvatarFallback>
               </Avatar>
               <div className="ml-3 flex-1">
                 <div className="flex justify-between items-baseline">
-                  <h3 className="font-semibold">{conv.workerId?.FirstName}</h3>
+                  <h3 className="font-semibold">{conv.workerId?.firstName}</h3>
                   <span className="text-xs text-gray-500">
                     {new Date(conv.updatedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
@@ -241,11 +231,11 @@ export default function Chats() {
             {/* Chat header */}
             <div className="p-4 border-b flex items-center">
               <Avatar>
-                <AvatarImage src={messageBox.workerId?.Profile} alt={messageBox.workerId?.FirstName} />
-                <AvatarFallback>{messageBox.workerId?.FirstName[0]}</AvatarFallback>
+                <AvatarImage src={messageBox.workerId?.profile} alt={messageBox.workerId?.firstName} />
+                <AvatarFallback>{messageBox.workerId?.firstName[0]}</AvatarFallback>
               </Avatar>
               <div className="ml-3">
-                <h2 className="font-semibold">{messageBox.workerId?.FirstName}</h2>
+                <h2 className="font-semibold">{messageBox.workerId?.firstName}</h2>
               </div>
             </div>
 

@@ -4,7 +4,7 @@ import { Toaster } from "sonner";
 import { Hourglass } from "react-loader-spinner";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai"; // * Eye icon from react-icons
 import {HandlError} from '@/components/Utils/FormValidation/setPassword' // * from validation
-import {useForgetPasswordMutation,useCustomerResendMutation} from '@/lib/features/api/customerApiSlice'
+import { customerResend, forgetPassword} from '@/lib/features/api/customerApiSlice'
 import {Vortex} from 'react-loader-spinner'
 import {toast} from 'sonner'
 import { useRouter } from "next/navigation";
@@ -13,18 +13,18 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 
 
-
+//customerResend
 
 export default function SetNewPass({role}:{role:string}) {
 
   const [customerID, setCustomerID] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
 
   const {customerId} = useSelector((state:any)=>state?.CustomerData)
 
-    // * Here call API function which is RTK query
-    const [ForgetPassword,{isLoading}] = useForgetPasswordMutation()
-    const [CustomerResend] = useCustomerResendMutation()
+
+
 
     // * Router function 
     const Router = useRouter()
@@ -60,7 +60,7 @@ export default function SetNewPass({role}:{role:string}) {
   
       if(timer!=0) return
      
-      const result = await CustomerResend({role,customerID}).unwrap()
+      const result = await customerResend({role,customerId:customerID})
       if(result.success){
         toast.success(result.message)
         setTimer(60)  // * reset timer after resend the OTP
@@ -68,10 +68,7 @@ export default function SetNewPass({role}:{role:string}) {
 
     } catch (error:any) {
       console.log(`Error from ResendOTP`,error)
-      {
-        error?.data?.errorMessage ? toast.error(error?.data?.errorMessage) : toast.error('server error please try again!')
-      }
-      
+      toast.error(error?.message)
     }
   }
 
@@ -98,26 +95,26 @@ export default function SetNewPass({role}:{role:string}) {
       const checkError =  HandlError(formData, error);  
      
       if(!checkError || isLoading) return  // * prevent multiple request and validate the input field
-      
-      const result = await ForgetPassword({formData,role,customerId}).unwrap()
+      setIsLoading(true)
+      const result = await forgetPassword({formData,role,customerId})
       
       if(result?.success){
         toast.success(result.message)
         if(role=='user'){
           setTimeout(()=>{
             Router.push('/user/login')
-          },2000)
+          },600)
         }else{
           setTimeout(()=>{
             Router.push('/worker/login')
-          },2000)
+          },600)
         }
       }
     } catch (error:any) {
       console.log(`Error from handleSubmit \n`,error)
-      {
-        error?.data?.errorMessage ? toast.error(error?.data?.errorMessage) : toast.error('server error please try again!')
-      } 
+     toast.error(error?.message)
+    }finally{
+      setIsLoading(false)
     }
 
     

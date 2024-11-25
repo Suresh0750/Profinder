@@ -4,7 +4,7 @@ import { BaseQueryFn } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery,FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
 import {editeprofile} from '@/types/userTypes'
 // * import { register } from "module"
-
+import Router from 'next/router'; 
 
 const baseQuery = fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
@@ -122,16 +122,16 @@ export const userApi = createApi({
 
 
 export const {
-    useSignUpMutation,
-    useLoginMutation,
-    useCheckEmailForgetPassMutation,
-    useProfileQuery,
-    useUpdateprofileMutation,
-    useConversationMutation,
-    useGetAllconversationQuery,
-    useGetAllMessageQuery,
-    useBookingQuery,
-    usePaymentIdQuery,
+    // useSignUpMutation,
+    // useLoginMutation,
+    // useCheckEmailForgetPassMutation,
+    // useProfileQuery,
+    // useUpdateprofileMutation,
+    // useConversationMutation,
+    // useGetAllconversationQuery,
+    // useGetAllMessageQuery,
+    // useBookingQuery,
+    // usePaymentIdQuery,
 } = userApi
 
 
@@ -152,8 +152,30 @@ const axiosInstance1 = axios.create({
     withCredentials : true,
 })
 
+// * Axios interceptor
+
+axiosInstance.interceptors.response.use(
+    (response) => {
+        console.log('accout is block')
+        if (response.data?.isBlock) {
+            console.log('User is blocked. Redirecting to login...');
+            Router.replace('/homePage'); 
+            localStorage.setItem('customerData','')
+            localStorage.setItem('workerDetails','')
+            localStorage.setItem('conversationId','')
+            return Promise.reject(new Error('Account is blocked'));
+        }
+        return response; 
+    },
+    (error) => {
+        console.error('API Error:', error);
+        return Promise.reject(error);
+    }
+);
+
 
 // * Error handler
+
 export const handleAxiosError = (error: any) => {
     console.log(error)
     const errorMessage = error?.response?.data?.errorMessage || "Unexpected error occurred.";

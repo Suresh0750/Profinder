@@ -18,8 +18,8 @@ import { Button } from "@/components/ui/button"
 import { PulseLoader } from 'react-spinners'
 import { useSelector } from 'react-redux'
 import { useEffect, useState, useMemo } from 'react'
-import { useProfessionalInfoMutation,professionalInfo } from '@/lib/features/api/workerApiSlice'
-import { useGetCategoryNameQuery } from '@/lib/features/api/customerApiSlice'
+import { professionalInfo } from '@/lib/features/api/workerApiSlice'
+import {fetchCategoryName} from '@/lib/features/api/customerApiSlice'
 import Select, { SingleValue } from 'react-select'
 import countryList from 'react-select-country-list'
 import { City, State, Country } from 'country-state-city'
@@ -51,7 +51,21 @@ export default function ProfessionalInfoForm() {
 
   const workersignupData = useSelector((state: any) => state.WorkerSignupData)
 
-  const { data: categoryData } = useGetCategoryNameQuery('')
+
+
+  // handle fetch category data
+  useEffect(() => {
+    const fetchCategory = async ()=>{
+      try{
+        const res = await fetchCategoryName()
+        if(res?.success){
+          setCategoryOptions(res?.result?.map((category: string) => ({ value: category, label: category })))
+        }
+      }catch(error:any){
+        console.log(error)
+      }
+    }
+  }, [])
 
   const router = useRouter()
 
@@ -78,11 +92,7 @@ export default function ProfessionalInfoForm() {
     setWorkerSignupDetails(workersignupData)
   }, [countries, workersignupData])
 
-  useEffect(() => {
-    if (categoryData) {
-      setCategoryOptions(categoryData?.result?.map((category: string) => ({ value: category, label: category })))
-    }
-  }, [categoryData])
+
 
   const form = useForm<FormValues>({
     resolver: zodResolver(professionalInfoFormSchema),

@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { toast, Toaster } from "sonner"
-import { useUpdateprofileMutation, useProfileQuery, profile,updateprofile } from "@/lib/features/api/userApiSlice"
+import { profile,updateprofile } from "@/lib/features/api/userApiSlice"
 
 interface UserProfile {
   name: string
@@ -38,6 +38,7 @@ export default function UserProfilePage() {
   const [newImageData, setNewImageData] = useState<File | null>(null)
   const [customerData, setCustomerData] = useState<any>({});
   const [isProfileLoading,setIsProfileLoading] = useState<boolean>(false)
+  const [isUpdating,setIsUpdating] = useState<boolean>(false)
   const [userProfile, dispatch] = useReducer(userProfileReducer, {
     name: '',
     email: '',
@@ -87,11 +88,11 @@ export default function UserProfilePage() {
     }
   }, []);
   // const { data, refetch, isLoading: isProfileLoading } = useProfileQuery(customerData?._id)
-  const [updateProfile, { isLoading: isUpdating }] = useUpdateprofileMutation()
+
   // 
   useEffect(() => {
     fetchProfile()
-  }, [customerData])
+  }, [customerData,fetchProfile])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const image = e.target.files?.[0]
@@ -114,6 +115,9 @@ export default function UserProfilePage() {
     }
 
     try {
+      if(isUpdating) return
+
+      setIsUpdating(true)
       const formData = new FormData()
       formData.append("username", userProfile.name)
       formData.append("emailAddress", userProfile.email)
@@ -139,6 +143,8 @@ export default function UserProfilePage() {
     } catch (error:any) {
       console.error(error)
       toast.error(error?.message)
+    }finally{
+      setIsUpdating(false)
     }
   }
 

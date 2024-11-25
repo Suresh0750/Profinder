@@ -1,4 +1,5 @@
 import { z } from "zod";
+import * as yup from 'yup';
 
 export const FormSchema = z.object({
     CategoryName: z.string().min(2, {
@@ -77,6 +78,27 @@ export const professionalInfoFormSchema = z.object({
   postalCode: z.string().min(1, { message: "Postal code is required." }),
 })
 
+
+// * google verification
+ // * Validation schema using Yup
+ export const WorkerGoogleVerificationschema = yup.object({
+  phoneNumber: yup.string().required('Phone number is required'),
+  password: yup.string()
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters long')
+    .matches(/[A-Za-z]/, 'Password must contain at least one letter')
+    .matches(/\d/, 'Password must contain at least one number')
+    .matches(/[@$!%*?&]/, 'Password must contain at least one special character'),
+
+    category: yup.string().required('Category is required'),
+    country: yup.string().required('Country is required'),
+    streetAddress: yup.string().required('Street Address is required'),
+    state: yup.string().required('State is required'),
+    city: yup.string().required('City is required'),
+    apt: yup.string(),
+    identity: yup.mixed().required('Identity (image) is required'),
+    postalCode: yup.number().required('Postal Code is required').positive().integer(),
+  }).required();
 
 
 

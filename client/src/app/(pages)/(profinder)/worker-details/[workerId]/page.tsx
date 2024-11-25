@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { useGetSingleWorkerDetailsQuery } from '@/lib/features/api/workerApiSlice'
-import { useGetReviewQuery } from '@/lib/features/api/customerApiSlice'
-import { useConversationMutation } from '@/lib/features/api/userApiSlice'
+import {fetchSingleWorkerDetails } from '@/lib/features/api/workerApiSlice'
+import { fetchReview } from '@/lib/features/api/customerApiSlice'
+
 import defaultImage from '../../../../../../public/images/worker/defaultImage.png'
 import MaterialCarousel from '@/components/WokerDetailscarousel'
 import { Button } from "@/components/ui/button"
@@ -25,16 +25,33 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
   const [customerRating, setCustomerRating] = useState(0)
   const [customerData, setCustomerData] = useState<any>(null)
   const [skip,setSkip] = useState<boolean>(true)
+  const [isWorkerDetailsLoading,seIsWorkerDetailsLoading] = useState<boolean>(false)
+  const [isReviewLoading,setIsReviewLoading] = useState<boolean>(false)
+
+
+  // fetch reviw data
+
+  const fetchReviewDetails = async ()=>{
+    try{
+      setIsReviewLoading(true)
+      const res = await fetchReview(params.workerId)
+      if(res?.success){
+        setReviewDetails(res.result)
+      }
+    }catch(error:any){
+      console.log(error)
+    }finally{
+      setIsReviewLoading(false)
+    }
+  }
+
+
+
+  // fetchReview
+
+  //fetchSingleWorkerDetails
 
   const router = useRouter()
-
-  const { data, refetch, isLoading: isWorkerDetailsLoading } = useGetSingleWorkerDetailsQuery(
-    customerData ? `${params.workerId}/${customerData._id}` : `${params.workerId}/55`,
-    { skip: skip }
-  )
-  const [conversation] = useConversationMutation()
- 
-  const { data: reviewData, isLoading: isReviewLoading } = useGetReviewQuery(params.workerId)
 
   useEffect(() => {
     const storedCustomerData = typeof window !== 'undefined' ? localStorage.getItem("customerData") : null
@@ -46,18 +63,31 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
     }
   }, [])
 
+ 
   useEffect(() => {
-    if (data?.result) {
-      setWorkerDetails(data.result)
+    async function fetchWorkerData(){
+      try{
+        seIsWorkerDetailsLoading(true)
+        let data = customerData ? `${params.workerId}/${customerData._id}` : `${params.workerId}/55`
+        const res = await fetchSingleWorkerDetails(data)
+        if(res?.success){
+          setWorkerDetails(res?.result)
+        }
+      }catch(error:any){
+        console.log(error)
+      }finally{
+        seIsWorkerDetailsLoading(false)
+      }
+    
     }
-  }, [data])
+    fetchWorkerData()
+  }, [customerData?._id,customerData])
 
   useEffect(() => {
-    if (reviewData?.result) {
- 
-      setReviewDetails(reviewData.result)
+    if (params.workerId) {
+      fetchReviewDetails()
     }
-  }, [reviewData])
+  }, [params.workerId])
 
   useEffect(() => {
     if (reviewDetails.length > 0) {
@@ -66,23 +96,7 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
     }
   }, [reviewDetails])
 
-  const handleMessage = async () => {
-    if (customerData && workerDetails) {
-      try {
-        const result = await conversation({
-          userId: customerData._id,
-          lastMessage: '',
-          workerId: workerDetails._id,
-          newMessage: true
-        })
-        if (result?.data?.success) {
-          router.push('/user/message')
-        }
-      } catch (error) {
-        console.error('Error starting conversation:', error)
-      }
-    }
-  }
+ 
 
   if (isWorkerDetailsLoading || isReviewLoading) {
     return (

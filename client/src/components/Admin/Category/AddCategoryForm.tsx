@@ -4,7 +4,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { FormSchema } from "@/lib/formSchema";
-import { useAddCategoryFormMutation,addCategory } from "../../../lib/features/api/adminApiSlice";
+import { addCategory } from "../../../lib/features/api/adminApiSlice";
 import {
   Form,
   FormControl,

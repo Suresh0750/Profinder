@@ -3,14 +3,10 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import AddImageModal from "./AddModal";
 import { useSelector } from "react-redux";
-import { useGetWorkerProjectQuery } from "@/lib/features/api/workerApiSlice";
+import {fetchProject } from "@/lib/features/api/workerApiSlice";
+import { ImageData } from "@/types/workerTypes";
 
 
-interface ImageData {
-  ProjectDescription: string; 
-  ProjectImage: string;
-  projectName: number;
-}
 
 const ImageGrid = () => {
   const [modalData, setModalData] = useState<ImageData | null>(null); // Stores data fetched for modal
@@ -21,7 +17,27 @@ const ImageGrid = () => {
   const [customerData, setCustomerData] = useState<any>({});
   const [stop,setStop] = useState<boolean>(true)
 
-  const { data, refetch, isLoading, error } = useGetWorkerProjectQuery(customerData?._id,{skip:stop,refetchOnMountOrArgChange: true});
+
+  async function handleFetchProject(){
+      try{
+        const res = await fetchProject(customerData?._id)
+        console.log(res)
+        if(res?.success){
+          setShowImage(res?.result?.workerImage); 
+        }else{
+          setShowImage(workerData.workerImage)
+        }
+      }catch(error:any){
+        console.log(error)
+      }
+  }
+
+  useEffect(()=>{
+    if(customerData?._id){
+      handleFetchProject()
+    }
+  },[customerData?._id])
+
   useEffect(() => {
     // Only access localStorage in the browser
     if (typeof window !== "undefined") {
@@ -39,13 +55,13 @@ const ImageGrid = () => {
   }, []);
   // Fetching worker projects data
   
-  useEffect(() => {
-    if (data && data.length > 0) {
-      setShowImage(data?.result); // Using data fetched from the API
-    } else if (workerData?.WorkerImage) {
-      setShowImage(workerData.WorkerImage); // Fallback to redux data if API fails
-    }
-  }, [data, workerData]);
+  // useEffect(() => {
+  //   if (data && data.length > 0) {
+  //     setShowImage(data?.result); // Using data fetched from the API
+  //   } else if (workerData?.WorkerImage) {
+  //     setShowImage(workerData.WorkerImage); // Fallback to redux data if API fails
+  //   }
+  // }, [data, workerData]);
 
   const handleButtonClick = async (workerProject: any) => {
     try {
@@ -76,16 +92,16 @@ const ImageGrid = () => {
       {/* Image grid container */}
       <div className="mt-[75px] w-[70%] mr-[5%] ml-[5%] min-h-96 max-h-[600px] overflow-y-auto overflow-x-hidden bg-[#D9D9D9] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {/* Loop through images */}
-        {showImage.length > 0 &&
-          showImage.map((workerProject: any) => (
+        {showImage?.length > 0 &&
+          showImage?.map((workerProject: any) => (
             <div
-              key={workerProject.id}
+              key={workerProject._id}
               className="relative w-full h-[300px] group overflow-hidden"
             >
               {/* Displaying the Image */}
               <Image
-                src={workerProject.ProjectImage}
-                alt={`${workerProject.projectName} Image`}
+                src={workerProject?.projectImage}
+                alt={`${workerProject?.projectName} Image`}
                 className="w-full h-full object-cover"
                 width={250}
                 height={250}
@@ -118,8 +134,8 @@ const ImageGrid = () => {
             {modalData && (
               <div>
                 <Image
-                  src={modalData.ProjectImage}
-                  alt={modalData.ProjectDescription}
+                  src={modalData.projectImage}
+                  alt={modalData.projectDescription}
                   width={500}
                   height={500}
                   className="object-cover"
@@ -134,7 +150,7 @@ const ImageGrid = () => {
       <AddImageModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        refetch={() => refetch()}
+        refetch={() => handleFetchProject()}
       />
     </>
   );

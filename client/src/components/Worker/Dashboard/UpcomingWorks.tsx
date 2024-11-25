@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { format, parseISO } from 'date-fns'
 import { Calendar, Clock, MapPin, User, Phone, FileText, CheckCircle, XCircle,BadgeIndianRupee } from 'lucide-react'
-import { useGetUpcomingWorksQuery,useUpdateWorkStatusMutation} from '@/lib/features/api/workerApiSlice'
+import { updateWorkStatus, fetchUpcomingWorks} from '@/lib/features/api/workerApiSlice'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -24,16 +24,37 @@ import {upcomingWorkerData} from '@/types/workerTypes'
 export default function UpcomingWorksPage() {
 
   const [customerData, setCustomerData] = useState<any>({});
-  const router = useRouter()
   const [selectedWork, setSelectedWork] = useState<upcomingWorkerData | null>(null)
-  const [skip,setSkip] = useState<boolean>(true)
   const [filter,setFilter] = useState<boolean>(false)
-  
+  const [isLoadingUpdate,setIsLoadingUpdate] = useState<boolean>(false)
+  const [isLoading,setIsLoading] = useState<boolean>(false)
+  const [upcomingWorks,setUpcomingWorks] = useState([])
+  const [error,setError] = useState<boolean>(false)
 
-  const { data: upcomingWorks, isLoading, error,refetch } = useGetUpcomingWorksQuery(customerData?._id,{
-    skip:skip
-  })
-  const [updateWorkStatus,{isLoading:isLoadingUpdate}] =  useUpdateWorkStatusMutation()
+
+
+  // handle fetchUpcoming works data
+  const handleFethcUpcomingData = async ()=>{
+    try{
+      console.log('isLoading',isLoading)
+      if(isLoading) return
+      setIsLoading(true)
+      const res = await fetchUpcomingWorks(customerData?._id)
+      if(res?.message){
+        setUpcomingWorks(res?.result)
+      }
+    }catch(error:any){
+      setError(true)
+      console.log(error?.message)
+    }finally{
+      setIsLoading(false)
+    }
+  }
+  useEffect(()=>{
+    if(customerData?._id){
+      handleFethcUpcomingData()
+    }
+  },[customerData?._id, handleFethcUpcomingData])
 
   const handleFilter = (isUpdate:boolean)=>{
     setFilter(isUpdate)
@@ -58,43 +79,44 @@ export default function UpcomingWorksPage() {
     setSelectedWork(work)
   }
 
-  useEffect(()=>{
-    setSkip(false)
-  },[])
+  
 
-  useEffect(()=>{
-    // setSelectedWork(upcomingWorks?.result)
-    console.log(JSON.stringify(upcomingWorks))
-  },[upcomingWorks])
 
   const handleStatusChange = (_id: string, newStatus:string) => {
+    try{
+      if(isLoadingUpdate) return // * handle multiple click
+    
+      setIsLoadingUpdate(true)
+      if((selectedWork?.paymentId) && newStatus=="Cancelled") return toast.warning(`Payment has been completed`)
+  
+      MySwal.fire({
+        title: `Have you want ${newStatus} "${selectedWork?.userId?.username} of work"?`,
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: `Yes, ${newStatus} it!`,
+      }).then(async (res:any) => {     
+        // alert(JSON.stringify(res))
+        const result:any = await updateWorkStatus({status:newStatus,_id})
+      
+        if(result?.success){
+          MySwal.fire(
+            `Mark as ${newStatus}!`,
+            `${selectedWork?.userId?.username} has been ${newStatus}.`,
+            "success"
+          );
+          handleFethcUpcomingData()
+        }
+        })
+    }catch(error:any){
+      console.log(error?.message)
+    }finally{
+      setIsLoadingUpdate(false)
+    }
 
-    if(isLoadingUpdate) return // * handle multiple click
-    
-    
-    if((selectedWork?.paymentId) && newStatus=="Cancelled") return toast.warning(`Payment has been completed`)
-
-    MySwal.fire({
-      title: `Have you want ${newStatus} "${selectedWork?.userId?.username} of work"?`,
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: `Yes, ${newStatus} it!`,
-    }).then(async (res:any) => {     
-      // alert(JSON.stringify(res))
-      const result:any = await updateWorkStatus({status:newStatus,_id}).unwrap()
-    
-      if(result?.success){
-        MySwal.fire(
-          `Mark as ${newStatus}!`,
-          `${selectedWork?.userId?.username} has been ${newStatus}.`,
-          "success"
-        );
-        refetch()
-      }
-      })
+   
 
   }
 
@@ -119,7 +141,7 @@ export default function UpcomingWorksPage() {
               <ScrollArea className="h-[60vh] mt-2">
                 {['pending', 'completed'].map((status) => (
                   <TabsContent key={status} value={status}>
-                    {upcomingWorks?.result?.filter((work: upcomingWorkerData) => work.isCompleted === filter)
+                    {upcomingWorks?.filter((work: upcomingWorkerData) => work.isCompleted === filter)
                       .map((work: upcomingWorkerData) => (
                         <Card
                           key={work._id}

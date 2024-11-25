@@ -13,7 +13,7 @@ import { format, isAfter, isBefore, startOfDay } from "date-fns"
 import jsPDF from "jspdf"
 import "jspdf-autotable"
 import * as XLSX from "xlsx"
-import { useSalesReportQuery, useCategoryListQuery, useDownloadSalesQuery } from '@/lib/features/api/adminApiSlice' 
+import { fetchSalesReport,fetchCategoryList,downloadSalesReport } from '@/lib/features/api/adminApiSlice' 
 import { salesReport } from '@/types/adminTypes'
 
 export default function SalesReport() {
@@ -24,51 +24,86 @@ export default function SalesReport() {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [itemsPerPage] = useState<number>(10)
   const [categoryList, setCategoryList] = useState<string[]>(["All"])
-  const [stopCategoryAPI, setStopCategoryAPI] = useState<boolean>(true)
-  const [stopAPI, setStopAPI] = useState(true)
   const [stopDownloadAPI, setDownloadAPI] = useState(true)
   const [salesReport, setSalesReport] = useState<salesReport[]>([])
   const [download, setDownload] = useState('')
+  const [salesDownloadDatas,setSalseDownloadDatas] = useState([])
 
-  const { data: category } = useCategoryListQuery({}, { skip: stopCategoryAPI })
-  const { data: downloadSales } = useDownloadSalesQuery({
-    categoryFilter,
-    startDateFilter: startDateFilter ? startDateFilter.toISOString().split('T')[0] : '',
-    endDateFilter: endDateFilter ? endDateFilter.toISOString().split('T')[0] : '',
-    currentPage,
-    itemsPerPage
-  }, { skip: stopDownloadAPI })
-  const { data } = useSalesReportQuery({
-    categoryFilter,
-    startDateFilter: startDateFilter ? startDateFilter.toISOString().split('T')[0] : '',
-    endDateFilter: endDateFilter ? endDateFilter.toISOString().split('T')[0] : '',
-    currentPage,
-    itemsPerPage
-  }, { skip: stopAPI })
 
-  useEffect(() => {
-    setStopCategoryAPI(false)
-    if (category?.result) {
-      setCategoryList(["All", ...category.result])
-      setStopCategoryAPI(true)
+  //downloadSalesReport
+  const handleSalesReport = async ()=>{
+      try{
+        const res = await downloadSalesReport({
+          categoryFilter,
+          startDateFilter: startDateFilter ? startDateFilter.toISOString().split('T')[0] : '',
+          endDateFilter: endDateFilter ? endDateFilter.toISOString().split('T')[0] : '',
+          currentPage,
+          itemsPerPage
+        })
+        if(res?.success){
+          setSalseDownloadDatas(res?.result)
+        }
+      }catch(error:any){
+        console.log(error)
+      }
+  }
+
+
+
+  // fetch category list
+
+  const handleFetchCategoryList = async ()=>{
+    try{
+      const res = await fetchCategoryList()
+      if(res?.success){
+        setCategoryList(["All", ...res?.result])
+      }
+
+    }catch(error:any){
+      console.log(error)
     }
-  }, [category])
+  }
+
+  
+  useEffect(() => {
+    
+    handleFetchCategoryList()
+    
+  }, [])
+
+  
+ 
 
   useEffect(() => {
-    setStopAPI(false)
-    if (data?.result?.salesDatas) {
-      setSalesReport(data.result.salesDatas)
-      setStopAPI(true)
+     // fetch sales data
+  const fetchSalesData = async ()=>{
+    try{
+      const res = await fetchSalesReport({
+        categoryFilter,
+        startDateFilter: startDateFilter ? startDateFilter.toISOString().split('T')[0] : '',
+        endDateFilter: endDateFilter ? endDateFilter.toISOString().split('T')[0] : '',
+        currentPage,
+        itemsPerPage
+      })
+      if(res?.result?.salesDatas){
+        setSalesReport(res?.result?.salesDatas)
+      }
+    }catch(error:any){
+      console.log(error)
     }
-  }, [data])
+  }
+  fetchSalesData()
+  }, [])
+
+  
 
   useEffect(() => {
-    if (downloadSales?.result && download == 'PDF') {
+    if (salesDownloadDatas && download == 'PDF') {
       const doc = new jsPDF()
       doc.text("Sales Report", 20, 10)
       ;(doc as any).autoTable({
         head: [["#", "User Name", "Date", "Worker", "Amount", "Status"]],
-        body: (downloadSales?.result)?.map((booking: any, index: number) => [
+        body: (salesDownloadDatas)?.map((booking: any, index: number) => [
           index + 1,
           booking?.user,
           booking?.preferredDate,
@@ -80,12 +115,13 @@ export default function SalesReport() {
       doc.save("booking_report.pdf")
       setDownload('')
     }
-  }, [downloadSales, download])
+  }, [salesDownloadDatas,download])
 
   useEffect(() => {
-    if (downloadSales?.result && download == 'XLSX') {
+    
+    if (salesDownloadDatas && download == 'XLSX') {
       const worksheet = XLSX.utils.json_to_sheet(
-        (downloadSales?.result)?.map((booking: any, index: number) => ({
+        (salesDownloadDatas)?.map((booking: any, index: number) => ({
           "#": index + 1,
           Username: booking?.user,
           Date: booking?.preferredDate,
@@ -99,10 +135,10 @@ export default function SalesReport() {
       XLSX.writeFile(workbook, "booking_report.xlsx")
       setDownload('')
     }
-  }, [downloadSales, download])
+  }, [download,salesDownloadDatas])
 
   const applyFilters = () => {
-    setStopAPI(false)
+    // fetchSalesData()
   }
 
   const resetFilters = () => {

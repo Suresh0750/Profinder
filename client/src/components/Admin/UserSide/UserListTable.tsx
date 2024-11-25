@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { useGetUserListQuery ,useIsUserBlockMutation} from "@/lib/features/api/adminApiSlice";
+import { fetchUserList, toggleUserBlock } from "@/lib/features/api/adminApiSlice";
 import Table from '@mui/material/Table';
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -33,14 +33,46 @@ const UserTable = () => {
   const [page,setPage] = useState(1)
   const [showUserList, setShowUserList] = useState<any[]>([]);
   const [allUserList, setAllUserList] = useState<any[]>([]);
-  const { data,refetch} = useGetUserListQuery("");
-  const [isUserBlock] = useIsUserBlockMutation()
   const Router = useRouter()
 
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage)
   };
+
+  // * fetch all user list
+
+  const fetchAllUserList = async ()=>{
+    try{
+      const res = await fetchUserList()
+      if(res?.success){
+        setAllUserList(res?.result);
+        setShowUserList(
+          (res?.result).map((user: any, i: number) =>
+             
+            createData(
+              i + 1,
+              user.username, 
+              user.PhoneNumber,
+              user.EmailAddress,
+              user.isBlock,
+              user._id
+            )
+           
+          )
+        );
+      }
+
+    }catch(error:any){
+      console.log(error)
+      
+    }
+  }
+
+  
+  useEffect(() => {
+    fetchAllUserList()
+  }, []);
 
   const searchHandle = (value:string)=>{
 
@@ -78,10 +110,10 @@ const UserTable = () => {
 
   const handleUserBlock =async (isBlock:boolean,_id:string)=>{
     try{
-      const result = await isUserBlock({isBlock,_id}).unwrap()
+      const result = await toggleUserBlock({isBlock,_id})
        if(result?.success){
         toast.success(result?.message)
-        refetch()
+        fetchAllUserList()
        }
     }catch(error:any){
         console.log(`Error from handleUserBlock`,error)
@@ -90,25 +122,6 @@ const UserTable = () => {
   }
 
 
-  useEffect(() => {
-    if (data) {
-      setAllUserList(data?.result);
-      setShowUserList(
-        (data?.result).map((user: any, i: number) =>
-           
-          createData(
-            i + 1,
-            user.username, 
-            user.PhoneNumber,
-            user.EmailAddress,
-            user.isBlock,
-            user._id
-          )
-         
-        )
-      );
-    }
-  }, [data]);
 
 
   return (

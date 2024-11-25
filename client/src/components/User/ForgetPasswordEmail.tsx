@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { useCheckEmailForgetPassMutation } from "@/lib/features/api/userApiSlice";
-import { useCheckWorkerEmailForgetPassMutation } from "@/lib/features/api/workerApiSlice";
+import {checkEmailForgetPass} from "@/lib/features/api/userApiSlice";
+import { checkWorkerEmailForgetPass } from "@/lib/features/api/workerApiSlice";
 import { toast, Toaster } from "sonner";
 import { useRouter } from "next/navigation";
 import { ColorRing } from "react-loader-spinner";
@@ -13,10 +13,6 @@ const UserForgetPassword = ({role}:{role:string}) => {
   const [email, setUserEmail] = useState("");
   const [emailErrmsg, setEmailErrMsg] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
-
-  const [checkEmailForgetPass] = useCheckEmailForgetPassMutation();
-  const [CheckWorkerEmailForget] = useCheckWorkerEmailForgetPassMutation();
-  
 
   const Router = useRouter();
   const dispatch = useDispatch()
@@ -41,9 +37,9 @@ const UserForgetPassword = ({role}:{role:string}) => {
       let result ;
       // * Call the API
       if(role=='user'){
-       result = await checkEmailForgetPass({ emailAddress : email,role }).unwrap();
+       result = await checkEmailForgetPass({ emailAddress : email,role });
       }else {
-        result = await CheckWorkerEmailForget({ emailAddress:email,role }).unwrap();
+        result = await checkWorkerEmailForgetPass({ emailAddress:email,role })
 
       }
       if (result.success) {
@@ -55,12 +51,9 @@ const UserForgetPassword = ({role}:{role:string}) => {
         }, 600);
       }
      
-    } catch (err: any) {
-      // console.log(`Error in validateEmail function: ${err.message}`);
-     
-      err.data?.message
-        ? toast.error(err.data?.message)
-        : toast.error("Error in submitting email.");
+    } catch (error: any) {
+     console.log(error)
+      toast.error(error?.message)
     } finally {
       setIsLoading(false)
     }

@@ -7,7 +7,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { CheckCircle, ArrowRight, Calendar, DollarSign, MapPin, Clock } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { usePaymentDetailsQuery } from "@/lib/features/api/customerApiSlice";
+import {paymentDetails } from "@/lib/features/api/customerApiSlice";
 
 interface PaymentData {
   service?: string;
@@ -18,13 +18,29 @@ interface PaymentData {
 }
 
 export default function EnhancedPaymentSuccessPage({ params }: { params: { id: string } }) {
-  const [isExpanded, setIsExpanded] = useState(false);
+
   const [paymentData, setPaymentData] = useState<PaymentData>({});
-  const { data } = usePaymentDetailsQuery(params?.id);
 
   useEffect(() => {
-    setPaymentData(data?.result || {});
-  }, [data]);
+    async function handlePaymentData() {
+      try {
+        const res = await paymentDetails(params.id);
+        if (res?.success) {
+          setPaymentData(res?.result || {});
+        } else {
+          console.error("Failed to fetch payment data");
+          
+        }
+      } catch (error: any) {
+        console.log("Error fetching payment data:", error?.message);
+       
+      }
+    }
+    handlePaymentData()
+  }, [params.id]);
+  
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200 flex items-center justify-center p-4 mt-[4em]">

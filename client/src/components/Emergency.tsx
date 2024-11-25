@@ -1,5 +1,5 @@
 "use client"
-import { useGetCategoryNameQuery, useGetNearByworkerListMutation } from '@/lib/features/api/customerApiSlice';
+import {fetchCategoryName, fetchNearByWorkerList } from '@/lib/features/api/customerApiSlice';
 import { workerDetailsWithlatlon } from '@/types/utilsTypes';
 import React, { useState, useEffect } from 'react';
 import GoogleMaps from './GoogleMap/GoogleMaps';
@@ -11,21 +11,32 @@ interface ModalProps {
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [category, setCategory] = useState<string>('');
+  const [allCategory,setAllCategory] = useState([])
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isOpenMap, setIsOpenMap] = useState<boolean>(false);
   const [coords, setCoords] = useState<{ latitude: number; longitude: number }>({ latitude: 0, longitude: 0 });
   const [categoryWorkerData, setCategoryWorkerData] = useState<workerDetailsWithlatlon[]>([]);
 
-  // * API call to get categories
-  const { data } = useGetCategoryNameQuery('');
-  const [getNearByworkerList, { isLoading }] = useGetNearByworkerListMutation();
+  // fetch category name 
+
+  const fetchAllCategoryName = async ()=>{
+    try{
+      const res = await fetchCategoryName()
+      if(res?.success){
+        setCategory(res?.result?.[0]);
+        setAllCategory(res?.result)
+        
+      }
+
+    }catch(error:any){
+      console.log(error)
+    }
+  }
 
   // * Set the default category when the data is loaded
   useEffect(() => {
-    if (data?.result?.length) {
-      setCategory(data.result[0]);
-    }
-  }, [data]);
+    fetchAllCategoryName()
+  }, []);
 
   // * Get user location
   const userLocation = async () => {
@@ -50,7 +61,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     // * Validation
     if (!category) newErrors.category = "Category is required";
 
-    if (Object.keys(newErrors).length > 0) {
+    if (Object.keys(newErrors)?.length > 0) {
       setErrors(newErrors);
       return;
     }
@@ -66,10 +77,10 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
   // Function to handle API call with the selected category
   const handleCategorySelection = async (selectedCategory: string) => {
-    const result = await getNearByworkerList(selectedCategory);
+    const result = await fetchNearByWorkerList(selectedCategory);
 
-    if (result?.data?.success) {
-      setCategoryWorkerData(result.data.result);
+    if (result?.success) {
+      setCategoryWorkerData(result?.result);
       onClose(); // Close the category modal
       setIsOpenMap(true); // Open the map
     } else {
@@ -104,7 +115,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                 <option value="" disabled>
                   Select a category
                 </option>
-                {data?.result?.map((cat: string) => (
+                {allCategory?.map((cat: string) => (
                   <option key={cat} value={cat}>
                     {cat}
                   </option>

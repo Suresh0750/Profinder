@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent,CardHeader, CardTitle} from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import {fetchWorkerData, useGetWorkerDataQuery} from '@/lib/features/api/adminApiSlice'
+import {fetchWorkerData} from '@/lib/features/api/adminApiSlice'
 import {Triangle} from 'react-loader-spinner'
 import IdentityModal from "./IdentityVerifyModal";
 

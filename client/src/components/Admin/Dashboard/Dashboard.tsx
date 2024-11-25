@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { DollarSign, Star, Users, TrendingUp } from "lucide-react"
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import {toast,Toaster} from 'sonner'
 // API 
 import {fetchDashboardData } from '@/lib/features/api/adminApiSlice'
@@ -30,8 +29,6 @@ const Dashboard = () => {
                                               },
                                           ],
                                       });
-  const [isLoading,setIsLoading] =  useState<boolean>(false)
-  
 
   const router = useRouter();
 
@@ -39,9 +36,7 @@ const Dashboard = () => {
     
     const loadDashboardData = async()=>{
       try{
-        if(isLoading) return
-        alert('hello')
-        setIsLoading(true)   // * prevent the Multiple api trigger
+      
         const res = await fetchDashboardData()
         if(res?.result){
           setDashboard(res?.result)
@@ -49,8 +44,6 @@ const Dashboard = () => {
       }catch(error:any){
         console.log(error?.message)
         toast.error(error?.message)
-      }finally{
-        setIsLoading(false)
       }
     }
     loadDashboardData()

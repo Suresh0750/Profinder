@@ -3,7 +3,7 @@
 
 import React,{useState} from 'react';
 import { GoogleLogin } from '@react-oauth/google';
-import { useCustomerGoogleLoginMutation ,customerGoogleLogin} from "@/lib/features/api/customerApiSlice"
+import { customerGoogleLogin} from "@/lib/features/api/customerApiSlice"
 import { jwtDecode } from "jwt-decode";
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from "sonner"

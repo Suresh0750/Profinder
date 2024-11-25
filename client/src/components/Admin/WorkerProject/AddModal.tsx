@@ -1,6 +1,6 @@
 "use client";
 
-import { useWorkerUploadProjectMutation } from "@/lib/features/api/workerApiSlice";
+import { uploadProject } from "@/lib/features/api/workerApiSlice";
 import { useState, ChangeEvent, FormEvent,useEffect } from "react";
 import {toast,Toaster} from 'sonner'
 import Image from "next/image"
@@ -20,8 +20,9 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose,refetch }) =>
   const [description, setDescription] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [customerData, setCustomerData] = useState<any>({});
+  const [isLoading,setIsLoading] = useState<boolean>(false)
 
-  const [workerUploadProject,{isLoading}] = useWorkerUploadProjectMutation()
+
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -69,26 +70,30 @@ const UploadModal: React.FC<UploadModalProps> = ({ isOpen, onClose,refetch }) =>
     setError(""); // Reset error before validation
   
     if (!validateForm() || isLoading) return;
+    
+    setIsLoading(true)
   
     const formData = new FormData();
     if(customerData?._id) formData.append("_id", customerData?._id);
     
     formData.append("image", image as Blob);
     formData.append("projectName", projectName.trim());
-    formData.append("ProjectDescription", description.trim());
+    formData.append("projectDescription", description.trim());
   
     try {
-      const response = await workerUploadProject(formData).unwrap();
+      const response = await uploadProject(formData);
       if (response?.success) {
         toast.success(response.message);
-       await refetch();  
+        refetch();  
         
         onClose(); // Close modal on successful submission
       }
     } catch (error: any) {
-      setError("Failed to submit. Try again.");
-      console.error("Error:", error);
-      toast.error(error?.errMessage);
+      setError(error?.message);
+      toast.error(error?.message)
+      
+    } finally{
+      setIsLoading(false)
     }
   };
   

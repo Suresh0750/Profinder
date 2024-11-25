@@ -1,5 +1,6 @@
+
 import { useEffect, useRef, useState } from "react";
-import { usePayU_APIMutation } from "@/lib/features/api/customerApiSlice";
+import { payUHash } from "@/lib/features/api/customerApiSlice";
 import { FRONTEND_DOMAIN, PayU } from "@/utils/constants";
 import { IUser } from "@/types/utilsTypes";
 import { generateTxnId } from "@/utils/generateTxnId";
@@ -10,13 +11,14 @@ type props = {
   payment: string;
 };
 
+
+
 const PayUComponent = ({ currUserData, requestId, payment }: props) => {
   const [hash, setHash] = useState(null);
 
+  console.log(currUserData,requestId,payment)
   const { customerName, _id, customerEmail }: any = currUserData;
 
-  // * API call
-  const [payU_API] = usePayU_APIMutation();
 
   const txnidRef = useRef(generateTxnId(8));
   const txnid = txnidRef.current;
@@ -31,16 +33,20 @@ const PayUComponent = ({ currUserData, requestId, payment }: props) => {
   const service_provider = "payu_paisa";
   useEffect(() => {
     const data = { txnid, amount, productinfo, firstname, customerEmail, phone };
-
     (async function (data) {
+   
+
       try {
-        const res = await payU_API(data).unwrap();
+        const res = await payUHash(data);
         setHash(res.hash);
+        console.log('hash')
+        console.log(res.hash)
+        console.log({key,_id,surl,furl,hash:res.hash})
       } catch (error: any) {
         console.error("Payment Error: " + error.message);
       }
     })(data);
-  }, [payU_API, amount, customerEmail, firstname, productinfo, txnid]);
+  }, [ amount, customerEmail, firstname, productinfo, txnid]);
 
   return (
     <form action="https://test.payu.in/_payment" method="post">

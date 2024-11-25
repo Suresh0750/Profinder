@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import {AdminCredentials} from '@/types/adminTypes'
-import {useAdminVeriyAPIMutation,adminLogin} from '@/lib/features/api/adminApiSlice'
+import {adminLogin} from '@/lib/features/api/adminApiSlice'
 import { Toaster, toast } from 'sonner';
 import {useRouter} from 'next/navigation'
 

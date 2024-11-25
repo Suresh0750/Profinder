@@ -1,7 +1,9 @@
 import { BaseQueryFn } from "@reduxjs/toolkit/query";
 import { createApi, fetchBaseQuery,FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
-// import { register } from "module"
 import {FormValues} from "@/types/workerTypes"
+import Router from 'next/router'; 
+
+
 
 const baseQuery = fetchBaseQuery({
     baseUrl: `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
@@ -175,24 +177,24 @@ export const workerApi = createApi({
 
 
 export const {
-    useAddtionalProffessionalInfoMutation,
-    useWorkerSignUpMutation,
-    useProfessionalInfoMutation,
-    useCheckWorkerEmailForgetPassMutation,
-    useLoginMutation,
-    useGetWorkerDetailsQuery,
-    useWorkerUploadProjectMutation,
-    useGetWorkerProjectQuery,
-    useGetSingleWorkerDetailsQuery,
-    useGetAllRequestDataQuery,
-    useAcceptWorkAPIMutation,
-    useRejectWorkAPIMutation,
-    useGetmessageQuery,
-    useUpdateMessageMutation,
-    useFetchMessageQuery,
-    useDashboardQuery,
-    useGetUpcomingWorksQuery,
-    useUpdateWorkStatusMutation,
+    // useAddtionalProffessionalInfoMutation,
+    // useWorkerSignUpMutation,
+    // useProfessionalInfoMutation,
+    // useCheckWorkerEmailForgetPassMutation,
+    // useLoginMutation,
+    // useGetWorkerDetailsQuery,
+    // useWorkerUploadProjectMutation,
+    // useGetWorkerProjectQuery,
+    // useGetSingleWorkerDetailsQuery,
+    // useGetAllRequestDataQuery,
+    // useAcceptWorkAPIMutation,
+    // useRejectWorkAPIMutation,
+    // useGetmessageQuery,
+    // useUpdateMessageMutation,
+    // useFetchMessageQuery,
+    // useDashboardQuery,
+    // useGetUpcomingWorksQuery,
+    // useUpdateWorkStatusMutation,
 } = workerApi
 
 import axios from 'axios'
@@ -207,6 +209,28 @@ const axiosInstance1 = axios.create({
     baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
     withCredentials : true,
 })
+
+// Axios interceptor
+
+axiosInstance.interceptors.response.use(
+    (response) => {
+        console.log('accout is block')
+        if (response.data?.isBlock) {
+            console.log('User is blocked. Redirecting to login...');
+            Router.replace('/homePage'); 
+            localStorage.setItem('customerData','')
+            localStorage.setItem('workerDetails','')
+            localStorage.setItem('conversationId','')
+            return Promise.reject(new Error('Account is blocked'));
+        }
+        return response; 
+    },
+    (error) => {
+       
+        console.error('API Error:', error);
+        return Promise.reject(error);
+    }
+);
 
 // * Error handler
 export const handleAxiosError = (error:any)=>{
@@ -265,7 +289,7 @@ export const login = async(data:any)=>{
 
 export const uploadProject = async(data:any)=>{
     try{
-        const response = await axiosInstance.post(`/worker/uploadWorkerProject`,data)
+        const response = await axiosInstance1.post(`/worker/uploadWorkerProject`,data)
         return response.data
     }catch(error:any){
         throw handleAxiosError(error)

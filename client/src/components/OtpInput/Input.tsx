@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Toaster, toast } from "sonner";
-import { useCustomerOtpMutation,useCustomerResendMutation } from "@/lib/features/api/customerApiSlice";
+import { customerOtp, customerResend } from "@/lib/features/api/customerApiSlice";
 import { ClipLoader } from "react-spinners";
 import {useRouter} from 'next/navigation'
 import { useDispatch } from "react-redux";
@@ -13,8 +13,6 @@ export default function InputOtp({ userId }: { userId: string }) {
   const [isResendVisible, setResendVisible] = useState(false);
   const Router = useRouter()
 
-  const [CustomerOtp] = useCustomerOtpMutation();
-  const [CustomerResend] = useCustomerResendMutation();
 
   const dispatch = useDispatch()
 
@@ -65,7 +63,7 @@ export default function InputOtp({ userId }: { userId: string }) {
     // * Call API to resend OTP
     try {
       setLoading(true);
-      const res = await CustomerResend({ userId, role: "user" }).unwrap();
+      const res = await customerResend({ customerId:userId, role: "user" })
 
       if (res.success) {
         toast.success(res.message);
@@ -75,7 +73,7 @@ export default function InputOtp({ userId }: { userId: string }) {
       }
     } catch (error: any) {
       console.log("Resend OTP error: ", error);
-      toast.error(error?.data?.errorMessage || "Server error");
+      toast.error(error?.message);
     } finally {
       setLoading(false);
     }
@@ -93,8 +91,8 @@ export default function InputOtp({ userId }: { userId: string }) {
         return;
       }
 
-      const data = { otpValue, userId, role: "user" };
-      const res = await CustomerOtp(data).unwrap();
+      const data = { otpValue, customerId:userId, role: "user" };
+      const res = await customerOtp(data)
 
       if (res.success) {
         toast.success(res.message);
@@ -108,7 +106,7 @@ export default function InputOtp({ userId }: { userId: string }) {
       }
     } catch (error: any) {
       console.log("OTP Page \n", error);
-      toast.error(error?.data?.errorMessage || "Server error");
+      toast.error(error?.Message);
     } finally {
       setLoading(false);
     }

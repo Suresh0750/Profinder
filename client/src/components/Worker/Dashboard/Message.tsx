@@ -3,9 +3,9 @@ import React, { useState,useEffect } from 'react'
 import { Search, Send } from 'lucide-react'
 import {conversationData} from '@/types/workerTypes'
 import {
-    useGetmessageQuery,
-    useUpdateMessageMutation,
-    useFetchMessageQuery
+    connectedUsers ,
+    fetchMessage,
+    updateMessage,
 } from '../../../lib/features/api/workerApiSlice'
 import {readMsgType,newMessage} from '@/types/utilsTypes'
 import {io,Socket} from 'socket.io-client'
@@ -17,15 +17,10 @@ const [inputMessage, setInputMessage] = useState("")
 const [allCustomer,setAllCustomer] = useState([])
 const [customerDetails,setCustomerDetails] = useState([])
 const [conversationID,setConversationID] = useState<string>('')
-const [stopFetch,setStopFetch] = useState(true)
-const [messages ,setMessages] = useState<any[]>([])
-const [stopFetchGetMsg,setStopFetchGetMsg] = useState<boolean>(true)
 
-// * API
-const [updateMessage] = useUpdateMessageMutation()
+const [messages ,setMessages] = useState<any[]>([])
+
 const [customerData, setCustomerData] = useState<any>({});
-const {data,refetch} = useGetmessageQuery(customerData?._id,{skip:stopFetchGetMsg})
-const {data:allMessage,refetch:refetchAllMsg} =  useFetchMessageQuery(conversationID,{skip:stopFetch,refetchOnMountOrArgChange: true})
 const [socket,setSocket] = useState<Socket|null>(null)
 const [messageBox,setMessageBox] = useState<conversationData>({
         _id : '',
@@ -49,6 +44,49 @@ interface newMessage {
   conversationId?:string
 }
 
+
+
+// fetch user list
+const fetchConnectedPeople = async ()=>{
+  try{
+    const res = await connectedUsers(customerData?._id)
+    if(res?.success){
+      setCustomerDetails(res?.result)
+      setAllCustomer(res?.result)
+    }
+  }catch(error:any){
+    console.log(error)
+  }
+}
+
+// fetch conversation message
+
+const fetchAllMsg = async ()=>{
+  try{
+    const res = await fetchMessage(conversationID)
+    if(res?.success){
+      setMessages(res?.result)
+    }
+  }catch(error:any){
+    console.log(error)
+  }
+}
+
+
+
+useEffect(()=>{
+  if(customerData?._id){
+    fetchConnectedPeople()
+  }
+},[customerData?._id])
+
+useEffect(()=>{
+  if(conversationID){
+    fetchAllMsg()
+  }
+},[conversationID])
+
+
 useEffect(() => {
   
   if (typeof window !== "undefined") {
@@ -56,7 +94,7 @@ useEffect(() => {
     if (storedData) {
       try {
         setCustomerData(JSON.parse(storedData));
-        setStopFetchGetMsg(false)
+      
       } catch (error) {
         console.error("Error parsing customerData from localStorage:", error);
         setCustomerData({});
@@ -114,21 +152,6 @@ useEffect(() => {
   },[socket])
 
   
-// * enable get method RTK query API tool
-  useEffect(()=>{
-    if(conversationID){
-      setStopFetch(false)
-    }
-  },[conversationID])
-
-  useEffect(()=>{
-    setMessages(allMessage?.result)
-  },[allMessage])
-  
-useEffect(()=>{
-    setCustomerDetails(data?.result)
-    setAllCustomer(data?.result)
-},[data])
 
 
 const handleSearch = (e:React.ChangeEvent<HTMLInputElement>)=>{

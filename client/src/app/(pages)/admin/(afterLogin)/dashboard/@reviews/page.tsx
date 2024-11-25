@@ -11,7 +11,7 @@ import {useState,useEffect} from 'react'
 
 // * RTK query
 // * API CALL
-import {useDashboardReviewQuery} from '@/lib/features/api/adminApiSlice'
+import {fetchReviewDashboardData} from '@/lib/features/api/adminApiSlice'
 
 // * types
 import {reviewDashboardTypes} from '@/types/adminTypes'
@@ -19,15 +19,22 @@ import {reviewDashboardTypes} from '@/types/adminTypes'
 export default function ReviewsPage() {
 
   const [recentReviews,setRecentReviews] = useState<reviewDashboardTypes[]>([])
-  const {data} = useDashboardReviewQuery({})
+
+
+  const fetchDashboardOverview = async ()=>{
+    try{
+      const res = await fetchReviewDashboardData()
+      if(res?.success){
+        setRecentReviews(res?.result)
+      }
+    }catch(error:any){
+      console.log(error)
+    }
+  }
 
   useEffect(()=>{
-    if(data?.result){
-      // console.log('review page')
-      // console.log(JSON.stringify(data?.result))
-      setRecentReviews(data?.result)
-    }
-  },[data])
+    fetchDashboardOverview()
+  },[])
 
   return (
     <Card>

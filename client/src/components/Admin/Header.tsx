@@ -1,8 +1,9 @@
 'use client'
+import {useState} from 'react'
 import logo from '../../../public/images/profinderIcon.png'
 import Image from 'next/image'
 import LogoutIcon from '@mui/icons-material/Logout'
-import {useAdminLogoutAPIMutation} from '../../lib/features/api/adminApiSlice'
+import {adminLogout} from '../../lib/features/api/adminApiSlice'
 import {useRouter} from 'next/navigation'
 import {toast,Toaster} from 'sonner'
 
@@ -10,15 +11,15 @@ export default function Header(){
 
     // * navigation route
     const Router = useRouter()
+    const [isLoading,setIsLoading] = useState<boolean>(false)
 
-    // * API Call
 
-    const [AdminLogoutAPI,{isLoading,isSuccess}] = useAdminLogoutAPIMutation()
-
+//adminLogout
     const handleLogout = async ()=>{
         try{
             if(isLoading) return
-            const result = await AdminLogoutAPI('').unwrap()
+            setIsLoading(true)
+            const result = await adminLogout()
 
             if(result.success){
                 toast.success(result.message)
@@ -28,10 +29,9 @@ export default function Header(){
             }
         }catch(error:any){
             console.log(`Error from logout function ${error}`)
-            {
-                error.data.errorMessage ?  toast.error(error.errorMessage) :  toast.error(`something wrong please try again`)
-            }
-           
+           toast.error(error?.message)
+        }finally{
+            setIsLoading(false)
         }
     }
 

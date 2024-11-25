@@ -1,10 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import {
-  useGetAllUnApprovalWorkerlistQuery,
-  useIsUserBlockMutation,
-  useIsWorkerApprovalMutation,
-  fetchUnapprovedWorkers
+  fetchUnapprovedWorkers,
 } from "@/lib/features/api/adminApiSlice";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -49,36 +46,35 @@ const UserTable = () => {
  
 
 
-  // const { data, refetch } = useGetAllUnApprovalWorkerlistQuery({});
-
+  
 
   const router = useRouter();
-  useEffect(()=>{
-    async function fetchUnApprovalWorker(){
-      try{
-        const res = await fetchUnapprovedWorkers()
-        if(res?.success){
-          setAllWorkerList(res?.result);
-          setShowWorkerList(
-            res?.result.map((worker: any, i: number) =>
-              createData(
-                i + 1,
-                worker.profile, 
-                worker.firstName, 
-                worker.phoneNumber,
-                worker.emailAddress,
-                worker.isBlock,
-                worker.identity,
-                worker._id
-              )
+  async function fetchUnApprovalWorker(){
+    try{
+      const res = await fetchUnapprovedWorkers()
+      if(res?.success){
+        setAllWorkerList(res?.result);
+        setShowWorkerList(
+          res?.result.map((worker: any, i: number) =>
+            createData(
+              i + 1,
+              worker.profile, 
+              worker.firstName, 
+              worker.phoneNumber,
+              worker.emailAddress,
+              worker.isBlock,
+              worker.identity,
+              worker._id
             )
-          );
-        }
-        
-      }catch(error:any){
-        toast.error(error?.message)
+          )
+        );
       }
+      
+    }catch(error:any){
+      toast.error(error?.message)
     }
+  }
+  useEffect(()=>{
     fetchUnApprovalWorker()
   },[])
 

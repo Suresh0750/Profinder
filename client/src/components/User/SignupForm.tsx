@@ -5,7 +5,7 @@ import axios from 'axios';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useSignUpMutation,signUp} from '@/lib/features/api/userApiSlice';
+import { signUp} from '@/lib/features/api/userApiSlice';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Toaster, toast } from 'sonner';
@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { useState } from 'react';
 import { PulseLoader } from 'react-spinners';
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // for password visibility
-import { updateCustomerLogin, updateRole } from '@/lib/features/slices/customerSlice';
+import {updateRole } from '@/lib/features/slices/customerSlice';
 import { useDispatch } from 'react-redux';
 import { userSignupformSchema } from '@/lib/formSchema';
 
@@ -53,7 +53,7 @@ export function SignupForm() {
       if (res.success) {
         toast.success('User registration successful');
         setTimeout(() => {
-          router.push(`/user/userOtp/${res.user}`);
+          router.replace(`/user/userOtp/${res.user}`);
         }, 500);
       }
     } catch (error: any) {

@@ -10,7 +10,7 @@ import {useState,useEffect} from 'react'
 
 
 // * api call
-import {useDashboardWorkerQuery} from '@/lib/features/api/adminApiSlice'
+import {fetchWorkerDashboardData} from '@/lib/features/api/adminApiSlice'
 
 // * types
 import {topWorkerTypes} from '@/types/adminTypes'
@@ -20,12 +20,22 @@ export default function WorkersPage() {
 
   const [worker,setWorker] = useState<topWorkerTypes[]>([])
 
-  const {data} = useDashboardWorkerQuery({})
+
+  // fetch worker dashboard 
+  const fetchDashboardOverview = async ()=>{
+    try{
+      const res = await fetchWorkerDashboardData()
+      if(res?.success){
+        setWorker(res?.result)
+      }
+    }catch(error:any){
+      console.log(error)
+    }
+  }
 
   useEffect(()=>{
-    setWorker(data?.result)
-
-  },[data])
+    fetchDashboardOverview()
+  },[])
 
 
   return (

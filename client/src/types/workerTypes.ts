@@ -95,3 +95,12 @@ export interface upcomingWorkerData  {
   updatedAt : string,
   __v : number
 }
+
+
+// * worker dashboard
+
+export interface ImageData {
+  projectDescription: string; 
+  projectImage: string;
+  projectName: number;
+}

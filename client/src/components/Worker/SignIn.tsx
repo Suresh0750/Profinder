@@ -7,7 +7,7 @@ import {Checkbox} from "../ui/checkbox"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { useLoginMutation,login } from "@/lib/features/api/workerApiSlice"
+import {login } from "@/lib/features/api/workerApiSlice"
 import { PulseLoader } from 'react-spinners';
 import {
   Form,
@@ -23,7 +23,6 @@ import { toast, Toaster } from "sonner"
 import Link from 'next/link'
 import {updateCustomerLogin,updateRole} from '@/lib/features/slices/customerSlice'
 import { useDispatch } from "react-redux"
-import { updateSignup ,getWorkerData} from "@/lib/features/slices/workerSlice"
 import GooglLogin from '../Utils/WorkerGoogle'
 import { workerLoginFormSchema } from "@/lib/formSchema"
 

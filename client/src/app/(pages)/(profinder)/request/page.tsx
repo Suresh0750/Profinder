@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { useRequestToWorkerMutation ,requestToWorker} from '@/lib/features/api/customerApiSlice'
+import {requestToWorker} from '@/lib/features/api/customerApiSlice'
 import { toast, Toaster } from 'sonner'
 import { useLoadScript, Autocomplete, GoogleMap, Marker } from "@react-google-maps/api"
 import { Button } from "@/components/ui/button"

@@ -1,7 +1,7 @@
 "use client";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { useGetWorkerListQuery } from "@/lib/features/api/adminApiSlice";
+import { fetchWorkerList,blockWorker } from "@/lib/features/api/adminApiSlice";
 import Table from '@mui/material/Table';
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -14,8 +14,7 @@ import { Pagination } from "@mui/material";
 import Image from "next/image"
 import {toast,Toaster} from 'sonner'
 
-// * API call
-import {useIsWorkerBlockMutation} from '@/lib/features/api/adminApiSlice'
+
 
 function createData(
   No: number,
@@ -33,30 +32,60 @@ const WorkerTableBody = () => {
   const [page,setPage] = useState(1)
   const [showWorkerList, setShowWorkerList] = useState<any[]>([]);
   const [allWorkerList, setAllWorkerList] = useState<any[]>([]);
-  const { data,refetch } = useGetWorkerListQuery("");
-
-  const [isWorkerBlock,{isLoading}] = useIsWorkerBlockMutation()
+  const [isLoading,setIsLoading] = useState<boolean>(false)
 
 
   const handleChangePage = (event: React.ChangeEvent<unknown>, newPage: number) => {
     setPage(newPage)
   };
 
+
+  // fetch all workerlist
+
+  const fetchAllWorkerList = async()=>{
+    try{
+      const res = await fetchWorkerList()
+      if(res?.success){
+        setAllWorkerList(res?.result);
+        setShowWorkerList(
+          (res?.result).map((worker: any, i: number) =>
+              
+            createData(
+              worker?._id,
+              worker.profile, 
+              worker.firstName,
+              worker.phoneNumber,
+              worker.category,
+              worker?.isBlock
+            )
+            
+          )
+        );
+      }
+
+    }catch(error:any){
+      console.log(error)
+    }
+  }
+  useEffect(() => {
+    fetchAllWorkerList()
+  }, []);
+
   const searchHandle = (value:string)=>{
   
     if(value){
 
       let filterData =allWorkerList
-      filterData = filterData?.filter((prev:any)=>((prev?.FirstName).toLowerCase())?.includes((value)?.toLowerCase()))
+      filterData = filterData?.filter((prev:any)=>((prev?.firstName).toLowerCase())?.includes((value)?.toLowerCase()))
      
       setShowWorkerList(
         filterData?.map((worker: any, i: number) =>
          createData(
               worker?._id,
-              worker.Profile, 
-              worker.FirstName,
-              worker.PhoneNumber,
-              worker.Category,
+              worker.profile, 
+              worker.firstName,
+              worker.phoneNumber,
+              worker.category,
               worker?.isBlock,
               
             )
@@ -67,47 +96,32 @@ const WorkerTableBody = () => {
         allWorkerList?.map((worker: any, i: number) =>
           createData(
               worker?._id,
-              worker.Profile, 
-              worker.FirstName,
-              worker.PhoneNumber,
-              worker.Category,
+              worker.profile, 
+              worker.firstName,
+              worker.phoneNumber,
+              worker.category,
               worker?.isBlock,
               
             )
         ))
     }
   }
-  useEffect(() => {
-    if (data) {
-      setAllWorkerList(data?.result);
-      setShowWorkerList(
-        (data?.result).map((worker: any, i: number) =>
-            
-          createData(
-            worker?._id,
-            worker.Profile, 
-            worker.FirstName,
-            worker.PhoneNumber,
-            worker.Category,
-            worker?.isBlock
-          )
-          
-        )
-      );
-    }
-  }, [data]);
+ 
 
   const handleIsBlock = async(id:string)=>{
     try{
       if(isLoading) return 
 
-      const res =  await isWorkerBlock(id).unwrap()
+      setIsLoading(true)
+      const res =  await blockWorker(id)
       if(res.success){
         toast.success(res.message)
-        refetch()
+        fetchAllWorkerList()
       }
     }catch(error){
       console.log(error)
+    } finally{
+      setIsLoading(false)
     }
   }
 
