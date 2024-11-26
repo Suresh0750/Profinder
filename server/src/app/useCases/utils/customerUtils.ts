@@ -116,6 +116,9 @@ export const getCategoryNameUtils = async()=>{
 export const getVerifiedWorkerUtils = async(lat:string,lon:string)=>{
     try {
         const workerData = await CustomerQueryRepository().getVerifiedWorker()
+        console.log('all worker')
+        console.log(JSON.stringify(workerData))
+        console.log(lat,lon)
         const res = await FindNearByWorkers({latitude:Number(lat),longitude:Number(lon)},workerData)
         return res
     } catch (error) {

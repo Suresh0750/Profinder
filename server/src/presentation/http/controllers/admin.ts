@@ -38,7 +38,9 @@ import { JwtService } from "../../../infrastructure/service/jwt"
 // * admin in sales Report side
 export const downloadSales = async(req:Request,res:Response,next:NextFunction)=>{
     try{
+        console.log('downloadSales')
         const result = await downloadSalesUsecases(req.query)
+        console.log(result)
         return res.status(StatusCode.Success).json({success:true,message:'data has been fetched',result})
     }catch(error){
         console.log(`Error from downloadSales\n${error}`)  
@@ -52,7 +54,7 @@ export const salesReport = async(req:Request,res:Response,next:NextFunction)=>{
         console.log(req?.query)
       
         const result = await salesUsecases(req.query)
-   
+        console.log(result)
         return await res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
     } catch (error) {
         console.log(`Error from salesReport\n${error}`)  
@@ -63,6 +65,7 @@ export const salesReport = async(req:Request,res:Response,next:NextFunction)=>{
 export const categoryList = async (req:Request,res:Response,next:NextFunction)=>{
     try {
         const result = await getCategory()
+        console.log(result)
         return await res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
 
     } catch (error) {
