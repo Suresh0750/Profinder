@@ -6,7 +6,7 @@ import { WorkerInformation } from "../../../domain/entities/worker";
 import { ICustomerQueryRepository } from "../../../domain/repositories/customer";
 
 // * database model
-import { CategoryModel } from "./models/admin(category)";
+import { CategoryModel } from "./models/category";
 import {UserModel} from './models/user'
 import {WorkerModel} from './models/worker'
 import {RequestModel} from './models/request'

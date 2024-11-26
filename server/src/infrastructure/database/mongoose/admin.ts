@@ -7,7 +7,7 @@ import { AddCategory,filterSales } from "../../../domain/entities/admin"
 import {IAdminMongoose} from "../../../domain/repositories/admin"
 
 // * Model
-import {CategoryModel} from "./models/admin(category)"
+import {CategoryModel} from "./models/category"
 import {WorkerModel} from "./models/worker"
 import {UserModel} from "./models/user"
 import { RecentActivityModel } from "./models/recentActivity"
