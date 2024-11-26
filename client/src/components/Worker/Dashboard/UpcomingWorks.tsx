@@ -33,26 +33,28 @@ export default function UpcomingWorksPage() {
 
 
 
-  // handle fetchUpcoming works data
-  const handleFethcUpcomingData = async ()=>{
-    try{
-      console.log('isLoading',isLoading)
-      if(isLoading) return
-      setIsLoading(true)
-      const res = await fetchUpcomingWorks(customerData?._id)
-      if(res?.message){
-        setUpcomingWorks(res?.result)
+     // handle fetchUpcoming works data
+     const handleFethcUpcomingData = async ()=>{
+      try{
+        console.log('isLoading',isLoading)
+        if(isLoading) return
+        setIsLoading(true)
+        const res = await fetchUpcomingWorks(customerData?._id)
+        if(res?.message){
+          console.log(res?.result)
+          setUpcomingWorks(res?.result)
+        }
+      }catch(error:any){
+        setError(true)
+        console.log(error?.message)
+      }finally{
+        setIsLoading(false)
       }
-    }catch(error:any){
-      setError(true)
-      console.log(error?.message)
-    }finally{
-      setIsLoading(false)
     }
-  }
   useEffect(()=>{
     if(customerData?._id){
-      handleFethcUpcomingData()
+   
+  handleFethcUpcomingData()
     }
   },[customerData?._id])
 
@@ -102,6 +104,7 @@ export default function UpcomingWorksPage() {
         const result:any = await updateWorkStatus({status:newStatus,_id})
       
         if(result?.success){
+          // alert(newStatus)
           MySwal.fire(
             `Mark as ${newStatus}!`,
             `${selectedWork?.userId?.username} has been ${newStatus}.`,

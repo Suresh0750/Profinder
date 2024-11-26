@@ -168,7 +168,6 @@ export default function WorkerRequestPage() {
       setValidationErrors(errors)
       return
     }
-
     try {
       const result = await requestToWorker({
         ...formData,

@@ -53,15 +53,7 @@ const ImageGrid = () => {
       }
     }
   }, []);
-  // Fetching worker projects data
-  
-  // useEffect(() => {
-  //   if (data && data.length > 0) {
-  //     setShowImage(data?.result); // Using data fetched from the API
-  //   } else if (workerData?.WorkerImage) {
-  //     setShowImage(workerData.WorkerImage); // Fallback to redux data if API fails
-  //   }
-  // }, [data, workerData]);
+ 
 
   const handleButtonClick = async (workerProject: any) => {
     try {
@@ -134,13 +126,14 @@ const ImageGrid = () => {
             {modalData && (
               <div>
                 <Image
-                  src={modalData.projectImage}
-                  alt={modalData.projectDescription}
+                  src={modalData?.projectImage}
+                  alt={modalData?.projectDescription}
                   width={500}
                   height={500}
                   className="object-cover"
                 />
-                <p>{modalData.projectName}</p>
+                <p>{modalData?.projectName}</p>
+                <p>{modalData?.projectDescription}</p>
               </div>
             )}
           </div>

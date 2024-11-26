@@ -125,15 +125,13 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
     if (categoryToDelete) {
       try {
         const result = await deleteProduct(categoryToDelete._id)
-        if ('data' in result && result.data.success) {
+        if (result?.success) {
           setCategories(categories.filter(cat => cat._id !== categoryToDelete._id))
           toast.success(`${categoryToDelete.categoryName} has been deleted`)
           setIsDeleteDialogOpen(false)
-        } else {
-          toast.error('Failed to delete category')
-        }
-      } catch (error) {
-        toast.error('An error occurred while deleting the category')
+        } 
+      } catch (error:any) {
+        toast.error(error?.message)
       }
     }
   }
@@ -180,21 +178,21 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
           </TableHeader>
           <TableBody>
             {paginatedCategories.map((category) => (
-              <TableRow key={category._id}>
+              <TableRow key={category?._id}>
                 <TableCell>
                   <Image
-                    src={category.categoryImage}
-                    alt={category.categoryName}
+                    src={category?.categoryImage}
+                    alt={category?.categoryName}
                     width={50}
                     height={50}
                     className="rounded-full object-cover"
                   />
                 </TableCell>
-                <TableCell className="font-medium">{category.categoryName}</TableCell>
-                <TableCell>{category.categoryDescription}</TableCell>
+                <TableCell className="font-medium">{category?.categoryName}</TableCell>
+                <TableCell>{category?.categoryDescription}</TableCell>
                 <TableCell>
                   <Switch
-                    checked={category.isListed}
+                    checked={category?.isListed}
                     onCheckedChange={() => handleToggleList(category)}
                   />
                 </TableCell>
@@ -256,7 +254,7 @@ export default function CategoryTable({ searchValue }: { searchValue: string }) 
               <Input
                 id="description"
                 value={editCategory?.categoryDescription || ''}
-                onChange={(e) => setEditCategory(prev => ({ ...prev!, categoryDescription: e.target.value }))}
+                onChange={(e) => setEditCategory(prev => ({ ...prev!, categoryDescription: e.target?.value }))}
                 className="col-span-3"
               />
             </div>

@@ -24,14 +24,13 @@ export default function SalesReport() {
   const [currentPage, setCurrentPage] = useState<number>(1)
   const [itemsPerPage] = useState<number>(10)
   const [categoryList, setCategoryList] = useState<string[]>(["All"])
-  const [stopDownloadAPI, setDownloadAPI] = useState(true)
   const [salesReport, setSalesReport] = useState<salesReport[]>([])
   const [download, setDownload] = useState('')
   const [salesDownloadDatas,setSalseDownloadDatas] = useState([])
 
 
   //downloadSalesReport
-  const handleSalesReport = async ()=>{
+  const handleSalesReport = async (doucument:string)=>{
       try{
         const res = await downloadSalesReport({
           categoryFilter,
@@ -41,8 +40,12 @@ export default function SalesReport() {
           itemsPerPage
         })
         if(res?.success){
+          console.log('download  api')
+          console.log(res?.result)
           setSalseDownloadDatas(res?.result)
+          setDownload(doucument)
         }
+        return
       }catch(error:any){
         console.log(error)
       }
@@ -70,11 +73,6 @@ export default function SalesReport() {
     
   }, [])
 
-  
- 
-
-  useEffect(() => {
-     // fetch sales data
   const fetchSalesData = async ()=>{
     try{
       const res = await fetchSalesReport({
@@ -91,13 +89,20 @@ export default function SalesReport() {
       console.log(error)
     }
   }
+ 
+
+  useEffect(() => {
+
   fetchSalesData()
   }, [])
 
   
 
   useEffect(() => {
+
+    // * PDF
     if (salesDownloadDatas && download == 'PDF') {
+      console.log(salesDownloadDatas)
       const doc = new jsPDF()
       doc.text("Sales Report", 20, 10)
       ;(doc as any).autoTable({
@@ -114,11 +119,9 @@ export default function SalesReport() {
       doc.save("booking_report.pdf")
       setDownload('')
     }
-  }, [salesDownloadDatas,download])
-
-  useEffect(() => {
-    
+    // * XLSX
     if (salesDownloadDatas && download == 'XLSX') {
+      console.log(salesDownloadDatas)
       const worksheet = XLSX.utils.json_to_sheet(
         (salesDownloadDatas)?.map((booking: any, index: number) => ({
           "#": index + 1,
@@ -134,10 +137,12 @@ export default function SalesReport() {
       XLSX.writeFile(workbook, "booking_report.xlsx")
       setDownload('')
     }
-  }, [download,salesDownloadDatas])
+  }, [download])
 
-  const applyFilters = () => {
-    // fetchSalesData()
+
+  const applyFilters = async () => {
+    alert('dds')
+    fetchSalesData()
   }
 
   const resetFilters = () => {
@@ -148,16 +153,15 @@ export default function SalesReport() {
     setCurrentPage(1)
   }
 
-  const downloadPDF = () => {
+  const downloadPDF = async () => {
     console.log("Downloading PDF...")
-    setDownloadAPI(false)
-    setDownload('PDF')
+    
+    handleSalesReport('PDF')
   }
 
   const downloadExcel = () => {
     console.log("Downloading Excel...")
-    setDownloadAPI(false)
-    setDownload('XLSX')
+     handleSalesReport('XLSX')
   }
 
   const today = startOfDay(new Date())

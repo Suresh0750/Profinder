@@ -42,35 +42,36 @@ const UserTable = () => {
 
   // * fetch all user list
 
-  const fetchAllUserList = async ()=>{
-    try{
-      const res = await fetchUserList()
-      if(res?.success){
-        setAllUserList(res?.result);
-        setShowUserList(
-          (res?.result).map((user: any, i: number) =>
-             
-            createData(
-              i + 1,
-              user.username, 
-              user.PhoneNumber,
-              user.EmailAddress,
-              user.isBlock,
-              user._id
-            )
-           
-          )
-        );
-      }
-
-    }catch(error:any){
-      console.log(error)
-      
-    }
-  }
+  
 
   
   useEffect(() => {
+    const fetchAllUserList = async ()=>{
+      try{
+        const res = await fetchUserList()
+        if(res?.success){
+          setAllUserList(res?.result);
+          setShowUserList(
+            (res?.result).map((user: any, i: number) =>
+               
+              createData(
+                i + 1,
+                user.username, 
+                user.phoneNumber,
+                user.emailAddress,
+                user.isBlocked,
+                user._id
+              )
+             
+            )
+          );
+        }
+  
+      }catch(error:any){
+        console.log(error)
+        
+      }
+    }
     fetchAllUserList()
   }, []);
 
@@ -85,9 +86,9 @@ const UserTable = () => {
           createData(
             i + 1,
             user?.username, 
-            user?.PhoneNumber,
-            user?.EmailAddress,
-            user?.isBlock,
+            user?.phoneNumber,
+            user?.emailAddress,
+            user?.isBlocked,
             user?._id
           )
         ))
@@ -98,9 +99,9 @@ const UserTable = () => {
           createData(
             i + 1,
             user?.username, 
-            user?.PhoneNumber,
-            user?.EmailAddress,
-            user?.isBlock,
+            user?.phoneNumber,
+            user?.emailAddress,
+            user?.isBlocked,
             user?._id
           )
         ))
@@ -108,12 +109,24 @@ const UserTable = () => {
   }
 
 
-  const handleUserBlock =async (isBlock:boolean,_id:string)=>{
+  const handleUserBlock =async (isBlocked:boolean,_id:string)=>{
     try{
-      const result = await toggleUserBlock({isBlock,_id})
+      const result = await toggleUserBlock({isBlocked,_id})
        if(result?.success){
         toast.success(result?.message)
-        fetchAllUserList()
+        // fetchAllUserList()
+        setShowUserList(
+          allUserList?.map((user: any, i: number) =>
+          createData(
+            i + 1,
+            user?.username, 
+            user?.phoneNumber,
+            user?.emailAddress,
+            user?._id==_id ? !isBlocked : user?.isBlocked,
+            user?._id
+          )
+           
+        ))
        }
     }catch(error:any){
         console.log(`Error from handleUserBlock`,error)
@@ -152,9 +165,9 @@ const UserTable = () => {
             <TableCell component="th" scope="row">
                 {((page-1)*5)+index+1}
             </TableCell>
-            <TableCell align="right">{worker.Name}</TableCell>
-            <TableCell align="right">{worker.Phone}</TableCell>
-            <TableCell align="right">{worker.EmailId}</TableCell>
+            <TableCell align="right">{worker?.Name}</TableCell>
+            <TableCell align="right">{worker?.Phone}</TableCell>
+            <TableCell align="right">{worker?.EmailId}</TableCell>
             <TableCell align="right">
                 <button onClick={()=>handleUserBlock(worker?.isBlock,worker?._id)} className={`p-2 rounded cursor-pointer ${worker?.isBlock ? 'bg-green-600':'bg-red-600'}`}>
                     {

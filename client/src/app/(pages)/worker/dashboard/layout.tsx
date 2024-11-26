@@ -32,16 +32,20 @@ export default function WorkerDashboardLayout({ children }: { children: React.Re
       
         setIsLoading(true)
         const res = await fetchWorkerDetails()
+        console.log(res)
         if(res?.success){
           setCustomerData(res?.workerData || {})
         dispatch(getWorkerData(res?.workerData))
         }
       }catch(error:any){
         console.log(error?.message)
-        toast.error(error?.message)
+        // toast.error(error?.message)
+      }finally{
+        setIsLoading(false)
       }
   
     }
+    fetchWorkerData()
   }, [dispatch])
 
   return (

@@ -57,8 +57,6 @@ const AddCategoryForm = () => {
       if (res?.success) {
         toast.success(res?.message); 
         window.location.reload()
-      }else{
-        alert('token expired')
       }
     } catch (error:any) {
       console.log(`Error from add category form \n`, error);

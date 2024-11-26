@@ -38,6 +38,7 @@ const Dashboard = () => {
       try{
       
         const res = await fetchDashboardData()
+        console.log(res)
         if(res?.result){
           setDashboard(res?.result)
         }
@@ -90,7 +91,7 @@ const Dashboard = () => {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
-            {dashboard?.totalRevenue?.length && (dashboard?.avgRating[0]?.sum / dashboard?.avgRating[0]?.count).toFixed(2)}
+            {dashboard?.avgRating?.length && (dashboard?.avgRating[0]?.sum / dashboard?.avgRating[0]?.count).toFixed(2) || 0}
           </div>
           <p className="text-xs text-muted-foreground">+0.2 from last month</p>
         </CardContent>

@@ -56,7 +56,7 @@ const WorkerTableBody = () => {
               worker.firstName,
               worker.phoneNumber,
               worker.category,
-              worker?.isBlock
+              worker?.isBlocked
             )
             
           )
@@ -68,6 +68,7 @@ const WorkerTableBody = () => {
     }
   }
   useEffect(() => {
+   
     fetchAllWorkerList()
   }, []);
 
@@ -86,7 +87,7 @@ const WorkerTableBody = () => {
               worker.firstName,
               worker.phoneNumber,
               worker.category,
-              worker?.isBlock,
+              worker?.isBlocked,
               
             )
         ))
@@ -100,8 +101,7 @@ const WorkerTableBody = () => {
               worker.firstName,
               worker.phoneNumber,
               worker.category,
-              worker?.isBlock,
-              
+              worker?.isBlocked,
             )
         ))
     }
@@ -123,7 +123,7 @@ const WorkerTableBody = () => {
     } finally{
       setIsLoading(false)
     }
-  }
+  } 
 
   return (
 
