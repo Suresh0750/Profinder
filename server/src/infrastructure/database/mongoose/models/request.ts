@@ -7,7 +7,7 @@ const RequestSchema = new Schema(
         service: { type: String, required: true },
         worker: { type: String, required: true },
         user: { type: String, required: true },
-        preferredDate: { type: Date, required: true }, 
+        preferredDate: { type: String, required: true }, 
         preferredTime: { type: String, required: true },
         serviceLocation: { type: String, required: true }, 
         additionalNotes: { type: String,required:true,trim:true }, 

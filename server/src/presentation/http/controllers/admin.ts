@@ -39,7 +39,7 @@ import { JwtService } from "../../../infrastructure/service/jwt"
 export const downloadSales = async(req:Request,res:Response,next:NextFunction)=>{
     try{
         const result = await downloadSalesUsecases(req.query)
-        return res.status(StatusCode.Success).json({sucess:true,message:'data has been fetched',result})
+        return res.status(StatusCode.Success).json({success:true,message:'data has been fetched',result})
     }catch(error){
         console.log(`Error from downloadSales\n${error}`)  
         next(error) 
@@ -48,6 +48,8 @@ export const downloadSales = async(req:Request,res:Response,next:NextFunction)=>
 
 export const salesReport = async(req:Request,res:Response,next:NextFunction)=>{
     try {
+        console.log('salesReport')
+        console.log(req?.query)
       
         const result = await salesUsecases(req.query)
    
@@ -122,8 +124,8 @@ export const dashboard = async(req:Request,res:Response,next:NextFunction)=>{
 // * admin User side
 export const isBlockUserController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-
-        await isBlockUserUseCases(req.body._id,req.body.isBlock)
+        console.log(req.body)
+        await isBlockUserUseCases(req.body._id,req.body.isBlocked)
         return res.status(StatusCode.Success).json({success:true,message:"Data has been update"})
     } catch (error) {
         console.log(`Error from isBlcokUser\n${error}`)  

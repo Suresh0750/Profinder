@@ -7,7 +7,7 @@ import { AddCategory,filterSales } from "../../../domain/entities/admin"
 import {IAdminMongoose} from "../../../domain/repositories/admin"
 
 // * Model
-import {CategoryModel} from "./models/admin"
+import {CategoryModel} from "./models/admin(category)"
 import {WorkerModel} from "./models/worker"
 import {UserModel} from "./models/user"
 import { RecentActivityModel } from "./models/recentActivity"
@@ -114,9 +114,9 @@ export const AdminMongoose = () : IAdminMongoose =>({
             throw error
         }
     },
-    isBlockUser : async(userId:string,isBlock:false)=>{
+    isBlockUser : async(userId:string,isBlocked:false)=>{
         try {
-            await UserModel.findByIdAndUpdate({_id:userId},{$set:{isBlock}})
+            await UserModel.findByIdAndUpdate({_id:userId},{$set:{isBlocked}})
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->isBlockUser->\n`,error)
             throw error
@@ -302,7 +302,7 @@ export const AdminMongoose = () : IAdminMongoose =>({
         try {
             await WorkerModel.updateOne(
                 { _id: new ObjectId(workerId) },
-                [{ $set: { isBlock: { $not: "$isBlock" } } }]
+                [{ $set: { isBlocked: { $not: "$isBlocked" } } }]
               );            
         } catch (error) {
             throw error

@@ -5,7 +5,7 @@ import {AdminMongoose} from "../../../infrastructure/database/mongoose/admin"
 
 export const isBlockUserUseCases = async(_id:string,value:boolean)=>{
     try {
-        return await AdminMongoose().isBlockUser(_id,value ? false:true)  // * block and unblock the value
+        return await AdminMongoose().isBlockUser(_id,value ? false : true)  // * block and unblock the value
     } catch (error) {
         console.log(`Error from useCases->admin->isBlockUserUseCases\n`,error)
         throw error 

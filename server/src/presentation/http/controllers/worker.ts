@@ -250,7 +250,7 @@ export const isCheckEmail = async (req:Request,res:Response,next:NextFunction)=>
             const error = new Error('This email is not registered. Please check your email address.');
             (error as any).statusCode = StatusCode.NotFound;
             throw error;
-        }
+        }   
     } catch (error) {
         console.log(`Error from presentation layer-> http->isCheckEmail\n ${error}`)
         next(error) 
