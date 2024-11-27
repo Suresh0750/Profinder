@@ -141,7 +141,7 @@ export default function SalesReport() {
 
 
   const applyFilters = async () => {
-    alert('dds')
+
     fetchSalesData()
   }
 

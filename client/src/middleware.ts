@@ -10,7 +10,7 @@ export async function middleware(req:NextRequest){
 
     const cookieStore = cookies();
     const pathname = req.nextUrl.pathname;
-
+  console.log(pathname)
   // Improved matcher for static assets
   if (pathname.startsWith("/_next/") || pathname.startsWith("/favicon.ico")) {
     return NextResponse.next();
@@ -36,7 +36,7 @@ export async function middleware(req:NextRequest){
   }
 
 
-  const homePage = req.url
+  const homePage = req.nextUrl.pathname
   
   if(homePage==='/'){
     

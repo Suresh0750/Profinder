@@ -1,7 +1,9 @@
-
+"use client"
 import { createApi, fetchBaseQuery,FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
 import {FormValues} from "@/types/workerTypes"
-import Router from 'next/router'; 
+import {useRouter} from 'next/navigation'
+
+
 
 import axios from 'axios'
 const axiosInstance = axios.create({
@@ -16,35 +18,27 @@ const axiosInstance1 = axios.create({
     withCredentials : true,
 })
 
-// Axios interceptor
 
-axiosInstance.interceptors.response.use(
-    (response) => {
-        console.log('accout is block')
-        if (response.data?.isBlock) {
-            console.log('User is blocked. Redirecting to login...');
-            Router.replace('/homePage'); 
+// * Error handler
+
+export const handleAxiosError = (error: any) => {
+    console.log(error)
+    console.error('API Error:', error);
+    if ((error?.response?.status==403 || error?.response?.status==401 || error.data?.isBlock) && error?.response?.data?.middleware) {
+          
+            window.location.replace('/homePage')
             localStorage.setItem('customerData','')
             localStorage.setItem('workerDetails','')
             localStorage.setItem('conversationId','')
-            return Promise.reject(new Error('Account is blocked'));
+            const errorMessage = error?.response?.data?.message || "Unexpected error occurred.";
+            return new Error(errorMessage);
         }
-        return response; 
-    },
-    (error) => {
-       
-        console.error('API Error:', error);
-        return Promise.reject(error);
-    }
-);
 
-// * Error handler
-export const handleAxiosError = (error:any)=>{
-    console.log(error)
-    const errorMessage = error?.response?.data?.errorMessage || "Unexpected error occurred";
+    const errorMessage =error?.response?.data?.errorMessage || error?.response?.data?.message || "Unexpected error occurred.";
     console.log(errorMessage)
-    return new Error(errorMessage)
-}
+
+    return new Error(errorMessage);
+};
 
 export const signUp = async(data:FormValues)=>{
     try{

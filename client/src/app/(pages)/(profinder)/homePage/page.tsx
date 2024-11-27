@@ -48,8 +48,7 @@ const Home = () => {
     },
   ];
 
- 
-  const [worker,setWorker] = useState<any>([])
+
   const [mechanic,setMechannic] = useState<any>([])
   
 
@@ -66,9 +65,11 @@ const Home = () => {
   useEffect(()=>{
     const fetchWorkerData = async ()=>{
       try{
-        const res = await listWorkerData(location)
-        const mechanic = (res?.result)?.filter((data:any)=>data?.category=="Mechanical")
-        setMechannic(res?.result)
+        if(location?.latitude!=0){
+          const res = await listWorkerData(location)
+          const mechanic = (res?.result)?.filter((data:any)=>data?.category=="Mechanical")
+          setMechannic(res?.result)
+        }
       }catch(error:any){
         console.log(error)
       }
