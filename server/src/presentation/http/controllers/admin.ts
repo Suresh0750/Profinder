@@ -38,9 +38,9 @@ import { JwtService } from "../../../infrastructure/service/jwt"
 // * admin in sales Report side
 export const downloadSales = async(req:Request,res:Response,next:NextFunction)=>{
     try{
-        console.log('downloadSales')
+        // console.log('downloadSales')
         const result = await downloadSalesUsecases(req.query)
-        console.log(result)
+        // console.log(result)
         return res.status(StatusCode.Success).json({success:true,message:'data has been fetched',result})
     }catch(error){
         console.log(`Error from downloadSales\n${error}`)  
@@ -50,11 +50,11 @@ export const downloadSales = async(req:Request,res:Response,next:NextFunction)=>
 
 export const salesReport = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log('salesReport')
-        console.log(req?.query)
+        // console.log('salesReport')
+        // console.log(req?.query)
       
         const result = await salesUsecases(req.query)
-        console.log(result)
+        // console.log(result)
         return await res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
     } catch (error) {
         console.log(`Error from salesReport\n${error}`)  
@@ -65,7 +65,7 @@ export const salesReport = async(req:Request,res:Response,next:NextFunction)=>{
 export const categoryList = async (req:Request,res:Response,next:NextFunction)=>{
     try {
         const result = await getCategory()
-        console.log(result)
+        // console.log(result)
         return await res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
 
     } catch (error) {
@@ -103,9 +103,9 @@ export const workerDashboard = async(req:Request,res:Response,next:NextFunction)
 // * admin Dashboard side
 export const dashboardOverview = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log('request reached dashboardOverview')
+        // console.log('request reached dashboardOverview')
         const result = await adminOverviewUsecases()
-        console.log(result)
+        // console.log(result)
         return res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
     } catch (error) {
         console.log(`Error from dashboardOverview\n${error}`)  
@@ -127,7 +127,7 @@ export const dashboard = async(req:Request,res:Response,next:NextFunction)=>{
 // * admin User side
 export const isBlockUserController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(req.body)
+        // console.log(req.body)
         await isBlockUserUseCases(req.body._id,req.body.isBlocked)
         return res.status(StatusCode.Success).json({success:true,message:"Data has been update"})
     } catch (error) {
@@ -207,8 +207,8 @@ export const isBlock = async(req:Request,res:Response,next:NextFunction)=>{
 
 export const addCategoryController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(`req reached addCategory controller`) 
-        console.log(req.body)
+        // console.log(`req reached addCategory controller`) 
+        // console.log(req.body)
         if(true){
             const ExistCategory = await CheckExistCategory(req?.body?.categoryName)
     
@@ -244,8 +244,8 @@ export const getAllCategory =async (req:Request,res:Response,next:NextFunction)=
 
 export const editCategory = async (req:Request,res:Response,next:NextFunction)=>{
     try{
-        console.log('editCategory')
-        console.log(req.body)
+        // console.log('editCategory')
+        // console.log(req.body)
         if(req.body?.newImage){
             const file: IMulterFile |any = req.file
             const imageUrl = await uploadImage(file)  
@@ -263,7 +263,7 @@ export const editCategory = async (req:Request,res:Response,next:NextFunction)=>
 
 export const verifyListController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(req.body)
+        // console.log(req.body)
         await isListedProductUsecases(req.body._id,req.body.isListed)
         return res.status(StatusCode.Success).json({success:true,message:'List has been updated'})
         

@@ -21,7 +21,7 @@ export const getReviewController = async(req:Request,res:Response,next:NextFunct
     try {
         console.log('getReviewController')
         const result = await getReviewUsecases(req.params.id)
-        console.log(result)
+        // console.log(result)
         return res.status(StatusCode.Success).json({success:true,message:'fetch all review data',result})
     } catch (error) {
         console.log(`Error from getReviewController\n${error}`)
@@ -45,7 +45,7 @@ export const ReviewController = async (req:Request,res:Response,next:NextFunctio
 export const paymetnAPIController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
 
-        console.log(req.body)
+        // console.log(req.body)
         const {hash}  = await payment(req.body)
 
     
@@ -72,7 +72,7 @@ export const paymentDetails = async(req:Request,res:Response,next:NextFunction)=
     try {
         console.log('paymeneDetails')
         const result = await paymentUsecases(req.params.requestId)
-        console.log(result)
+        // console.log(result)
         return res.status(StatusCode.Success).json({success:true,message:'data successfully fetched',result})
     } catch (error) {
         console.log(`Error from paymentDetails\n${error}`)
@@ -87,7 +87,7 @@ export const userRequestWorkerController = async (req:Request,res:Response,next:
     try {
         console.log('userRequestWorkerController')
         const result = await userRequestUsecases(req.body)
-        console.log(result);
+        // console.log(result);
         
         return res.status(StatusCode.Success).json({success:true,message:'Request has been sent'})
         
@@ -103,7 +103,7 @@ export const getNearByWorkerDetailsController = async(req:Request,res:Response,n
     try {
        
         const result = await getNearByWorkerListUtils(req.params.categoryName)
-        console.log(JSON.stringify(result))
+        // console.log(JSON.stringify(result))
      
         return res.status(StatusCode.Success).json({success:true,message:'successfully fetched near by worker details',result})
     } catch (error) {
@@ -119,7 +119,7 @@ export const getVerifiedWorkerController = async(req:Request,res:Response,next:N
     try {
   
          const result = await getVerifiedWorkerUtils(req.params.lat,req.params.lon)
-         console.log(JSON.stringify(result))
+        //  console.log(JSON.stringify(result))
          if(result) return res.status(StatusCode.Success).json({success:true,message:'Verified worker has been fetched',result})
         
         return res.status(StatusCode.InternalServerError).json({success:false,message:'server error trye again'})
@@ -136,7 +136,7 @@ export const getCategoryName = async(req:Request,res:Response,next:Function)=>{
     try {
 
         const result = await getCategoryNameUtils()
-        console.log(JSON.stringify(result))
+        // console.log(JSON.stringify(result))
         return res.status(StatusCode.Success).json({success:true,message:`Fetch category's name has been success`,result})
     } catch (error) {
         console.log(`Error from getCategoryName\n${error}`)
@@ -283,7 +283,7 @@ export const WorkerGoogleLoginWithRegistrastion = async (req:Request,res:Respons
 
 export const GoogleLogin = async (req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(req.body)
+        // console.log(req.body)
      
         if(req?.body?.role == Role.User){
         

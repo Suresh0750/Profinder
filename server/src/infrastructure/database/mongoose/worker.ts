@@ -174,7 +174,7 @@ export const getWorkerRepository = ():IgetWorkerRepository =>({
     updatemessage : async({_id,lastMessage} :{_id:Types.ObjectId,lastMessage:string})=>{
         try {
             console.log(`update query`)
-            console.log(_id,lastMessage)
+            // console.log(_id,lastMessage)
             await ConversationModel.findByIdAndUpdate({_id},{$set:{lastMessage,workerUnread:0},$inc:{userUnread:1}})
         } catch (error) {
             // console.log(`Error from infrastructure->database->mongoose->updatemessage->\n`,error)

@@ -68,14 +68,14 @@ export const customerResentOTP = async(customerData:ResendOTP)=>{
         // console.log(`Req reached usCases utils cutomerResentOTP`)
 
         const {getUserDataResendOTP,getWorkerDataResendOTP} = OTPRepository()
-        console.log(customerData.role)
+        // console.log(customerData.role)
         if(customerData.role=='user' && customerData.customerId){
           
             const userEmail : string | undefined= await getUserDataResendOTP(customerData.customerId)
-            console.log(userEmail) 
+            // console.log(userEmail) 
             if(userEmail){
                 const userData  = await OtpService(customerData.customerId,userEmail)
-                console.log(userData.customerOTP)
+                // console.log(userData.customerOTP)
                 await ResendOTPStore(customerData.customerId,Number(userData?.customerOTP))      // * Restore the OTP data in mongodb database
             }
         }else if(customerData.customerId){
@@ -101,7 +101,7 @@ export const ForgetPassWordUseCase = async (forgetPasswordData:ForgetPasswordDat
 
         const verifyOTP = await OtpVerifyUseCases(Number(forgetPasswordData?.formData?.otpValue),forgetPasswordData.customerId)
         if(forgetPasswordData.role=="user" && verifyOTP){
-            console.log(forgetPasswordData)
+            // console.log(forgetPasswordData)
             const {setNewPassWord} = getUserRepository();
             const hashNewPassword = await hashPassword(forgetPasswordData.formData.newPass)
             await setNewPassWord(forgetPasswordData.customerId,hashNewPassword)  // * call the setNewPassWord function for setting new Password user database
@@ -138,8 +138,8 @@ export const GoogleLoginWorkerRegister = async(customerData:WorkerInformation)=>
 // * Google Login UseCases 
 export const GoogleLoginUseCases = async (customerData:GoogleLoginTypes )=>{
     try {
-        console.log('use case')
-        console.log(customerData)
+        // console.log('use case')
+        // console.log(customerData)
         if(customerData.role==Role.User){
             const {UserGoogleLogin} = CustomerQueryRepository()     // * user
             // console.log(customerData)

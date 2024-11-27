@@ -29,7 +29,7 @@ export const EditCategoryUseCases = async(categoryData:AddCategory)=>{
 export const AddCategoryUseCases = async(categoryDetails:AddCategory)=>{
     try {
         // * call mongoose query
-        console.log(`req reached AddCategory Usecases`)
+        // console.log(`req reached AddCategory Usecases`)
         
         const categoryData = {
             categoryName : categoryDetails.categoryName,

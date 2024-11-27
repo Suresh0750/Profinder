@@ -84,9 +84,9 @@ export const editprofile = async(req:Request,res:Response,next:NextFunction)=>{
         const file: IMulterFile |any  = req.file
         if(JSON.parse(req.body.isImage)){
             const image = await uploadImage(file)
-            console.log(image)
+            // console.log(image)
             req.body.profile = image
-            console.log(req.body.profile)
+            // console.log(req.body.profile)
         }
         await EditprofileUsecases(req.body)
         return res.status(StatusCode.Success).json({success:true,message:'data successfully updated'})
@@ -112,7 +112,7 @@ export const profile = async(req:Request,res:Response,next:NextFunction)=>{
 export const userSignupController = async (req:Request,res:Response,next:NextFunction)=>{
     try {
         console.log('reached userSignup constroller')
-        console.log(req.body)
+        // console.log(req.body)
         const user:string = await createUser(req.body);
         const token = await generateOtpAccessToken(user)
         res.cookie(CookieTypes.Token,token,{
@@ -131,9 +131,8 @@ export const userSignupController = async (req:Request,res:Response,next:NextFun
 export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
     try{
         console.log('request reached controller')
-        console.log(req.body)
+        // (req.body)
         const loginUsecase :any = await LoginVerify(req.body?.emailAddress,req.body?.password)
-      
         if(!loginUsecase){
             res.status(StatusCode.Unauthorized)
             throw new Error('check email and password')
@@ -143,7 +142,7 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
             throw new Error('User is blocked')
         }else if(loginUsecase && loginUsecase?._id){
     
-            const  {refreshToken,accessToken} = JwtService((loginUsecase._id).toString(),loginUsecase.username,loginUsecase.EmailAddress,(req.body.role || Role.User))   // * mongose Id converted as a string
+            const  {refreshToken,accessToken} = JwtService((loginUsecase._id).toString(),loginUsecase.username,loginUsecase.emailAddress,(req.body.role || Role.User))   // * mongose Id converted as a string
         
             // * JWT referesh token setUp
             
@@ -162,7 +161,7 @@ export const LoginUser = async (req:Request,res:Response,next:NextFunction)=>{
                 customerEmail : loginUsecase.emailAddress,
                 role : Role.User
             }
-            console.log(customerData)
+            // console.log(customerData)
          return res.status(StatusCode.Success).json({success:true,message:'Login successful',customerData}) 
         }   
     }catch(error){
@@ -180,9 +179,9 @@ export const isCheckEmail = async(req:Request,res:Response,next:NextFunction)=>{
         const userEmailValidation = await isCheckUserEmail(req.body?.emailAddress)
         
         if(userEmailValidation){
-         return   res.status(StatusCode.Success).json({success:true,message:'verified success',userEmailValidation})
+         return  res.status(StatusCode.Success).json({success:true,message:'verified success',userEmailValidation})
         }else {
-         return   res.status(StatusCode.NotFound).json({
+         return  res.status(StatusCode.NotFound).json({
                 success: false,
                 message: 'This email is not registered. Please check your email address.',
               });}

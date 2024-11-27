@@ -23,10 +23,10 @@ export const salesUsecases = async(data:any)=>{
             let startDate = {$gte:data?.startDateFilter}
             query.preferredDate = startDate
         }
-       console.log(query)
+    //    console.log(query)
        let skip = (Number(data?.currentPage)-1)*Number(data?.itemsPerPage)
        let limit = Number(data?.itemsPerPage)
-        console.log(query)
+        // console.log(query)
         const [
             salesDatas,
             count 
@@ -47,7 +47,7 @@ export const salesUsecases = async(data:any)=>{
 export const downloadSalesUsecases = async(data:any)=>{
     try {
         console.log('sales side')
-        console.log(data)
+        // console.log(data)
         let query:{[key:string]:any} ={}
         if(data?.categoryFilter && data?.categoryFilter!=="All"){
             query.service = data?.categoryFilter
@@ -63,7 +63,7 @@ export const downloadSalesUsecases = async(data:any)=>{
             let startDate = {$gte:data?.startDateFilter}
             query.preferredDate = startDate
         }
-       console.log(query)
+    //    console.log(query)
        query.isAccept = "Completed"
         return await AdminMongoose().downloadSalesData(query)
      

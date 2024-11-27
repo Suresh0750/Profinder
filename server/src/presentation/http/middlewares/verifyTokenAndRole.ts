@@ -41,47 +41,46 @@ export const verifyTokenAndRole = (role: string[]) => {
             let payload: CustomerDetails | null = null;
             let accessToken;
 
-            console.log('req in middleware');
+ 
             if (selectRefreshToken(url, Role.Admin)) {
                 accessToken = req.cookies[CookieTypes.AdminAccessToken];
             } else if (selectRefreshToken(url, Role.Worker)) {
                 accessToken = req.cookies[CookieTypes.WorkerAccessToken];
             } else if (selectRefreshToken(url, Role.User)) {
                 accessToken = req.cookies[CookieTypes.UserAccessToken];
-                console.log('user');
-                console.log(accessToken);
+                // console.log('user');
+                // console.log(accessToken);
             } else {
                 accessToken = req.cookies[CookieTypes.UserAccessToken] || req.cookies[CookieTypes.WorkerAccessToken];
             }
 
             if (accessToken) {
-                console.log('accessToken',accessToken)
+             
                 payload = verifyToken(accessToken, String(process.env.ACCESS_TOKEN_SECRET));
-                console.log('accessToken');
-                console.log(payload);
+                
             }
 
            
 
             if (!payload || !accessToken) {
-                console.log('accessToken vanished', accessToken);
+                // console.log('accessToken vanished', accessToken);
                 payload = await verifyRefreshToken(req, res); // Await the async function here
             }
 
             if (!payload) {
-                console.log('no access token and no refreshtoken');
-                return res.status(StatusCode.Unauthorized).json({ success: false, message: 'Unauthorized, please log in' });
+                // console.log('no access token and no refreshtoken');
+                return res.status(StatusCode.Unauthorized).json({ success: false, message: 'Unauthorized, please log in',middleware:true });
             }
 
             
             if (payload && (payload?.role == Role.User || payload?.role == Role.Worker)) {
                 const isBlock = await checkBlocked(payload?.role, payload?.customerId);
-                console.log("isBlock",isBlock)
+                
                 if (isBlock) {
                     await clearToken(payload.role,res)
                     return res
                         .status(StatusCode.Forbidden)
-                        .json({ success: false, message: 'account is blocked', isBlock: true });
+                        .json({ success: false, message: 'account is blocked', isBlock: true,middleware:true  });
                 }
             }
             
@@ -90,9 +89,9 @@ export const verifyTokenAndRole = (role: string[]) => {
             req.session.save();
 
             if (!role.includes(payload.role)) {
-                console.log('role checking');
-                console.log(role, payload.role);
-                return res.status(StatusCode.Forbidden).json({ success: false, message: 'Access denied' });
+                // console.log('role checking');
+                // console.log(role, payload.role);
+                return res.status(StatusCode.Forbidden).json({ success: false, message: 'Access denied',middleware:true });
             }
 
             next(); // Proceed to the next middleware/handler
@@ -136,14 +135,14 @@ export const verifyRefreshToken = (req: Request, res: Response): CustomerDetails
         if(!refreshToken){
             return null
         }
-        console.log('refreshToken',refreshToken)
+        // console.log('refreshToken',refreshToken)
         const refreshPayload = verifyToken(refreshToken,String(process.env.REFRESH_TOKEN_SECRET));
-        console.log('refreshPayload',refreshPayload)
+        // console.log('refreshPayload',refreshPayload)
         if (refreshPayload) {
             const { exp, ...newPayload } = refreshPayload;
             const newAccessToken =  generateAccessToken(newPayload);
             if (newAccessToken) {
-                console.log('newAccessToken ,',newAccessToken)
+                // console.log('newAccessToken ,',newAccessToken)
                 if(tokenRole) res.cookie(roleAccessToken[tokenRole as RoleType],newAccessToken, { maxAge: 15 * 60 * 1000 });
                 return newPayload as CustomerDetails;
             }
@@ -161,8 +160,7 @@ export const verifyRefreshToken = (req: Request, res: Response): CustomerDetails
 
 
 function selectRefreshToken(url:string,role:string){
-    console.log('url',url)
-    console.log('role',role)
+   
     return url.includes(role)
 }
 

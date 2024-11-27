@@ -8,7 +8,7 @@ export const isCheckWorkerEmail = async (email:string)=>{
     try {
 
         const {ischeckEmail} = getWorkerRepository()
-       console.log(email)
+    //    console.log(email)
         const workerId = await ischeckEmail(email)  // * call the querey check whether is email there or not
         if(workerId){
             const {customerOTP} = await OtpService(workerId,email) // * generate OTP and send to the user

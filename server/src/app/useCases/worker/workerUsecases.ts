@@ -164,7 +164,7 @@ export const workerProjectUsecases = async (workerProjectDetails:ProjectDetails)
 }
 export const getWorkerProjectData = async(_id:string)=>{
     try {
-        console.log(_id)
+        // console.log(_id)
         return await getWorkerRepository().getProjectDetailsQuery(_id)
     } catch (error) {
         console.log(`Error from useCases->worker->getWorkerProjectData\n`,error)
@@ -188,7 +188,7 @@ export const workerExist = async (workerData:PersonalInformation) =>{
 
 export const WorkerUsecase= async(workerData:ProfessionalInfoData)=>{
     try {
-        console.log(workerData)
+        // console.log(workerData)
         let {firstName,lastName,phoneNumber,emailAddress,postalCode,password,latitude,longitude,profile,identity,category,country,state,city,streetAddress,apt,coord,mapAddress} = workerData
 
    console.log('step1')
@@ -211,17 +211,17 @@ export const WorkerUsecase= async(workerData:ProfessionalInfoData)=>{
             latitude : Number(latitude),
             longitude : Number(longitude)
         }
-        console.log(mapAddress)
-        console.log('step2')
+        // console.log(mapAddress)
+        // console.log('step2')
         mapAddress = JSON.parse(mapAddress)
-        console.log('step3')
+        // console.log('step3')
         if(mapAddress?.country) data.country = mapAddress?.country
         if(mapAddress?.postcode) data.postalCode = mapAddress?.postcode
         if(mapAddress?.state) data.state = mapAddress?.state
-        console.log('step4')
+        // console.log('step4')
         const {createWorker} = getWorkerRepository()
-        console.log('step5')
-        console.log(data)
+        // console.log('step5')
+        // console.log(data)
       
         const workerDetails = await createWorker(data)
 
@@ -238,8 +238,8 @@ export const getWorkerData = async(token:string)=>{
     try {
    
         const customer :any = verifyRefreshToken(token) 
-        console.log('customer')
-        console.log(customer)
+        // console.log('customer')
+        // console.log(customer)
         const {getWorkerData} = getWorkerRepository()
         return getWorkerData(customer?.customerId)
         // getWorkerData

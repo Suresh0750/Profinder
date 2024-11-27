@@ -143,7 +143,7 @@ export const isAcceptWorkController = async(req:Request,res:Response,next:NextFu
 
 export const isRejectWorkController = async(req:Request,res:Response,next:NextFunction)=>{
     try {
-        console.log(req.params)
+        // console.log(req.params)
         const result = await isRejectUsecases(req.params.id)
         return res.status(StatusCode.Success).json({success:true,message:"Project has been cancelled"})
     } catch (error) {
@@ -185,7 +185,7 @@ export const addProjectDetails = async(req:Request,res:Response,next:NextFunctio
 export const getProjectDetails = async (req:Request,res:Response,next:NextFunction)=>{
     try {
         // console.log('params id')
-        console.log(req.params.id)
+        // console.log(req.params.id)
         if(req.params.id){
             const result = await getWorkerProjectData(req.params.id)
             return res.status(StatusCode.Success).json({success:true,message:'Worker Project Data has been Fetched',result})
@@ -200,8 +200,8 @@ export const getProjectDetails = async (req:Request,res:Response,next:NextFuncti
 export const PersonalInformationControll = async (req:Request,res:Response, next : NextFunction)=>{
     try{
         const checkWorker = await workerExist(req.body) // * check weather the worker exist or not
-        console.log('check worker')
-        console.log(checkWorker)
+        // console.log('check worker')
+        // console.log(checkWorker)
         const {profileImage,...data} = req.body // * for checking
         if(checkWorker && checkWorker.isVerified) throw new Error('Email already exist')
 
@@ -262,7 +262,7 @@ export const getWorkerDataController = async (req:Request,res:Response,next:Next
     try {
         console.log('req reached worker controller')
         const {workerRefreshToken} = req.cookies
-        console.log(workerRefreshToken)
+        // console.log(workerRefreshToken)
         if(!workerRefreshToken) return res.status(StatusCode.Forbidden).json({ message: "Unauthenticated" });
         const workerData = await getWorkerData(workerRefreshToken)
         return res.status(StatusCode.Success).json({success:true,message:'success',workerData})
