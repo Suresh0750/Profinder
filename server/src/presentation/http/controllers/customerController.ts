@@ -177,12 +177,12 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
                     role : Role.User
                 } 
                 
-                res.status(StatusCode.Success).json({success:true,message:'OTP valid and user verified',customerData})
+                return   res.status(StatusCode.Success).json({success:true,message:'OTP valid and user verified',customerData})
             
             }else{
 
                 const workerData =  await  workerVerification(customerId) 
-
+                res.clearCookie(CookieTypes.Token)
                 const  {refreshToken,accessToken} = JwtService((req.body.customerId).toString(),(workerData?.firstName || ''),(workerData?.emailAddress || ''),(req.body.role || Role.Worker))   // * mongose Id converted as a string
                 // * JWT referesh token setUp
         
@@ -203,7 +203,7 @@ export const CustomerOtpController = async(req:Request,res:Response,next:NextFun
                     role : Role.Worker
                 }
 
-                res.status(StatusCode.Success).json({success:true,message:'OTP valid and worker verified',customerData})
+                return res.status(StatusCode.Success).json({success:true,message:'OTP valid and worker verified',customerData})
             }
 
         }else res.status(401).json({success:false,message:'Invalid message'})
