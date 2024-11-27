@@ -44,7 +44,7 @@ export interface MaterialCarouselProps {
                 {
                   projectName: string,
                   ProjectDescription:string,
-                  ProjectImage: string,
+                  projectImage: string,
                   _id: string
                 }
               ];

@@ -78,7 +78,7 @@ const Home = () => {
   },[location])
 
   const handleRedirectWorkerPage = useCallback((_id: string, worker: WorkerDatails) => {
-    alert('dds')
+    // alert('dds')
     console.log('worker',worker)
     if (typeof window !== "undefined" && worker) {
       localStorage.setItem("workerDetails", JSON.stringify({
@@ -126,7 +126,7 @@ const Home = () => {
           {
             mechanic?.length>0 && (
               <>
-              <div className="bg-white p-6 rounded shadow" onClick={()=>handleRedirectWorkerPage(mechanic?.[0]?._id,mechanic?.[0])}>
+              <div className="bg-white p-6 rounded shadow cursor-pointer" onClick={()=>handleRedirectWorkerPage(mechanic?.[0]?._id,mechanic?.[0])}>
               
                   <Image src={mechanic?.[0]?.profile} alt="Service 1" width={400} height={300} />
                   <h3 className="text-xl font-bold mt-4">{mechanic?.[0]?.firstName}</h3>
@@ -136,7 +136,7 @@ const Home = () => {
                   </div>
           
               </div>
-              <div className="bg-white p-6 rounded shadow" onClick={()=>handleRedirectWorkerPage(mechanic?.[1]?._id,mechanic?.[1])}>
+              <div className="bg-white p-6 rounded shadow cursor-pointer" onClick={()=>handleRedirectWorkerPage(mechanic?.[1]?._id,mechanic?.[1])}>
                 
                   <Image src={mechanic?.[1]?.profile} alt="Service 2" width={400} height={300} />
                   <h3 className="text-xl font-bold mt-4">{mechanic?.[1]?.firstName}</h3>
@@ -146,7 +146,7 @@ const Home = () => {
                   </div>
                 
               </div>
-              <div className="bg-white p-6 rounded shadow" onClick={()=>handleRedirectWorkerPage(mechanic?.[2]?._id,mechanic?.[2])}>
+              <div className="bg-white p-6 rounded shadow cursor-pointer" onClick={()=>handleRedirectWorkerPage(mechanic?.[2]?._id,mechanic?.[2])}>
                
                   <Image src={mechanic?.[2]?.profile} alt="Service 3" width={400} height={300} />
                   <h3 className="text-xl font-bold mt-4">{mechanic?.[2]?.firstName}</h3>

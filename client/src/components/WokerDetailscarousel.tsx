@@ -10,23 +10,30 @@ import { MaterialCarouselProps } from '@/types/workerTypes';
 
 const MaterialCarousel: React.FC<MaterialCarouselProps> = ({ images }) => {
 
+  console.log('image destructure')
+  console.log(images)
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const itemsToShow = 3; // Display 3 images at a time
+  const itemsToShow = 3; 
 
   const goToPrevious = () => {
-    // Move to the previous image
+    
     const newIndex = currentIndex === 0 ? images.length - 1 : currentIndex - 1;
     setCurrentIndex(newIndex);
   };
 
   const goToNext = () => {
-    // Move to the next image
+    
     const newIndex = currentIndex === images.length - 1 ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
   };
 
-  const visibleImages = images.slice(currentIndex, currentIndex + itemsToShow).length < itemsToShow
-    ? [...images.slice(currentIndex), ...images.slice(0, itemsToShow - (images.length - currentIndex))]
+  // const visibleImages = images.slice(currentIndex, currentIndex + itemsToShow)?.length < itemsToShow
+  //   ? [...images.slice(currentIndex), ...images.slice(0, itemsToShow - (images.length - currentIndex))]
+  //   : images.slice(currentIndex, currentIndex + itemsToShow);
+
+  const visibleImages = images.slice(currentIndex, currentIndex + itemsToShow)?.length < itemsToShow
+    ? [...images.slice(currentIndex)]
     : images.slice(currentIndex, currentIndex + itemsToShow);
 
   return (
@@ -53,7 +60,7 @@ const MaterialCarousel: React.FC<MaterialCarouselProps> = ({ images }) => {
           <Box
             key={index}
             component="img"
-            src={data?.ProjectImage}
+            src={data?.projectImage}
             alt={`Slide ${index + 1}`}
             sx={{
               width: '300px', // Adjust the width as per your design

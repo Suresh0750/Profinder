@@ -227,7 +227,7 @@ export default function ServiceWorkerListPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredWorkers?.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE).map((worker: any) => (
-              <Card key={worker._id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleRedirectWorkerPage(worker?._id,worker)}>
+              <Card key={worker?._id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleRedirectWorkerPage(worker?._id,worker)}>
                 <CardContent className="p-0">
                   <Image
                     src={worker?.profile || "/placeholder.svg?height=256&width=500"}

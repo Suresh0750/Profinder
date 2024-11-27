@@ -51,11 +51,14 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
   useEffect(() => {
     async function fetchWorkerData(){
       try{
-        seIsWorkerDetailsLoading(true)
-        let data = customerData ? `${params.workerId}/${customerData._id}` : `${params.workerId}/55`
-        const res = await fetchSingleWorkerDetails(data)
-        if(res?.success){
-          setWorkerDetails(res?.result)
+        if(customerData?._id && params?.workerId){
+          seIsWorkerDetailsLoading(true)
+          let data = `${params.workerId}/${customerData?._id}`
+          const res = await fetchSingleWorkerDetails(data)
+          if(res?.success){
+            console.log(res?.result)
+            setWorkerDetails(res?.result)
+          }
         }
       }catch(error:any){
         console.log(error)
@@ -157,7 +160,7 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
           <TabsTrigger value="reviews">Reviews</TabsTrigger>
         </TabsList>
         <TabsContent value="overview">
-          <Card>
+          <Card className='min-h-[137.562px]'>
             <CardContent className="p-6">
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
@@ -216,16 +219,16 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
           </Card>
         </TabsContent>
         <TabsContent value="work">
-          <Card>
-            <CardContent className="p-6">
-              {workerDetails?.WorkerImage && workerDetails?.workerImage.length > 0 && (
+          <Card  className='min-h-[137.562px]'>
+          <CardContent className="p-6">
+              {(workerDetails?.workerImage && workerDetails?.workerImage?.length > 0) ? (
                 <MaterialCarousel images={workerDetails.workerImage} />
-              )}
+              ) : <p>No work yet.</p>}
             </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="reviews">
-          <Card>
+          <Card  className='min-h-[137.562px]'>
             <CardContent className="p-6">
               {reviewDetails.length > 0 ? (
                 reviewDetails.map((review:reviewData, index:number) => (
