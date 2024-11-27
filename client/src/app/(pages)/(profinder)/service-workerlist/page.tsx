@@ -218,7 +218,7 @@ export default function ServiceWorkerListPage() {
                       value={locationSearchTerm}
                       onChange={handleLocationSearchChange}
                       className="flex-grow inline-block"
-                    />
+                    />  
                   </div>
                 </Autocomplete>
               </CardContent>

@@ -96,7 +96,7 @@ export default function WorkerSignUp() {
 
       toast.success('movie on')
       setTimeout(()=>{
-        router.push(`/worker/professionalInfo`)
+        router.replace(`/worker/professionalInfo`)
       },600)
     }else{
       toast.error('somethin wrong try again')

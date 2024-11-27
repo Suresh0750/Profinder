@@ -80,7 +80,7 @@ export default function Navbar() {
               <div className="ml-10 flex items-baseline space-x-4">
                 <Link href="/homePage" className="hover:bg-[#1c2536] px-3 py-2 rounded-md text-sm font-medium">Home</Link>
                 <Link href="/service-workerlist" className="hover:bg-[#1c2536] px-3 py-2 rounded-md text-sm font-medium">Service</Link>
-                <Link href="#" className="hover:bg-[#1c2536] px-3 py-2 rounded-md text-sm font-medium">Contact</Link>
+                {/* <Link href="#" className="hover:bg-[#1c2536] px-3 py-2 rounded-md text-sm font-medium">Contact</Link> */}
               </div>
             </div>
             <div className="hidden md:block">

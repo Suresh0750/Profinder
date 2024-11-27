@@ -214,7 +214,7 @@ export default function ProfessionalInfoForm() {
       if (res.success) {
         toast.success(res.message)
         setTimeout(() => {
-          router.push(`/worker/workerOtp/${res.worker}`)
+          router.replace(`/worker/workerOtp/${res.worker}`)
         }, 600)
       }
     } catch (error:any) {

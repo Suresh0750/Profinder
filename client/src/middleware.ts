@@ -62,7 +62,7 @@ export async function middleware(req:NextRequest){
     let isProduct = await productOtp(req)
     console.log('otp page')
     console.log(isProduct)
-    if(!isProduct){
+    if(workerVerifyToken){
       const loginUrl = new URL('/homePage',req.url)
       return NextResponse.redirect(loginUrl)
     }

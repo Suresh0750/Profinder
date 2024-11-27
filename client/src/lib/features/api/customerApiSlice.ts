@@ -22,7 +22,6 @@ export const handleAxiosError = (error: any) => {
     console.log(error)
     console.error('API Error:', error);
     if ((error?.response?.status==403 || error?.response?.status==401 || error.data?.isBlock) && error?.response?.data?.middleware) {
-          
             window.location.replace('/homePage')
             localStorage.setItem('customerData','')
             localStorage.setItem('workerDetails','')

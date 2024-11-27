@@ -1,12 +1,10 @@
 "use client"
-import {useState,useEffect} from 'react'
+import {useState,useEffect,useCallback} from 'react'
 import Image from 'next/image';
 import Link from 'next/link'
 import Navbar from '@/components/Navbar/page'
 import SliderSection from '@/components/SliderSection';
-import ContractImage from '../../../../../public/images/contractImage.avif'
-import Renovation from '../../../../../public/images/RenovationImage.jpg'
-import BuildingConstruction from '../../../../../public/images/BuildingConstruction.jpg'
+import {useRouter} from 'next/navigation'
 import InnovationOfMetallurgy from '../../../../../public/images/InnovationMetallurgy.jpg'
 import IndustrySociety from '../../../../../public/images/IndustrySociety.jpg'
 import AboutIndustry from '../../../../../public/images/aboutIndustry.jpg'
@@ -15,6 +13,7 @@ import { AiTwotoneEnvironment } from "react-icons/ai"
 import {  
   listWorkerData,
 } from "@/lib/features/api/customerApiSlice"
+import { WorkerDatails } from '@/types/workerTypes';
 
 
 //listWorkerData
@@ -29,6 +28,7 @@ const getCurrentLocation = (): Promise<GeolocationCoordinates> => {
 
 const Home = () => {
   // 
+  const router = useRouter()
   const [location, setLocation] = useState<{latitude: number, longitude: number}>({latitude: 0, longitude: 0})
   const expertise = [
     {
@@ -76,6 +76,19 @@ const Home = () => {
     }
     fetchWorkerData()
   },[location])
+
+  const handleRedirectWorkerPage = useCallback((_id: string, worker: WorkerDatails) => {
+    alert('dds')
+    console.log('worker',worker)
+    if (typeof window !== "undefined" && worker) {
+      localStorage.setItem("workerDetails", JSON.stringify({
+        _id: worker._id,
+        category: worker.category,
+        firstName: worker.firstName,  
+      }))
+    }
+    router.push(`/worker-details/${_id}`)
+  }, [router])
   
   return (
     <>
@@ -113,35 +126,35 @@ const Home = () => {
           {
             mechanic?.length>0 && (
               <>
-              <div className="bg-white p-6 rounded shadow">
-                <Link href={`/worker-details/${mechanic?.[0]?._id}`}>
+              <div className="bg-white p-6 rounded shadow" onClick={()=>handleRedirectWorkerPage(mechanic?.[0]?._id,mechanic?.[0])}>
+              
                   <Image src={mechanic?.[0]?.profile} alt="Service 1" width={400} height={300} />
                   <h3 className="text-xl font-bold mt-4">{mechanic?.[0]?.firstName}</h3>
                   <div className="flex items-center text-gray-500 mt-2">
                         <AiTwotoneEnvironment className="mr-1" />
                         <span>{mechanic?.[0]?.streetAddress}</span>
                   </div>
-                </Link>
+          
               </div>
-              <div className="bg-white p-6 rounded shadow">
-                <Link href={`/worker-details/${mechanic?.[1]?._id}`}>
+              <div className="bg-white p-6 rounded shadow" onClick={()=>handleRedirectWorkerPage(mechanic?.[1]?._id,mechanic?.[1])}>
+                
                   <Image src={mechanic?.[1]?.profile} alt="Service 2" width={400} height={300} />
                   <h3 className="text-xl font-bold mt-4">{mechanic?.[1]?.firstName}</h3>
                   <div className="flex items-center text-gray-500 mt-2">
                         <AiTwotoneEnvironment className="mr-1" />
                         <span>{mechanic?.[1]?.streetAddress}</span>
                   </div>
-                </Link>
+                
               </div>
-              <div className="bg-white p-6 rounded shadow">
-                <Link href={`/worker-details/${mechanic?.[2]?._id}`}>
+              <div className="bg-white p-6 rounded shadow" onClick={()=>handleRedirectWorkerPage(mechanic?.[2]?._id,mechanic?.[2])}>
+               
                   <Image src={mechanic?.[2]?.profile} alt="Service 3" width={400} height={300} />
                   <h3 className="text-xl font-bold mt-4">{mechanic?.[2]?.firstName}</h3>
                   <div className="flex items-center text-gray-500 mt-2">
                         <AiTwotoneEnvironment className="mr-1" />
                         <span>{mechanic?.[2]?.streetAddress}</span>
                   </div>
-                </Link>
+               
               </div>
               </>
             )

@@ -71,6 +71,8 @@ export default function WorkerRequestPage() {
     if (typeof window !== "undefined") {
       const storedData :{_id:string,category:string,firstName:string} | null = JSON.parse(localStorage.getItem("workerDetails") || "{}");
       const storeCustomerData = localStorage.getItem('customerData')
+      console.log('storeCustomerData')
+      console.log(storeCustomerData)
       if (storedData) {
         try {
           setWorkerDetails(storedData);
@@ -151,8 +153,6 @@ export default function WorkerRequestPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (isLoading) return
-    
-    seIsLoading(true)
     if (!customerData?._id) {
       toast.warning(`Please login`)
       setTimeout(() => {
@@ -168,6 +168,7 @@ export default function WorkerRequestPage() {
       setValidationErrors(errors)
       return
     }
+    seIsLoading(true)
     try {
       const result = await requestToWorker({
         ...formData,
