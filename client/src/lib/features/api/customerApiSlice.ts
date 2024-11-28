@@ -26,7 +26,7 @@ export const handleAxiosError = (error: any) => {
             localStorage.setItem('customerData','')
             localStorage.setItem('workerDetails','')
             localStorage.setItem('conversationId','')
-            const errorMessage = error?.response?.data?.message || "Unexpected error occurred.";
+            const errorMessage = error?.response?.data?.message || error?.response?.data?.message || "Unexpected error occurred.";
             return new Error(errorMessage);
         }
 

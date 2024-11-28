@@ -87,9 +87,7 @@ export default function UserProfilePage() {
       }
     }
   }, []);
-  // const { data, refetch, isLoading: isProfileLoading } = useProfileQuery(customerData?._id)
-
-  // 
+ 
   useEffect(() => {
     fetchProfile()
   }, [customerData])
@@ -109,10 +107,17 @@ export default function UserProfilePage() {
   }
 
   const handleSave = async () => {
-    if (String(userProfile.phone).length !== 10) {
+    if ((String(userProfile?.name)?.trim()).length <2) {
+      console.log(userProfile.name)
+      toast.error("User name should be 2 letters")
+      return
+    }
+    if (String(userProfile.phone)?.length !== 10) {
+      console.log(userProfile.phone)
       toast.error("Please enter a valid 10-digit phone number")
       return
     }
+   
 
     try {
       if(isUpdating) return
@@ -214,7 +219,7 @@ export default function UserProfilePage() {
                       type="email"
                       value={userProfile?.email}
                       onChange={handleInputChange}
-                      readOnly={!isEditing}
+                      readOnly={true}
                     />
                   </div>
                 </div>

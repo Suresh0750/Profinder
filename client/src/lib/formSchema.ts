@@ -2,10 +2,10 @@ import { z } from "zod";
 import * as yup from 'yup';
 
 export const FormSchema = z.object({
-    CategoryName: z.string().min(2, {
+    CategoryName: z.string().trim().min(2, {
       message: "Category name must be at least 2 characters.",
     }),
-    Description: z.string().min(10, {
+    Description: z.string().trim().min(10, {
       message: "Description must be at least 10 characters.",
     }),
     CategoryImage: z

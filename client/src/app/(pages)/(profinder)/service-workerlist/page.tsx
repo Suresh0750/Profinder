@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Label } from "@/components/ui/label"
+import {Triangle} from 'react-loader-spinner'
 import { toast } from 'sonner'
 import { WorkerDatails } from '@/types/workerTypes'
 import {
@@ -50,6 +50,7 @@ export default function ServiceWorkerListPage() {
   const [categoryData, setCategoryData] = useState<string[]>([])
   const [workerData, setWorkerData] = useState<WorkerDatails[]>([])
   const [filteredWorkers, setFilteredWorkers] = useState<WorkerDatails[]>([])
+  const [isLoading,setIsLoading] = useState<boolean>(false)
 
   const router = useRouter()
 
@@ -58,6 +59,7 @@ export default function ServiceWorkerListPage() {
     async function fetchWorkerData() {
       try {
         if (!location) return
+        setIsLoading(true)
         const res = await listWorkerData(location)
         if (res?.success) {
           setWorkerData(res?.result)
@@ -66,6 +68,8 @@ export default function ServiceWorkerListPage() {
       } catch (error: any) {
         console.error(error?.message)
         toast.error("Error fetching workers")
+      }finally{
+        setIsLoading(false)
       }
     }
     fetchWorkerData()
@@ -162,6 +166,17 @@ export default function ServiceWorkerListPage() {
   if (loadError) return <div>Error loading maps</div>
   if (!isLoaded) return <div>Loading maps...</div>
 
+  if(isLoading) return <div className='min-h-screen w-full h-screen flex justify-center items-center'>
+                        <Triangle
+                          visible={true}
+                          height="80"
+                          width="80"
+                          color="#0f1729"
+                          ariaLabel="triangle-loading"
+                          wrapperStyle={{}}
+                          wrapperClass=""
+                          />
+                        </div>
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -225,32 +240,41 @@ export default function ServiceWorkerListPage() {
             </Card>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredWorkers?.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE).map((worker: any) => (
-              <Card key={worker?._id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleRedirectWorkerPage(worker?._id,worker)}>
-                <CardContent className="p-0">
-                  <Image
-                    src={worker?.profile || "/placeholder.svg?height=256&width=500"}
-                    width={500}
-                    height={256}
-                    alt={worker?.firstName || "Worker"}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-4">
-                    <h2 className="text-xl font-semibold text-gray-900">{worker?.firstName}</h2>
-                    <p className="text-sm text-gray-600">Reviews</p>
-                    <div className="flex items-center text-gray-500 mt-2">
-                      <AiTwotoneEnvironment className="mr-1" />
-                      <span>{worker?.streetAddress}</span>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[390.400px]">
+            {
+              filteredWorkers?.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)?.length ? (filteredWorkers?.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE).map((worker: any) => (
+                <Card key={worker?._id} className="cursor-pointer hover:shadow-lg transition-shadow duration-200" onClick={() => handleRedirectWorkerPage(worker?._id,worker)}>
+                  <CardContent className="p-0">
+                    <Image
+                      src={worker?.profile || "/placeholder.svg?height=256&width=500"}
+                      width={500}
+                      height={256}
+                      alt={worker?.firstName || "Worker"}
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="p-4">
+                      <h2 className="text-xl font-semibold text-gray-900">{worker?.firstName}</h2>
+                      <p className="text-sm text-gray-600">Reviews</p>
+                      <div className="flex items-center text-gray-500 mt-2">
+                        <AiTwotoneEnvironment className="mr-1" />
+                        <span>{worker?.streetAddress}</span>
+                      </div>
                     </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between p-4">
+                    <Button variant="secondary">{worker?.category}</Button>
+                    <Button onClick={() => handleRedirectWorkerPage(worker?._id,worker)}>Read More</Button>
+                  </CardFooter>
+                </Card>
+              ))) :(
+                <Card className="flex justify-center items-center">
+                  <div className="flex justify-center items-center">
+                    <p>No worker available</p>
                   </div>
-                </CardContent>
-                <CardFooter className="flex justify-between p-4">
-                  <Button variant="secondary">{worker?.category}</Button>
-                  <Button onClick={() => handleRedirectWorkerPage(worker?._id,worker)}>Read More</Button>
-                </CardFooter>
-              </Card>
-            ))}
+                </Card>
+              )
+            }
+            
           </div>
           <div className="flex justify-center mt-8">
             <Pagination

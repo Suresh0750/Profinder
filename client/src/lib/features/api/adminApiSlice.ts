@@ -23,7 +23,7 @@ const axiosInstance1 = axios.create({
 
 export const handleAxiosError = (error:any)=>{
     console.log(error)
-    const errorMessage = error?.response?.data?.errorMessage || "Unexpected error occurred"
+    const errorMessage = error?.response?.data?.errorMessage || error?.response?.data?.message || "Unexpected error occurred"
     console.log(errorMessage)
     return new Error(errorMessage)
 }
