@@ -48,8 +48,7 @@ export const verifyTokenAndRole = (role: string[]) => {
                 accessToken = req.cookies[CookieTypes.WorkerAccessToken];
             } else if (selectRefreshToken(url, Role.User)) {
                 accessToken = req.cookies[CookieTypes.UserAccessToken];
-                // console.log('user');
-                // console.log(accessToken);
+             
             } else {
                 accessToken = req.cookies[CookieTypes.UserAccessToken] || req.cookies[CookieTypes.WorkerAccessToken];
             }
