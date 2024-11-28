@@ -13,8 +13,8 @@ import { Label } from "@/components/ui/label"
 
 interface WorkerDetails {
   _id: string
-  Category: string
-  FirstName: string
+  category: string
+  firstName: string
 }
 
 interface FormData {
@@ -140,7 +140,7 @@ export default function WorkerRequestPage() {
       }
     }
     
-    if (!formData.serviceLocation) {
+    if (!(formData.serviceLocation).trim()) {
       errors.serviceLocation = "Service location is required."
     }
     if (!(formData.additionalNotes).trim()) {
@@ -188,7 +188,7 @@ export default function WorkerRequestPage() {
       }
     } catch (err: any) {
 
-      toast.error(err?.data?.errorMessage || 'An error occurred while submitting the request.')
+      toast.error(err?.message || 'An error occurred while submitting the request.')
     } finally{
       seIsLoading(false)
     }
@@ -202,7 +202,7 @@ export default function WorkerRequestPage() {
     if (autocompleteRef.current) {
       const place = autocompleteRef.current.getPlace()
       if (place.geometry && place.geometry.location) {
-        setFormData((prev) => ({ ...prev, servicelocation: place.formatted_address || '' }))
+        setFormData((prev) => ({ ...prev, serviceLocation: place.formatted_address || '' }))
         const newPosition = {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
@@ -220,7 +220,7 @@ export default function WorkerRequestPage() {
     <div className="container mx-auto p-4 max-w-4xl mt-[4em]">
       <Card>
         <CardHeader>
-          <CardTitle>Service Request for {workerDetails?.FirstName}</CardTitle>
+          <CardTitle>Service Request for {workerDetails?.firstName}</CardTitle>
           <CardDescription>Please fill out the details for your service request</CardDescription>
         </CardHeader>
         <CardContent>
@@ -293,7 +293,7 @@ export default function WorkerRequestPage() {
                 />
               </Autocomplete>
               {validationErrors.serviceLocation && (
-                <p className="text-sm text-red-500">{validationErrors.serviceLocation}</p>
+                <p className="text-sm text-red-500">{validationErrors?.serviceLocation}</p>
               )}
             </div>
             <div className="space-y-2">
@@ -301,12 +301,12 @@ export default function WorkerRequestPage() {
               <Textarea
                 id="additionalNotes"
                 name="additionalNotes"
-                value={formData.additionalNotes}
+                value={formData?.additionalNotes}
                 onChange={handleChange}
                 required
               />
               {validationErrors.additionalNotes && (
-                <p className="text-sm text-red-500">{validationErrors.additionalNotes}</p>
+                <p className="text-sm text-red-500">{validationErrors?.additionalNotes}</p>
               )}
             </div>
             <Button type="submit" disabled={isLoading}>

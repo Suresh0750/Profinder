@@ -173,8 +173,8 @@ export default function UserProfilePage() {
           <div className="flex flex-col md:flex-row gap-8">
             <div className="flex flex-col items-center">
               <Avatar className="w-32 h-32">
-                <AvatarImage src={userProfile.avatarUrl} alt={userProfile.name} />
-                <AvatarFallback>{userProfile.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                <AvatarImage src={userProfile?.avatarUrl} alt={userProfile?.name} />
+                <AvatarFallback>{userProfile?.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
               </Avatar>
               {isEditing && (
                 <Label className="mt-4 cursor-pointer bg-primary text-primary-foreground hover:bg-primary/90 p-2 rounded">
@@ -198,7 +198,7 @@ export default function UserProfilePage() {
                     <Input
                       id="name"
                       name="name"
-                      value={userProfile.name}
+                      value={userProfile?.name}
                       onChange={handleInputChange}
                       readOnly={!isEditing}
                     />
@@ -212,7 +212,7 @@ export default function UserProfilePage() {
                       id="email"
                       name="email"
                       type="email"
-                      value={userProfile.email}
+                      value={userProfile?.email}
                       onChange={handleInputChange}
                       readOnly={!isEditing}
                     />
@@ -225,7 +225,7 @@ export default function UserProfilePage() {
                     <Input
                       id="phone"
                       name="phone"
-                      value={userProfile.phone}
+                      value={userProfile?.phone}
                       onChange={handleInputChange}
                       readOnly={!isEditing}
                     />

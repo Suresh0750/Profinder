@@ -51,9 +51,9 @@ const WorkerDetailsPage = ({ params }: { params: { workerId: string } }) => {
   useEffect(() => {
     async function fetchWorkerData(){
       try{
-        if(customerData?._id && params?.workerId){
-          seIsWorkerDetailsLoading(true)
-          let data = `${params.workerId}/${customerData?._id}`
+        if(params?.workerId){
+          seIsWorkerDetailsLoading(true) 
+          let data = customerData?._id ?  `${params.workerId}/${customerData?._id}` : `${params.workerId}/55` //* show the data without sign in people
           const res = await fetchSingleWorkerDetails(data)
           if(res?.success){
             console.log(res?.result)

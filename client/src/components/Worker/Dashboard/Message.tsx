@@ -10,7 +10,7 @@ import {
 import {readMsgType,newMessage} from '@/types/utilsTypes'
 import {io,Socket} from 'socket.io-client'
 import Image from "next/image"
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 const Message = ()=>{
 const [inputMessage, setInputMessage] = useState("")
@@ -228,7 +228,16 @@ const handleSendMessage = (e: React.FormEvent) => {
             <div key={conv?._id} className="flex items-center p-4 hover:bg-gray-100 cursor-pointer" onClick={()=>handleShowMsg(conv)}>
               <div className="relative">
                 <div className='w-10 h-10'>
-                  <Image src={conv?.userId?.profile} alt={conv?.userId?.username} width={250} height={250} className="w-10 h-10 rounded-full" />
+                  {
+                    conv?.userId?.profile ? (
+                      <Image src={conv?.userId?.profile} alt={conv?.userId?.username} width={250} height={250} className="w-10 h-10 rounded-full" />
+                    ) : (
+                      <Avatar className="w-10 h-10">
+                        <AvatarImage src={conv?.userId?.avatarUrl} alt={conv?.userId?.name} />
+                        <AvatarFallback>{conv?.userId?.username?.split(' ').map((n:any) => n[0]).join('')}</AvatarFallback>
+                      </Avatar>
+                    )
+                  }
                 </div>
                 {false && (
                   <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
@@ -258,7 +267,16 @@ const handleSendMessage = (e: React.FormEvent) => {
         {/* Chat header */}
         <div className="bg-white p-4 border-b flex items-center">
           <div className='w-10 -10'>
-          <Image src={messageBox?.userId?.profile} alt={messageBox?.userId?.username} width={0} height={0} className="w-10 h-10 rounded-full" />
+            {
+              messageBox?.userId?.profile ? (
+                <Image src={messageBox?.userId?.profile} alt={messageBox?.userId?.username} width={0} height={0} className="w-10 h-10 rounded-full" />
+              ) : (
+                <Avatar className="w-10 h-10">
+                  <AvatarImage src={'/placeholder.svg?height=100&width=100'} alt={messageBox?.userId?.username} />
+                  <AvatarFallback>{messageBox?.userId?.username?.split(' ').map((n:any) => n[0]).join('')}</AvatarFallback>
+                </Avatar>
+              )
+            }
           </div>
           <div className="ml-3">
             <h2 className="font-semibold">{messageBox?.userId?.username}</h2>
@@ -279,18 +297,23 @@ const handleSendMessage = (e: React.FormEvent) => {
         </div>
 
         {/* Message input */}
-        <form onSubmit={handleSendMessage} className="bg-white p-4 border-t flex items-center">
-          <input
-            type="text"
-            placeholder="Type your message"
-            className="flex-1 border rounded-full py-2 px-4 mr-2"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-          />
-          <button type="submit" className="bg-indigo-600 text-white rounded-full p-2">
-            <Send size={20} />
-          </button>
-        </form>
+        {
+          conversationID && (
+            <form onSubmit={handleSendMessage} className="bg-white p-4 border-t flex items-center">
+              <input
+                type="text"
+                placeholder="Type your message"
+                className="flex-1 border rounded-full py-2 px-4 mr-2"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+              />
+              <button type="submit" className="bg-indigo-600 text-white rounded-full p-2">
+                <Send size={20} />
+              </button>
+            </form>
+          )
+        }
+       
       </div>
         </>
     )
