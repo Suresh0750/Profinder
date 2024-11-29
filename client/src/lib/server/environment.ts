@@ -46,6 +46,7 @@ export const NEXT_PUBLIC_TOKEN = "wertyufdsafa@34343^&*(#$%^&)"
 // ** server 
 
 export const SERVER_URL = "https://api.profinders.online/v1/api"
+
 export const PAYMENTID_URL = 'https://api.profinders.online/v1/api/customer/savePaymentId'
 
 export const PAYMENT_SUCCESS_URL = 'https://api.profinders.online/v1/api/paymentSuccess'

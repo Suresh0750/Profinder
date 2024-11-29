@@ -22,7 +22,10 @@ export async function middleware(req:NextRequest){
   
   const workerVerifyToken = await verifyToken("workerRefreshToken",req)
   const userVerifyToken = await verifyToken("userRefreshToken",req)
+  
 
+  console.log('userRefreshToken',userVerifyToken)
+  console.log('workerVerifyToken',workerVerifyToken)
 
   // * product admin router
   if(pathname.includes('/admin')){
@@ -105,7 +108,8 @@ async function verifyToken(
   ){
     
     const token = req.cookies.get(workerToken);
-    
+    console.log('token')
+    console.log(token)
     if (!token?.value) {
       // console.log('step 1 if')
       return false;
@@ -123,7 +127,8 @@ async function verifyToken(
         token.value,
         new TextEncoder().encode(secret)
       );
-  
+      console.log('payload',payload)
+      console.log('Boolean(payload)',Boolean(payload))
       return Boolean(payload);
     } catch (err: any) {
       console.log(`failed to verify ${workerToken}`, err.message);
