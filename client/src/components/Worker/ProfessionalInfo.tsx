@@ -25,6 +25,7 @@ import countryList from 'react-select-country-list'
 import { City, State, Country } from 'country-state-city'
 import GoogleMapComponent from './GoogleMapComponent'
 import { professionalInfoFormSchema } from "@/lib/formSchema"
+import {GOOGLE_API} from '@/lib/server/environment'
 
 // import { professionalInfoFormSchema } from '@/lib/formSchema'
 
@@ -406,7 +407,7 @@ export default function ProfessionalInfoForm() {
             </Button>
             {isOpen && ( 
               <GoogleMapComponent 
-                apiKey={process.env.NEXT_PUBLIC_GOOGLE_API || ''} 
+                apiKey={GOOGLE_API || ''} 
                 onLocationConfirm={() => {}}
                 handleCoords={coords}
                 addressHandle={setGetAddress} 

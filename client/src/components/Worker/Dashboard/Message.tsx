@@ -11,6 +11,7 @@ import {readMsgType,newMessage} from '@/types/utilsTypes'
 import {io,Socket} from 'socket.io-client'
 import Image from "next/image"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import {SOCKET_URI} from '@/lib/server/environment'
 
 const Message = ()=>{
 const [inputMessage, setInputMessage] = useState("")
@@ -107,7 +108,7 @@ useEffect(() => {
 
  // * connect the socket
   useEffect(()=>{
-    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URI)
+    const socketInstance = io(SOCKET_URI)
 
     setSocket(socketInstance)
 

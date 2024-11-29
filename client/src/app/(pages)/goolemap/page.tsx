@@ -2,6 +2,8 @@
 
 
 import {useState} from 'react'
+import {GOOGLE_API,Map_ID} from '@/lib/server/environment'
+
 
 import {APIProvider,
     Map,
@@ -14,9 +16,9 @@ export default function Intro(){
     const position= {lat:38.897699700000004,lng:-77.03655315}
     const [open,setOpen] = useState(false)
     return(
-        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_API || ''}>
+        <APIProvider apiKey={GOOGLE_API || ''}>
             <div style={{height:"100vh",width:"100%"}}>
-               <Map zoom={9} center={position} mapId={process.env.NEXT_PUBLIC_Map_ID}>
+               <Map zoom={9} center={position} mapId={Map_ID}>
                     <AdvancedMarker position={position} onClick={()=>setOpen(true)}>
                         <Pin background={'grey'} borderColor={'green'} glyphColor={"purple"}/>
                     </AdvancedMarker>

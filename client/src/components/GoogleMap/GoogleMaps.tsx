@@ -3,6 +3,7 @@
 import { useState, useEffect,useRef} from 'react';
 import { APIProvider, Map, AdvancedMarker, Pin, InfoWindow } from '@vis.gl/react-google-maps';
 import { CoordsTypes, workerDetailsWithlatlon ,Point} from '@/types/utilsTypes';
+import {GOOGLE_API,Map_ID} from '@/lib/server/environment'
 
 export default function Intro({ coords, workerData }: { coords: CoordsTypes, workerData: workerDetailsWithlatlon[] }) {
     const { latitude, longitude } = coords;
@@ -42,7 +43,7 @@ export default function Intro({ coords, workerData }: { coords: CoordsTypes, wor
     const handleZoomOut = () => setZoom((prevZoom) => Math.max(prevZoom - 1, 0)); //* Min zoom level
 
     return (
-        <APIProvider apiKey={process.env.NEXT_PUBLIC_GOOGLE_API || ''}>
+        <APIProvider apiKey={GOOGLE_API || ''}>
             <div className='relative' style={{ height: "70vh", width: "100%" }}>
                 {/* Zoom Controls */}
                 <div style={{ position: 'absolute', top: '10px', left: '10px', zIndex: 10 }}>
@@ -51,7 +52,7 @@ export default function Intro({ coords, workerData }: { coords: CoordsTypes, wor
                 </div>
                 
                 {/* Map component */}
-                <Map zoom={zoom} center={userPosition} mapId={process.env.NEXT_PUBLIC_Map_ID}>
+                <Map zoom={zoom} center={userPosition} mapId={Map_ID}>
                     <AdvancedMarker position={userPosition} onClick={() => setOpen(true)}>
                         <Pin background={'blue'} borderColor={'blue'} glyphColor={"white"} />
                     </AdvancedMarker>

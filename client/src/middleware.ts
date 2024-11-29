@@ -4,6 +4,8 @@ import {NextRequest,NextResponse} from 'next/server'
 import { jwtVerify } from "jose";
 import { isUserProtectedRoute, productOtp } from './routes/routes';
 import { cookies } from 'next/headers';
+import {REFRESH_TOKEN_SECRET} from '@/lib/server/environment'
+
 
 
 export async function middleware(req:NextRequest){
@@ -109,7 +111,7 @@ async function verifyToken(
       return false;
     }
   
-    const secret = process.env.REFRESH_TOKEN_SECRET;
+    const secret = REFRESH_TOKEN_SECRET;
     
     if (!secret) {
      
@@ -137,7 +139,7 @@ async function AdminVerifyToken(AdminToken:string,req:NextRequest){
       return false;
     }
   
-    const secret = process.env.REFRESH_TOKEN_SECRET;
+    const secret = REFRESH_TOKEN_SECRET;
     
     
     if (!secret) {

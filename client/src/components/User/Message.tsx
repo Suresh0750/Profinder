@@ -14,6 +14,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import {SOCKET_URI} from '@/lib/server/environment'
+
 
 export default function Chats() {
   const [inputMessage, setInputMessage] = useState("")
@@ -86,7 +88,7 @@ export default function Chats() {
   // const { data: allMessageData } = useGetAllMessageQuery(conversationID, { skip: stopFetch, refetchOnMountOrArgChange: true})
 
   useEffect(() => {
-    const socketInstance = io(process.env.NEXT_PUBLIC_SOCKET_URI)
+    const socketInstance = io(SOCKET_URI)
     setSocket(socketInstance)
 
     socketInstance.on("connect", () => {

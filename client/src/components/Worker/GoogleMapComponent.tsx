@@ -10,6 +10,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog"
 import { APIProvider, Map, AdvancedMarker, Pin, useMap } from '@vis.gl/react-google-maps'
+import {Map_ID} from '@/lib/server/environment'
 
 interface GoogleMapComponentProps {
   apiKey: string;
@@ -59,7 +60,7 @@ function MapComponent({ handleCoords, onPositionChange }:{ handleCoords:any, onP
     <Map
       defaultCenter={{ lat: handleCoords.latitude, lng: handleCoords.longitude }}
       onClick={()=>handleMapClick}
-      mapId={process.env.NEXT_PUBLIC_Map_ID || 'your-default-map-id'}
+      mapId={Map_ID || 'your-default-map-id'}
     >
       <AdvancedMarker 
         position={{ lat: markerPosition.latitude, lng: markerPosition.longitude }}

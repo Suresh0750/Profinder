@@ -1,9 +1,10 @@
 "use client"
 
 import axios from 'axios'
+import {SERVER_URL} from '@/lib/server/environment'
 
 const axiosInstance = axios.create({
-    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    baseURL : `${SERVER_URL}`,
     headers : {
         "Content-Type" : "application/json"
     },
@@ -12,7 +13,7 @@ const axiosInstance = axios.create({
 
 // * for add the photo
 const axiosInstance1 = axios.create({
-    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    baseURL : `${SERVER_URL}`,
     withCredentials : true,
 })
 

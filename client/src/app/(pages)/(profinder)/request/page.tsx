@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
+import {GOOGLE_API} from '@/lib/server/environment'
+
 
 interface WorkerDetails {
   _id: string
@@ -62,7 +64,7 @@ export default function WorkerRequestPage() {
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null)
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API as string,
+    googleMapsApiKey: GOOGLE_API as string,
     libraries,
   })
 

@@ -2,6 +2,8 @@
 import {NextRequest} from 'next/server'
 import { jwtVerify } from "jose";
 import { cookies } from 'next/headers';
+import {NEXT_PUBLIC_TOKEN} from '@/lib/server/environment'
+
 const changeToHomeRoutes = new Set(["/user/login","/user/userOtp/", "/user/signup","/worker/login","/worker/signup",'/worker/professionalInfo']);
 
 
@@ -28,7 +30,7 @@ export async function productOtp(req:NextRequest){
         return false;
     }
 
-    const secret = process.env.NEXT_PUBLIC_TOKEN
+    const secret = NEXT_PUBLIC_TOKEN
 
     if (!secret) {
         console.log("JWT secret not found in env");
@@ -53,3 +55,4 @@ export async function productOtp(req:NextRequest){
       }
       
 }
+

@@ -2,15 +2,15 @@
 import { createApi, fetchBaseQuery,FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
 import {OTPData} from '../../../types/otpTypes/otpTypes'
 import {useRouter} from 'next/navigation'
-
+import {SERVER_URL} from '@/lib/server/environment'
 
 import axios from 'axios'
 
 console.log('check the env')
-console.log(process.env.NEXT_PUBLIC_NODE_SERVER_URL)
+console.log(SERVER_URL)
 
 const axiosInstance = axios.create({
-    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    baseURL : `${SERVER_URL}`,
     headers : {
         "Content-Type" : "application/json"
     },

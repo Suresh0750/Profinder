@@ -3,6 +3,8 @@
 import axios from 'axios';
 import { NextApiResponse } from "next";
 import { redirect } from "next/navigation";
+import {PAYMENTID_URL} from '@/lib/server/environment'
+
 
 export async function POST(req: any, res: NextApiResponse) {
     // const [savePaymentId] = useSavePaymentIdMutation()
@@ -16,7 +18,7 @@ export async function POST(req: any, res: NextApiResponse) {
     data[key] = value;
   });
   
-  const PAYMENT_URL :string = process.env.NEXT_PUBLIC_PAYMENTID_URL || ''
+  const PAYMENT_URL :string = PAYMENTID_URL || ''
   // const PAYMENT_URL :string = 'http://localhost:3001/v1/api/customer/savePaymentId'
  
   try {

@@ -2,19 +2,19 @@
 import { createApi, fetchBaseQuery,FetchArgs, FetchBaseQueryError} from "@reduxjs/toolkit/query/react"
 import {FormValues} from "@/types/workerTypes"
 import {useRouter} from 'next/navigation'
-
+import {SERVER_URL} from '@/lib/server/environment'
 
 
 import axios from 'axios'
 const axiosInstance = axios.create({
-    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    baseURL : `${SERVER_URL}`,
     headers : {
         "Content-Type" : "application/json"
     },
     withCredentials : true,
 })
 const axiosInstance1 = axios.create({
-    baseURL : `${process.env.NEXT_PUBLIC_NODE_SERVER_URL}`,
+    baseURL : `${SERVER_URL}`,
     withCredentials : true,
 })
 

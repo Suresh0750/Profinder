@@ -18,6 +18,8 @@ import {
   fetchCategoryName,
 } from "@/lib/features/api/customerApiSlice"
 import Image from "next/image"
+import {GOOGLE_PLACE_API} from '@/lib/server/environment'
+
 
 const ITEMS_PER_PAGE = 6
 const libraries: ("places")[] = ["places"]
@@ -112,7 +114,7 @@ export default function ServiceWorkerListPage() {
   }, [filterCategory, searchTerm, workerData])
 
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_PLACE_API as string,
+    googleMapsApiKey: GOOGLE_PLACE_API as string,
     libraries,
   })
 
