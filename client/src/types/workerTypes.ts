@@ -73,8 +73,8 @@ export interface upcomingWorkerData  {
  requestId :{
     _id: string,
     preferredTime : string,
-    servicelocation : string,
-    AdditionalNotes : string,
+    serviceLocation : string,
+    additionalNotes : string,
     payment : number,
     preferredDate : string
 },
@@ -82,10 +82,9 @@ export interface upcomingWorkerData  {
   userId : {
       _id : string,
       username : string,
-      PhoneNumber : number,
-      EmailAddress : string,
-      Address : string,
-      
+      phoneNumber : number,
+      emailAddress : string,
+      address : string,
   },
   isCompleted: boolean,
   status : string,

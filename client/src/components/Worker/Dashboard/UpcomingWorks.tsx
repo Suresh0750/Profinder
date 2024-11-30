@@ -194,11 +194,11 @@ export default function UpcomingWorksPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="flex items-center">
                     <Phone className="w-5 h-5 mr-2" />
-                    {selectedWork?.userId?.PhoneNumber}
+                    {selectedWork?.userId?.phoneNumber}
                   </div>
                   <div className="flex items-center">
                     <MapPin className="w-5 h-5 mr-2" />
-                    {selectedWork.requestId?.servicelocation}
+                    {selectedWork.requestId?.serviceLocation}
                   </div>
                   <div className="flex items-center">
                     <Calendar className="w-5 h-5 mr-2" />
@@ -228,7 +228,7 @@ export default function UpcomingWorksPage() {
                 </div>
                 <div>
                   <h4 className="font-semibold mb-2">Notes:</h4>
-                  <p className="text-muted-foreground">{selectedWork?.requestId?.AdditionalNotes || 'No additional notes'}</p>
+                  <p className="text-muted-foreground">{selectedWork?.requestId?.additionalNotes || 'No additional notes'}</p>
                 </div>
                 <div>
                 <h4 className="font-semibold mb-2">Status:</h4>
@@ -258,7 +258,7 @@ export default function UpcomingWorksPage() {
               )}
               {/* {(|| selectedWork.status === 'confirmed') && ( */}
               {!selectedWork.isCompleted  &&selectedWork.status === 'Pending' && (
-                <Button variant="destructive" onClick={() => handleStatusChange(selectedWork._id, 'Cancelled')}>
+                <Button variant="destructive" onClick={() => handleStatusChange(selectedWork?._id, 'Cancelled')}>
                   <XCircle className="w-5 h-5 text-red-500 mr-2" />
                   Cancel
                 </Button>
