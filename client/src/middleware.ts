@@ -110,6 +110,8 @@ async function verifyToken(
     const token = req.cookies.get(workerToken);
     console.log('token')
     console.log(token)
+    console.log('access js')
+    console.log(document.cookie)
     if (!token?.value) {
       // console.log('step 1 if')
       return false;
