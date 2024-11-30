@@ -49,7 +49,7 @@ export const SERVER_URL = "https://api.profinders.online/v1/api"
 
 export const PAYMENTID_URL = 'https://api.profinders.online/v1/api/customer/savePaymentId'
 
-export const PAYMENT_SUCCESS_URL = 'https://profinders.online/v1/api/paymentSuccess'
-export const PAYMENT_FAILURE_URL = 'https://profinders.online/v1/api/paymentFailure'
+export const PAYMENT_SUCCESS_URL = 'https://profinders.online/api/paymentSuccess'
+export const PAYMENT_FAILURE_URL = 'https://profinders.online/api/paymentFailure'
 
 export const SOCKET_URI ="https://api.profinders.online"
