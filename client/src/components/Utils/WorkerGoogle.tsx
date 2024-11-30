@@ -79,12 +79,13 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
 
         localStorage.setItem("customerData", JSON.stringify(result.customerData));
         setTimeout(() => {
-          router.push(`/homePage`);
+          router.replace(`/homePage`);
         }, 1000);
 
       }
 
     } catch (error: any) {
+      toast.error(error?.message)
       if(error?.status == 403){
         toast.error('worker has been blocked')
       }
