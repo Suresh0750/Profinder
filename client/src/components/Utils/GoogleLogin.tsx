@@ -37,7 +37,7 @@ const GoogleSignIn = ({ role }: { role: string }) => {
         toast.success(result?.message);
         localStorage.setItem('customerData', JSON.stringify(result?.customerData));
         setTimeout(() => {
-          router.push('/homePage');
+          router.replace('/homePage');
         }, 2000);
       }
       
