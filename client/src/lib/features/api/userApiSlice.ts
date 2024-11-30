@@ -78,7 +78,7 @@ export const updateprofile = async(data:any)=>{
         return response.data
     }catch(error:any){
         console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -88,7 +88,7 @@ export const conversation  = async(data:any)=>{
         return response.data
     }catch(error:any){
         console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -98,7 +98,7 @@ export const fetchAllConversation = async(userId:string)=>{
         return response.data
     }catch(error:any){
         console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -108,7 +108,7 @@ export const fetchAllMessage = async(conversationId:string)=>{
         return response.data
     }catch(error:any){
         console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -118,7 +118,7 @@ export const booking = async(userId:string)=>{
         return response.data
     }catch(error:any){
         console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
 
@@ -128,6 +128,6 @@ export const fetchPaymentId = async (requestId:string)=>{
         return response.data
     }catch(error:any){
         console.log(error.errMessage)
-        throw error
+        throw handleAxiosError(error)
     }
 }
