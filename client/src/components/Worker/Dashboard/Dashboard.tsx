@@ -34,8 +34,8 @@ const Dashboard = () => {
   const [rating, setRating] = useState([
     {
       "_id": null,
-      "sum": 3,
-      "count": 1
+      "sum": 0,
+      "count": 0
     }
   ])
   useEffect(() => {

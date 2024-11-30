@@ -43,7 +43,7 @@ const GoogleSignIn = ({ role }: { role: string }) => {
       
     }catch(error:any){
       console.log(error)
-      toast(error?.message)
+      toast(error?.message) 
     }finally{
       setIsLoading(false)
     }
