@@ -127,6 +127,8 @@ const GoogleSignIn: React.FC<{ role: string }> = ({ role }) => {
           toast.success(result?.message);
           setIsModalOpen(false);
           router.push('/homePage');
+        }else{
+          toast.error(result?.message || 'login is not succeed')
         }
       }
     } catch (error:any) {
