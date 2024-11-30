@@ -22,12 +22,20 @@ const axiosInstance1 = axios.create({
 
 // * Error Handler
 
-export const handleAxiosError = (error:any)=>{
+export const handleAxiosError = (error: any) => {
     console.log(error)
-    const errorMessage = error?.response?.data?.errorMessage || error?.response?.data?.message || "Unexpected error occurred"
+    console.error('API Error:', error);
+    if ((error?.response?.status==403 || error?.response?.status==401 || error.data?.isBlock) && error?.response?.data?.middleware) {
+            window.location.replace('/admin/login')
+            const errorMessage = error?.response?.data?.message || error?.response?.data?.message || "Unexpected error occurred.";
+            return new Error(errorMessage);
+        }
+
+    const errorMessage = error?.response?.data?.errorMessage || error?.response?.data?.message || "Unexpected error occurred.";
     console.log(errorMessage)
-    return new Error(errorMessage)
-}
+
+    return new Error(errorMessage);
+};
 
 export const addCategory = async(data: FormData)=>{
     try{
