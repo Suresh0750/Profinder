@@ -25,15 +25,16 @@ export default function OverviewPage() {
   useEffect(()=>{
     const loadDashboardOverviewData = async ()=>{
       try{
-        // const res = await fetchDashboardOverview()
-        // if(res?.result){
-        //   setRevenue(revenueCalculation(res?.result?.revenueData))
-        //   setJobStatus(jobStatusService(res?.result?.jobStatus))
-        //   setWorkerdata(getWorkerDistribution(res?.result?.workerDistribution,res?.result?.getAllCategory))
-          setRevenue(revenueCalculation([]))
-          setJobStatus(jobStatusService([]))
-          setWorkerdata(getWorkerDistribution([],[]))
-        // }
+        // const 
+        const res = await fetchDashboardOverview()
+        if(res?.result){
+          setRevenue(revenueCalculation(res?.result?.revenueData))
+          setJobStatus(jobStatusService(res?.result?.jobStatus))
+          setWorkerdata(getWorkerDistribution(res?.result?.workerDistribution,res?.result?.getAllCategory))
+          // setRevenue(revenueCalculation([]))
+          // setJobStatus(jobStatusService([]))
+          // setWorkerdata(getWorkerDistribution([],[]))
+        }
       }catch(error){
         console.log(error)
       }
