@@ -135,7 +135,7 @@ export function LoginForm() {
               Continue with Email
             </Button>
             <h2 className="text-center text-gray-500 my-4">or</h2>
-            <GoogleSignIn role="user" />
+            {/* <GoogleSignIn role="user" /> */}
           </form>
         </Form>
         <h2 className="text-center mt-4">

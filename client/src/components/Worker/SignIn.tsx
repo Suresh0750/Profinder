@@ -166,7 +166,7 @@ export function LoginForm() {
             Register
           </span>
         </h2>
-          <GooglLogin role="worker" />
+          {/* <GooglLogin role="worker" /> */}
       </div>
     </>
   )
